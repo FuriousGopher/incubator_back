@@ -1,6 +1,6 @@
  import express from 'express'
 export const app = express()
-const port = 3000
+const port = 3003
 
 const jsonBodyMiddleware = express.json()
 app.use(jsonBodyMiddleware)

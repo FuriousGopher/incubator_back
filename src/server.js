@@ -2,6 +2,11 @@ const express = require('express');
 const app = express();
 
 
+
+app.get('/', (req, res)=>{
+    res.send('Hello')
+})
+
 app.get('/route1', function(req, res) {
     res.send('This is Route 1');
 });

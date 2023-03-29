@@ -1,6 +1,6 @@
- import express from 'express'
+import express from 'express'
 export const app = express()
-const port = 3003
+const port = 3004
 
 const jsonBodyMiddleware = express.json()
 app.use(jsonBodyMiddleware)
@@ -16,13 +16,13 @@ const db = {
 
 app.get('/', (req, res) => {
 
-        res.send('Hello World!')
+    res.send('Hello World!')
 
 })
 app.get('/courses', (req, res) =>{
     let FoundCourses =  db.courses;
     if (req.query.title){
-        FoundCourses = FoundCourses .filter(c => c.title.indexOf(req.query.title as string) > -1)
+        FoundCourses = FoundCourses.filter(c => c.title.indexOf(req.query.title as string) > -1)
     }
     if (!FoundCourses.length){
         res.sendStatus(404)
@@ -31,7 +31,7 @@ app.get('/courses', (req, res) =>{
 
     res.json(FoundCourses)
 })
-app.get('/courses/:id', (req, res) =>{2
+app.get('/courses/:id', (req, res) =>{
     const foundCourse = db.courses.find(c => c.id === +req.params.id);
     if (!foundCourse){
         res.sendStatus(404)
@@ -47,12 +47,16 @@ app.post('/users', (req, res) => {
     res.send('We create Samurais!')
 })
 app.post('/courses', (req, res) => {
-    const createdCours = {
+    if (!req.body.title){
+        res.sendStatus(400)
+        return;
+    }
+    const createdCourse = {
         id: +(new Date()),
         title: 'unknown'
     };
-    db.courses.push(createdCours)
-    res.json(createdCours)
+    db.courses.push(createdCourse)
+    res.json(createdCourse)
 })
 app.delete('/courses/:id', (req, res) =>{
     db.courses = db.courses.filter(c => c.id !== +req.params.id);
@@ -60,7 +64,6 @@ app.delete('/courses/:id', (req, res) =>{
 
     res.sendStatus(204)
 })
-
 app.delete('/__test__/data', (req, res) =>{
     db.courses = [];
     res.sendStatus(204)

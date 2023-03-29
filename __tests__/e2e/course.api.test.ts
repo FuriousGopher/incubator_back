@@ -2,16 +2,30 @@ import request from 'supertest'
 
 import {app} from '../../src'
 
-
-describe('/course', () =>{
-
-    beforeAll(async  ()=>{
+describe('/courses', ()=> {
+    beforeAll(async ()=>{
         await request(app).delete('/__test__/data')
     })
-    it(`should create course with correct input data`, async ()=>{
+
+
+    it('should return 200 and empty array', async ()=> {
+        await request(app)
+            .get('/courses')
+            .expect(200, [])
+    })
+
+
+    it('should return 404 for not existing course', async ()=> {
+        await request(app)
+            .get('/courses/1')
+            .expect(404)
+    })
+
+    it (`shouldn't create course with incorrect input data`, async ()=>{
         await request(app)
             .post('/courses')
-            .send({ title: 'aaaaaa'})
+            .send({ title: ''})
+            .expect(400)
 
     })
 

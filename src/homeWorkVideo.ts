@@ -23,6 +23,10 @@ app.get('/', (req: Request, res: Response) =>{
 app.get('/videos', (req: Request, res: Response)=>{
     res.send(videos)
 })
+
+
+
+
 app.post('/videos', (req: Request, res: Response) =>{
     const newVideo = {
         id: +(new Date()),
@@ -32,7 +36,11 @@ app.post('/videos', (req: Request, res: Response) =>{
     video.push(newVideo)
     res.status(201).send(newVideo)
 })
-app.put('/videos/:videoId', (req: Request, res: Response)=>{
+
+
+
+
+apjp.put('/videos/:videoId', (req: Request, res: Response)=>{
     const id = +req.params.videoId;
     const video = videos.find(c=> c.id === id)
     if(video) {
@@ -42,6 +50,9 @@ app.put('/videos/:videoId', (req: Request, res: Response)=>{
         res.send(404)
     }
 })
+
+
+
 app.get('/videos/:videoId', (req: Request, res: Response)=>{
     const id = +req.params.videoId;
     const video = videos.find(c=> c.id === id)
@@ -51,6 +62,9 @@ app.get('/videos/:videoId', (req: Request, res: Response)=>{
         res.send(404)
     }
 })
+
+
+
 app.delete('/videos/videoid', (req: Request, res: Response)=>{
     const id = +req.param.videoid;
     const newVideo = videos.filter(c=> c.id !== id)
@@ -66,3 +80,5 @@ app.delete('/videos/videoid', (req: Request, res: Response)=>{
 app.listen(port, ()=>{
     console.log('Listen port: ${port}')
 })
+
+

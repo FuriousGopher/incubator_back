@@ -26,7 +26,7 @@ const db: { courses : CourseType[]} = {
 
 app.get('/', (req, res) => {
 
-    res.send('Hello World!')
+    res.send('I love Liuba')
 
 })
 app.get('/courses', (req: RequestWithQuery< {title: string}>,

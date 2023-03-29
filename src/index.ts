@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { Response } from 'express'
 import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "./types";
 import {CourseCreateInputModel} from "./models/CourseCreateModul";
 import {CourseUpdateModel} from "./models/CourseUpdateModel";

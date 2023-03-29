@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express'
+import express, { Request, Response } from 'express'
 import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "./types";
 import {CourseCreateInputModel} from "./models/CourseCreateModul";
 import {CourseUpdateModel} from "./models/CourseUpdateModel";
@@ -12,15 +12,15 @@ app.use(jsonBodyMiddleware)
 type CourseType = {
     id: number;
     title: string;
-    studentCount: number
+
 }
 
-const db: { courses : CourseViewModel[]} = {
+const db: { courses : CourseType[]} = {
     courses: [
-        {id: 1, title: 'front-end', studentCount: 10},
-        {id: 2, title: 'back-end', studentCount: 11},
-        {id: 3, title: 'auto qa', studentCount: 13},
-        {id: 4, title: 'devops', studentCount: 15}
+        {id: 1, title: 'front-end'},
+        {id: 2, title: 'back-end'},
+        {id: 3, title: 'auto qa'},
+        {id: 4, title: 'devops'}
     ]
 }
 
@@ -50,7 +50,7 @@ app.get('/courses/:id', (req: RequestWithParams<{id: string}>,
         return;
     }
 
-    res.json(foundCourse)
+    res.send(foundCourse)
 })
 app.get('/users', (req, res) => {
     res.send(' Samurais!')

@@ -2,6 +2,7 @@ import express, {Request, Response} from 'express'
 import {RequestWithBody, RequestWithParams, RequestWithParamsAndBody, RequestWithQuery} from "./types";
 import {CourseCreateInputModel} from "./models/CourseCreateModul";
 import {CourseUpdateModel} from "./models/CourseUpdateModel";
+import {CourseViewModel} from "./models/CourseViewModel";
 export const app = express()
 const port = 3004
 
@@ -11,14 +12,15 @@ app.use(jsonBodyMiddleware)
 type CourseType = {
     id: number;
     title: string;
+    studentCount: number
 }
 
-const db: { courses : CourseType[]} = {
+const db: { courses : CourseViewModel[]} = {
     courses: [
-        {id: 1, title: 'front-end'},
-        {id: 2, title: 'back-end'},
-        {id: 3, title: 'auto qa'},
-        {id: 4, title: 'devops'}
+        {id: 1, title: 'front-end', studentCount: 10},
+        {id: 2, title: 'back-end', studentCount: 11},
+        {id: 3, title: 'auto qa', studentCount: 13},
+        {id: 4, title: 'devops', studentCount: 15}
     ]
 }
 
@@ -28,7 +30,7 @@ app.get('/', (req, res) => {
 
 })
 app.get('/courses', (req: RequestWithQuery< {title: string}>,
-                     res: Response<CourseType[]>) =>{
+                     res: Response<CourseViewModel[]>) =>{
     let foundCourses =  db.courses;
     if (req.query.title){
         foundCourses = foundCourses.filter(c => c.title.indexOf(req.query.title as string) > -1)
@@ -40,7 +42,8 @@ app.get('/courses', (req: RequestWithQuery< {title: string}>,
 
     res.send(foundCourses)
 })
-app.get('/courses/:id', (req: RequestWithParams<{id: string}>, res) =>{
+app.get('/courses/:id', (req: RequestWithParams<{id: string}>,
+                         res: Response<CourseViewModel>) =>{
     const foundCourse = db.courses.find(c => c.id === +req.params.id);
     if (!foundCourse){
         res.sendStatus(404)

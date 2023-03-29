@@ -30,7 +30,7 @@ app.post('/videos', (req: Request, res: Response) =>{
         author: 'IvanK'
     }
     video.push(newVideo)
-    res.status(202).send(newVideo)
+    res.status(201).send(newVideo)
 })
 app.put('/videos/:videoId', (req: Request, res: Response)=>{
     const id = +req.params.videoId;

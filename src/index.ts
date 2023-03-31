@@ -29,14 +29,9 @@ type videosType = {
     availableResolutions?: Resolutions[] | null;
 }
 
-const video: { videos : videosType[]} = {
-    videos: [
-        {id: 1, title: 'front-end', author: 'I'},
-        {id: 2, title: 'back-end',author: 'K'},
-        {id: 3, title: 'auto qa',author: 'M'},
-        {id: 4, title: 'devops',author: 'N'}
-    ]
-}
+let videos: videosType[] = []
+
+
 
 app.get('/', (req, res) => {
 
@@ -44,7 +39,7 @@ app.get('/', (req, res) => {
 
 })
 app.get('/videos', (req: Request, res: Response)=> {
-    res.send(video.videos)
+    res.send(videos)
 })
 app.get('/videos/:videoId', (req: Request, res: Response) => {
     const id = +req.params.videoId;
@@ -57,19 +52,19 @@ app.get('/videos/:videoId', (req: Request, res: Response) => {
 });
 app.post('/videos', (req: Request, res: Response) => {
     if (!req.body.title){
-        res.sendStatus(400)
+        res.sendStatus(400).send('Need write a title')
         return;
     }
     const newVideo = {
         id: +(new Date()),
         title: req.body.title,
-        author: ''
+        author:  req.body.author,
     };
     videos.push(newVideo)
     res.status(201).send(newVideo)
 });
-app.delete('/videos/video:id', (req: Request, res: Response) => {
-    const id = +req.params.videoid;
+app.delete('/videos/:videoId', (req: Request, res: Response) => {
+    const id = +req.params.videoId;
     const newVideos = videos.filter(video => video.id !== id);
     if (newVideos.length < videos.length) {
         videos = newVideos;
@@ -83,9 +78,9 @@ app.put('/videos/:videoId', (req: Request, res: Response)=>{
     const video = videos.find(c=> c.id === id)
     if(video) {
         video.title = req.body.title;
-        res.send(video)
+        res.status(204).send(video)
     } else {
-        res.send(404)
+        res.sendStatus(404)
     }
 })
 

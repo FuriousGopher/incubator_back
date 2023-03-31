@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 })
 app.get('/videos', (req: Request, res: Response)=> {
     res.sendStatus(200).send('All Videos')
-})
+}) // why not work ?
 app.get('/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
     const video = videos.find(c => c.id === id);
@@ -50,7 +50,7 @@ app.get('/videos/:id', (req: Request, res: Response) => {
     }
 });
 app.post('/videos', (req: Request, res: Response) => {
-    if (!req.body.title || !req.body.author || req.body.availableResolutions){
+    if (!req.body.title || !req.body.author || !req.body.availableResolutions){
         res.sendStatus(400).send('Need write a title, author and resolution')
         return;
     }
@@ -58,6 +58,7 @@ app.post('/videos', (req: Request, res: Response) => {
         id: +(new Date()),
         title: req.body.title,
         author:  req.body.author,
+        availableResolutions: req.body.availableResolutions,
     };
     videos.push(newVideo)
     res.status(201).send(newVideo)
@@ -65,7 +66,7 @@ app.post('/videos', (req: Request, res: Response) => {
 app.delete('/testing/all-data', (req: Request, res: Response) =>{
     videos = []
     res.sendStatus(204).send('All data is deleted')
-})
+}) // Test pass
 app.delete('/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
     const newVideos = videos.filter(video => video.id !== id);

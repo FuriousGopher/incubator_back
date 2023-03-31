@@ -28,7 +28,7 @@ type videosType = {
     availableResolutions?: resolutions[] | null;
 }
 
-let videos: videosType[] = []
+let videos: videosType[] = [{id: 1, author: "Ivan", title: "video1"}]
 
 
 
@@ -38,6 +38,7 @@ app.get('/', (req, res) => {
 
 })
 app.get('/videos', (req: Request, res: Response)=> {
+    res.send(videos)
     res.sendStatus(200).send('All Videos')
 }) // why not work ?
 app.get('/videos/:id', (req: Request, res: Response) => {

@@ -28,7 +28,7 @@ type videosType = {
     availableResolutions?: resolutions[] | null;
 }
 
-let videos: videosType[] = [{id: 1, author: "Ivan", title: "video1"}]
+let videos: videosType[] = []
 
 
 

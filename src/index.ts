@@ -62,6 +62,10 @@ app.post('/videos', (req: Request, res: Response) => {
     videos.push(newVideo)
     res.status(201).send(newVideo)
 });
+app.delete('/testing/all-data', (req: Request, res: Response) =>{
+    videos = []
+    res.sendStatus(204).send('All data is deleted')
+})
 app.delete('/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
     const newVideos = videos.filter(video => video.id !== id);

@@ -51,14 +51,12 @@ const validateBody = ({
     if (!availableResolutions) {
         errorsMessages.push({message: 'Error', field: 'availableResolutions'})
     }
-    if (!(typeof canBeDownloaded  === 'undefined')) {
-        if (!(typeof canBeDownloaded  === 'boolean')) {
+    if (!(typeof canBeDownloaded === 'undefined')) {
+        if (!(typeof canBeDownloaded === 'boolean')) {
             errorsMessages.push({message: 'Error', field: 'canBeDownloaded'})
         }
     }
-    if (!minAgeRestriction || minAgeRestriction < 18 || minAgeRestriction > 1){
-        errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
-    }
+
     if (errorsMessages.length > 0) {
         return {errorsMessages}
     } else {
@@ -97,7 +95,7 @@ app.post('/videos', (req: Request, res: Response) => {
         availableResolutions: req.body.availableResolutions,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date().toISOString(),
+        createdAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
         publicationDate: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
     };
     videos.push(newVideo)

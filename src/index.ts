@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 app.get('/videos', (req: Request, res: Response)=> {
     res.status(200).send(videos)
 }) // why not work
-app.get('/videos/:id', (req: Request, res: Response) => {
+app.get('/videos/:id', (req: Request, res: Response) =>  {
     let id = +req.params.id;
     let video = videos.find(c => c.id === id);
     if (video) {
@@ -56,24 +56,31 @@ app.post('/videos', (req: Request, res: Response) => {
     }
     const newVideo = {
         id: +(new Date()),
-        ...req.body
+        title: req.body.title,
+        author:  req.body.author,
+        availableResolutions: req.body.availableResolutions,
+        canBeDownloaded: false,
+        minAgeRestriction: null,
+        createdAt: +(new Date()),
+        publicationDate: +(new Date()),
     };
+    // @ts-ignore
     videos.push(newVideo)
-    res.sendStatus(201)
-}); // received value must be a string
+    res.status(201).json(newVideo)
+}); // received value must be a string !!!!!!!!!!!!!
 app.delete('/testing/all-data', (req: Request, res: Response) =>{
     videos = []
     res.sendStatus(204).send('All data is deleted')
 }) // Test pass
 app.delete('/videos/:id', (req: Request, res: Response) => {
-    const id = +req.params.id;
-    const newVideos = videos.filter(video => video.id !== id);
-    if (newVideos.length < videos.length) {
-        videos = newVideos;
-        res.status(204).send('video was deleted');
-    } else {
-        res.sendStatus(404).send('Not Found')
-    }
+   for (let i = 0; i<videos.length; i++){
+       if (videos[i].id === +req.params.id) {
+           videos.splice(i, 1);
+           res.send(204);
+           return;
+       }
+   }
+   res.send(404)
 });
 app.put('/videos/:id', (req, res) => {
     const id = +req.params.id;

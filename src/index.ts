@@ -51,7 +51,7 @@ app.get('/videos/:id', (req: Request, res: Response) =>  {
 });
 app.post('/videos', (req: Request, res: Response) => {
     if (!req.body.title || !req.body.author || !req.body.availableResolutions){
-        res.sendStatus(400).send('Need write a title, author and resolution')
+        res.sendStatus(400).send({ errorsMessages: [{ message: 'Error', field: "title" }] })
         return;
     }
     const newVideo = {

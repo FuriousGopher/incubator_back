@@ -56,12 +56,10 @@ app.post('/videos', (req: Request, res: Response) => {
     }
     const newVideo = {
         id: +(new Date()),
-        title: req.body.title,
-        author:  req.body.author,
-        availableResolutions: req.body.availableResolutions,
+        ...req.body
     };
     videos.push(newVideo)
-    res.status(201).send('created')
+    res.sendStatus(201)
 }); // received value must be a string /*TODO*/ CHECK
 app.delete('/testing/all-data', (req: Request, res: Response) =>{
     videos = []

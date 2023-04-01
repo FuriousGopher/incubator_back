@@ -96,7 +96,7 @@ app.put('/videos/:id', (req, res) => {
             canBeDownloaded: req.body.canBeDownloaded,
             minAgeRestriction: req.body.minAgeRestriction,
             createdAt: videos[videoIndex].createdAt,
-            publicationDate: new Date().toISOString(),
+            publicationDate: req.body.publicationDate,
         };
         res.sendStatus(204);
     } else {

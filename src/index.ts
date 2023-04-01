@@ -30,7 +30,7 @@ type videosType = {
 
 let videos: videosType[] = []
 
-
+const regex = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/;
 
 app.get('/', (req, res) => {
 
@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 })
 app.get('/videos', (req: Request, res: Response)=> {
     res.status(200).send(videos)
-}) // why not work
+}) // why not work?
 app.get('/videos/:id', (req: Request, res: Response) =>  {
     let id = +req.params.id;
     let video = videos.find(c => c.id === id);
@@ -61,12 +61,12 @@ app.post('/videos', (req: Request, res: Response) => {
         availableResolutions: req.body.availableResolutions,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: +(new Date()),
-        publicationDate: +(new Date()),
+        createdAt: new Date(),
+        publicationDate: new Date(),
     };
     // @ts-ignore
     videos.push(newVideo)
-    res.status(201).json(newVideo)
+    res.status(201).send(newVideo)
 }); // received value must be a string !!!!!!!!!!!!!
 app.delete('/testing/all-data', (req: Request, res: Response) =>{
     videos = []
@@ -81,7 +81,7 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
        }
    }
    res.send(404)
-});
+}); // Test pass
 app.put('/videos/:id', (req, res) => {
     const id = +req.params.id;
     const videoIndex = videos.findIndex(c => c.id === id);

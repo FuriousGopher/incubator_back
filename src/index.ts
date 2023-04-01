@@ -49,7 +49,7 @@ app.get('/videos/:id', (req: Request, res: Response) =>  {
     }
 });
 app.post('/videos', (req: Request, res: Response) => {
-    if (!req.body.title || !req.body.author || !req.body.availableResolutions){
+    if (!req.body.title || req.body.title.length > 40 || !req.body.author || !req.body.availableResolutions){
         res.status(400).send({ errorsMessages: [{ message: 'Error', field: "title" }] })
         return;
     }

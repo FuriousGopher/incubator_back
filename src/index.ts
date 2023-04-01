@@ -56,7 +56,6 @@ const validateBody = ({
             errorsMessages.push({message: 'Error', field: 'canBeDownloaded'})
         }
     }
-
     if (errorsMessages.length > 0) {
         return {errorsMessages}
     } else {

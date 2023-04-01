@@ -39,24 +39,24 @@ const validateBody = ({
                           author,
                           availableResolutions,
                           canBeDownloaded
-                      }: { title?: string, author?: string, availableResolutions?: resolutions[], canBeDownloaded?: unknown }): { errorMessages: errorType[] } | undefined => {
-    const errorMessages: errorType[] = []
+                      }: { title?: string, author?: string, availableResolutions?: resolutions[], canBeDownloaded?: unknown }): { errorsMessages: errorType[] } | undefined => {
+    const errorsMessages: errorType[] = []
     if (!title || title.length > 40) {
-        errorMessages.push({message: 'Error', field: 'title'})
+        errorsMessages.push({message: 'Error', field: 'title'})
     }
     if (!author || author.length > 20) {
-        errorMessages.push({message: 'Error', field: 'author'})
+        errorsMessages.push({message: 'Error', field: 'author'})
     }
     if (!availableResolutions) {
-        errorMessages.push({message: 'Error', field: 'availableResolutions'})
+        errorsMessages.push({message: 'Error', field: 'availableResolutions'})
     }
     if (!(typeof canBeDownloaded  === 'undefined')) {
         if (!(typeof canBeDownloaded  === 'boolean')) {
-            errorMessages.push({message: 'Error', field: 'canBeDownloaded'})
+            errorsMessages.push({message: 'Error', field: 'canBeDownloaded'})
         }
     }
-    if (errorMessages.length > 0) {
-        return {errorMessages}
+    if (errorsMessages.length > 0) {
+        return {errorsMessages}
     } else {
         return
     }
@@ -82,7 +82,7 @@ app.get('/videos/:id', (req: Request, res: Response) => {
 });
 app.post('/videos', (req: Request, res: Response) => {
     const errors = validateBody(req.body)
-    if (errors?.errorMessages) {
+    if (errors?.errorsMessages) {
         res.status(400).send(errors)
         return;
     }
@@ -117,7 +117,7 @@ app.put('/videos/:id', (req, res) => {
     const id = +req.params.id;
     const videoIndex = videos.findIndex(c => c.id === id);
     const errors = validateBody(req.body)
-    if (errors?.errorMessages) {
+    if (errors?.errorsMessages) {
         res.status(400).send(errors)
         return;
     }

@@ -45,7 +45,7 @@ const validateBody = ({title,author,availableResolutions, canBeDownloaded}: {tit
     if (!availableResolutions){
         errorMessages.push({message: 'Error', field: 'availableResolutions'} )
     }
-    if (Boolean(canBeDownloaded){
+    if (Boolean(canBeDownloaded)){
         errorMessages.push({message: 'Error', field: 'canBeDownloaded'} )
     }
     if (errorMessages.length > 0 ){

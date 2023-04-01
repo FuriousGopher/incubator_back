@@ -34,23 +34,32 @@ type errorType = {
 }
 
 let videos: videosType[] = []
-const validateBody = ({title,author,availableResolutions, canBeDownloaded}: {title?: string, author?: string, availableResolutions?: resolutions[] , canBeDownloaded?: boolean }): {errorMessages: errorType[]} | undefined =>  {
+const validateBody = ({
+                          title,
+                          author,
+                          availableResolutions,
+                          canBeDownloaded
+                      }: { title?: string, author?: string, availableResolutions?: resolutions[], canBeDownloaded?: boolean }): { errorMessages: errorType[] } | undefined => {
     const errorMessages: errorType[] = []
-    if (!title || title.length > 40){
-        errorMessages.push({message: 'Error', field: 'title'} )
+    if (!title || title.length > 40) {
+        errorMessages.push({message: 'Error', field: 'title'})
     }
-    if (!author || author.length > 20){
-        errorMessages.push({message: 'Error', field: 'author'} )
+    if (!author || author.length > 20) {
+        errorMessages.push({message: 'Error', field: 'author'})
     }
-    if (!availableResolutions){
-        errorMessages.push({message: 'Error', field: 'availableResolutions'} )
+    if (!availableResolutions) {
+        errorMessages.push({message: 'Error', field: 'availableResolutions'})
     }
-    if (canBeDownloaded && !Boolean(canBeDownloaded)){
-        errorMessages.push({message: 'Error', field: 'canBeDownloaded'} )
+    if (canBeDownloaded) {
+        if (!Boolean(canBeDownloaded)) {
+            errorMessages.push({message: 'Error', field: 'canBeDownloaded'})
+        }
     }
-    if (errorMessages.length > 0 ){
+    if (errorMessages.length > 0) {
         return {errorMessages}
-    } else { return }
+    } else {
+        return
+    }
 
 }
 
@@ -59,10 +68,10 @@ app.get('/', (req, res) => {
     res.send('Hi Its I.K Videos#2')
 
 })
-app.get('/videos', (req: Request, res: Response)=> {
+app.get('/videos', (req: Request, res: Response) => {
     res.status(200).send(videos)
 }) // why not work?
-app.get('/videos/:id', (req: Request, res: Response) =>  {
+app.get('/videos/:id', (req: Request, res: Response) => {
     let id = +req.params.id;
     let video = videos.find(c => c.id === id);
     if (video) {
@@ -73,14 +82,14 @@ app.get('/videos/:id', (req: Request, res: Response) =>  {
 });
 app.post('/videos', (req: Request, res: Response) => {
     const errors = validateBody(req.body)
-    if (errors?.errorMessages){
+    if (errors?.errorMessages) {
         res.status(400).send(errors)
         return;
     }
     const newVideo = {
         id: +(new Date()),
         title: req.body.title,
-        author:  req.body.author,
+        author: req.body.author,
         availableResolutions: req.body.availableResolutions,
         canBeDownloaded: false,
         minAgeRestriction: null,
@@ -90,25 +99,25 @@ app.post('/videos', (req: Request, res: Response) => {
     videos.push(newVideo)
     res.status(201).send(newVideo)
 }); // why date difference ?
-app.delete('/testing/all-data', (req: Request, res: Response) =>{
+app.delete('/testing/all-data', (req: Request, res: Response) => {
     videos = []
     res.sendStatus(204).send('All data is deleted')
 }) // Test pass
 app.delete('/videos/:id', (req: Request, res: Response) => {
-   for (let i = 0; i<videos.length; i++){
-       if (videos[i].id === +req.params.id) {
-           videos.splice(i, 1);
-           res.send(204);
-           return;
-       }
-   }
-   res.send(404)
+    for (let i = 0; i < videos.length; i++) {
+        if (videos[i].id === +req.params.id) {
+            videos.splice(i, 1);
+            res.send(204);
+            return;
+        }
+    }
+    res.send(404)
 }); // Test pass
 app.put('/videos/:id', (req, res) => {
     const id = +req.params.id;
     const videoIndex = videos.findIndex(c => c.id === id);
     const errors = validateBody(req.body)
-    if (errors?.errorMessages){
+    if (errors?.errorMessages) {
         res.status(400).send(errors)
         return;
     }

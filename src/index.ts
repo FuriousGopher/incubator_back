@@ -34,10 +34,21 @@ type errorType = {
 }
 
 let videos: videosType[] = []
-const validateBody = (body: {title?: string, author?: string, availableResolutions?: resolutions[]  }) => {
-    if (!title){
-        return {}
+const validateBody = ({title,author,availableResolutions}: {title?: string, author?: string, availableResolutions?: resolutions[]  }): {errorMessages: errorType[]} | undefined =>  {
+    const errorMessages: errorType[] = []
+    if (!title || title.length > 40){
+        errorMessages.push({message: 'Error', field: 'title'} )
     }
+    if (!author || author.length > 20){
+        errorMessages.push({message: 'Error', field: 'author'} )
+    }
+    if (!availableResolutions){
+        errorMessages.push({message: 'Error', field: 'availableResolutions'} )
+    }
+    if (errorMessages.length > 0 ){
+        return {errorMessages}
+    } else { return }
+
 }
 
 app.get('/', (req, res) => {
@@ -58,8 +69,9 @@ app.get('/videos/:id', (req: Request, res: Response) =>  {
     }
 });
 app.post('/videos', (req: Request, res: Response) => {
-    if (!req.body.title || req.body.title.length > 40 || !req.body.author || req.body.author.length > 20 || !req.body.availableResolutions){
-        res.status(400).send({ errorsMessages: [{ message: 'Error', field: "title" }] })
+    const errors = validateBody(req.body)
+    if (errors?.errorMessages){
+        res.status(400).send(errors)
         return;
     }
     const newVideo = {
@@ -92,8 +104,9 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
 app.put('/videos/:id', (req, res) => {
     const id = +req.params.id;
     const videoIndex = videos.findIndex(c => c.id === id);
-    if (!req.body.title || !req.body.author || !req.body.availableResolutions){
-        res.status(400).send({ errorsMessages: [{ message: 'Error', field: "title" }] })
+    const errors = validateBody(req.body)
+    if (errors?.errorMessages){
+        res.status(400).send(errors)
         return;
     }
     if (videoIndex >= 0) {

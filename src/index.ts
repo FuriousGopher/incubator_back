@@ -38,8 +38,9 @@ const validateBody = ({
                           title,
                           author,
                           availableResolutions,
-                          canBeDownloaded
-                      }: { title?: string, author?: string, availableResolutions?: resolutions[], canBeDownloaded?: unknown }): { errorsMessages: errorType[] } | undefined => {
+                          canBeDownloaded,
+                          minAgeRestriction
+                      }: { title?: string, author?: string, availableResolutions?: resolutions[], canBeDownloaded?: unknown, minAgeRestriction?: number }): { errorsMessages: errorType[] } | undefined => {
     const errorsMessages: errorType[] = []
     if (!title || title.length > 40) {
         errorsMessages.push({message: 'Error', field: 'title'})
@@ -54,6 +55,9 @@ const validateBody = ({
         if (!(typeof canBeDownloaded  === 'boolean')) {
             errorsMessages.push({message: 'Error', field: 'canBeDownloaded'})
         }
+    }
+    if (!minAgeRestriction || minAgeRestriction > 18 || minAgeRestriction < 1){
+        errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
     }
     if (errorsMessages.length > 0) {
         return {errorsMessages}

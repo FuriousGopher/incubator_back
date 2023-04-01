@@ -84,7 +84,7 @@ app.put('/videos/:id', (req, res) => {
     const id = +req.params.id;
     const videoIndex = videos.findIndex(c => c.id === id);
     if (!req.body.title || !req.body.author || !req.body.availableResolutions){
-        res.sendStatus(400).send({ errorsMessages: [{ message: 'Error', field: "title" }] })
+        res.status(400).send({ errorsMessages: [{ message: 'Error', field: "title" }] })
         return;
     }
     if (videoIndex >= 0) {

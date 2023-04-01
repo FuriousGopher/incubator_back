@@ -38,18 +38,17 @@ app.get('/', (req, res) => {
 
 })
 app.get('/videos', (req: Request, res: Response)=> {
-    res.send(videos)
-    res.sendStatus(200).send('All Videos')
-}) // why not work ?
+    res.status(200).send(videos)
+}) // why not work ? check /*TODO */
 app.get('/videos/:id', (req: Request, res: Response) => {
     const id = +req.params.id;
     const video = videos.find(c => c.id === id);
     if (video) {
-        res.sendStatus(200).send(video);
+        res.status(200).send(video);
     } else {
         res.status(404).send('Video not found');
     }
-});
+}); /*TODO check*/
 app.post('/videos', (req: Request, res: Response) => {
     if (!req.body.title || !req.body.author || !req.body.availableResolutions){
         res.sendStatus(400).send('Need write a title, author and resolution')
@@ -62,8 +61,8 @@ app.post('/videos', (req: Request, res: Response) => {
         availableResolutions: req.body.availableResolutions,
     };
     videos.push(newVideo)
-    res.status(201).send(newVideo)
-});
+    res.status(201).send('created')
+}); // received value must be a string /*TODO*/ CHECK
 app.delete('/testing/all-data', (req: Request, res: Response) =>{
     videos = []
     res.sendStatus(204).send('All data is deleted')
@@ -73,7 +72,7 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
     const newVideos = videos.filter(video => video.id !== id);
     if (newVideos.length < videos.length) {
         videos = newVideos;
-        res.sendStatus(204).send('No Content');
+        res.status(204).send('video was deleted');
     } else {
         res.sendStatus(404).send('Not Found')
     }

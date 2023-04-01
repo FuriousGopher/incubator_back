@@ -39,7 +39,7 @@ const validateBody = ({
                           author,
                           availableResolutions,
                           canBeDownloaded
-                      }: { title?: string, author?: string, availableResolutions?: resolutions[], canBeDownloaded?: boolean }): { errorMessages: errorType[] } | undefined => {
+                      }: { title?: string, author?: string, availableResolutions?: resolutions[], canBeDownloaded?: unknown }): { errorMessages: errorType[] } | undefined => {
     const errorMessages: errorType[] = []
     if (!title || title.length > 40) {
         errorMessages.push({message: 'Error', field: 'title'})
@@ -51,7 +51,7 @@ const validateBody = ({
         errorMessages.push({message: 'Error', field: 'availableResolutions'})
     }
     if (!(typeof canBeDownloaded  === 'undefined')) {
-        if (!Boolean(canBeDownloaded)) {
+        if (!(typeof canBeDownloaded  === 'boolean')) {
             errorMessages.push({message: 'Error', field: 'canBeDownloaded'})
         }
     }

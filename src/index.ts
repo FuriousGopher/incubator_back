@@ -34,7 +34,7 @@ type errorType = {
 }
 
 let videos: videosType[] = []
-const validateBody = ({title,author,availableResolutions}: {title?: string, author?: string, availableResolutions?: resolutions[]  }): {errorMessages: errorType[]} | undefined =>  {
+const validateBody = ({title,author,availableResolutions, canBeDownloaded}: {title?: string, author?: string, availableResolutions?: resolutions[] , canBeDownloaded?: boolean }): {errorMessages: errorType[]} | undefined =>  {
     const errorMessages: errorType[] = []
     if (!title || title.length > 40){
         errorMessages.push({message: 'Error', field: 'title'} )
@@ -44,6 +44,9 @@ const validateBody = ({title,author,availableResolutions}: {title?: string, auth
     }
     if (!availableResolutions){
         errorMessages.push({message: 'Error', field: 'availableResolutions'} )
+    }
+    if (Boolean(canBeDownloaded){
+        errorMessages.push({message: 'Error', field: 'canBeDownloaded'} )
     }
     if (errorMessages.length > 0 ){
         return {errorMessages}

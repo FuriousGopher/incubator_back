@@ -28,8 +28,17 @@ type videosType = {
     availableResolutions?: resolutions[] | null;
 }
 
-let videos: videosType[] = []
+type errorType = {
+    message: string
+    field: string
+}
 
+let videos: videosType[] = []
+const validateBody = (body: {title?: string, author?: string, availableResolutions?: resolutions[]  }) => {
+    if (!title){
+        return {}
+    }
+}
 
 app.get('/', (req, res) => {
 
@@ -49,7 +58,7 @@ app.get('/videos/:id', (req: Request, res: Response) =>  {
     }
 });
 app.post('/videos', (req: Request, res: Response) => {
-    if (!req.body.title || req.body.title.length > 40 || !req.body.author || !req.body.availableResolutions){
+    if (!req.body.title || req.body.title.length > 40 || !req.body.author || req.body.author.length > 20 || !req.body.availableResolutions){
         res.status(400).send({ errorsMessages: [{ message: 'Error', field: "title" }] })
         return;
     }

@@ -64,7 +64,6 @@ app.post('/videos', (req: Request, res: Response) => {
         createdAt: new Date().toISOString(),
         publicationDate: new Date().toISOString(),
     };
-    // @ts-ignore
     videos.push(newVideo)
     res.status(201).send(newVideo)
 }); // received value must be a string !!!!!!!!!!!!!
@@ -92,6 +91,10 @@ app.put('/videos/:id', (req, res) => {
             title: req.body.title,
             author: req.body.author,
             availableResolutions: req.body.availableResolutions || [],
+            canBeDownloaded: videos[videoIndex].canBeDownloaded,
+            minAgeRestriction: videos[videoIndex].minAgeRestriction,
+            createdAt: videos[videoIndex].createdAt,
+            publicationDate: new Date().toISOString(),
         };
         res.sendStatus(204);
     } else {

@@ -50,7 +50,7 @@ const validateBody = ({
     if (!availableResolutions) {
         errorMessages.push({message: 'Error', field: 'availableResolutions'})
     }
-    if (canBeDownloaded) {
+    if (!(typeof canBeDownloaded  === 'undefined')) {
         if (!Boolean(canBeDownloaded)) {
             errorMessages.push({message: 'Error', field: 'canBeDownloaded'})
         }

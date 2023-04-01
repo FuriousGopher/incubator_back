@@ -65,7 +65,7 @@ app.post('/videos', (req: Request, res: Response) => {
     };
     videos.push(newVideo)
     res.status(201).send(newVideo)
-}); // received value must be a string !!!!!!!!!!!!!
+}); // why date difference ?
 app.delete('/testing/all-data', (req: Request, res: Response) =>{
     videos = []
     res.sendStatus(204).send('All data is deleted')
@@ -90,8 +90,8 @@ app.put('/videos/:id', (req, res) => {
             title: req.body.title,
             author: req.body.author,
             availableResolutions: req.body.availableResolutions || [],
-            canBeDownloaded: videos[videoIndex].canBeDownloaded,
-            minAgeRestriction: videos[videoIndex].minAgeRestriction,
+            canBeDownloaded: req.body.canBeDownloaded,
+            minAgeRestriction: req.body.minAgeRestriction,
             createdAt: videos[videoIndex].createdAt,
             publicationDate: new Date().toISOString(),
         };

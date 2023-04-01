@@ -61,8 +61,8 @@ app.post('/videos', (req: Request, res: Response) => {
         availableResolutions: req.body.availableResolutions,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(),
-        publicationDate: new Date(),
+        createdAt: new Date().toISOString(),
+        publicationDate: new Date().toISOString(),
     };
     // @ts-ignore
     videos.push(newVideo)

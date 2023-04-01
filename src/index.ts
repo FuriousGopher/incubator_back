@@ -39,16 +39,16 @@ app.get('/', (req, res) => {
 })
 app.get('/videos', (req: Request, res: Response)=> {
     res.status(200).send(videos)
-}) // why not work ? check /*TODO */
+}) // why not work
 app.get('/videos/:id', (req: Request, res: Response) => {
-    const id = +req.params.id;
-    const video = videos.find(c => c.id === id);
+    let id = +req.params.id;
+    let video = videos.find(c => c.id === id);
     if (video) {
         res.status(200).send(video);
     } else {
         res.status(404).send('Video not found');
     }
-}); /*TODO check*/
+});
 app.post('/videos', (req: Request, res: Response) => {
     if (!req.body.title || !req.body.author || !req.body.availableResolutions){
         res.sendStatus(400).send('Need write a title, author and resolution')
@@ -60,7 +60,7 @@ app.post('/videos', (req: Request, res: Response) => {
     };
     videos.push(newVideo)
     res.sendStatus(201)
-}); // received value must be a string /*TODO*/ CHECK
+}); // received value must be a string
 app.delete('/testing/all-data', (req: Request, res: Response) =>{
     videos = []
     res.sendStatus(204).send('All data is deleted')

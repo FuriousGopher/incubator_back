@@ -62,7 +62,7 @@ const validateBody = ({
         errorsMessages.push({message: 'Error', field: 'author'}) 
     }
     if (!availableResolutions) {
-        errorsMessages.push({message: 'Error', field: 'availableResolutions'}) // how to check if they put not from array resolution ?
+        errorsMessages.push({message: 'Error', field: 'availableResolutions'})
     } else if (validateAvailableResolution(availableResolutions)) {
         errorsMessages.push({message: 'Error', field: 'availableResolutions'})
     }
@@ -75,8 +75,8 @@ const validateBody = ({
         errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
     }
 
-    if (publicationDate?.match(dataRegex)) {
-        errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
+    if (!publicationDate?.match(dataRegex)) {
+        errorsMessages.push({message: 'Error', field: 'publicationDate'})
     }
 
     if (errorsMessages.length > 0) {

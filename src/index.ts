@@ -53,7 +53,7 @@ const validateBody = ({
                           canBeDownloaded,
                           minAgeRestriction,
                           publicationDate
-                      }: { title?: string, author?: string, availableResolutions?: unknown[] | null, canBeDownloaded?: unknown, minAgeRestriction?: number, publicationDate?: string }): { errorsMessages: errorType[] } | undefined => {
+                      }: { title?: string, author?: string, availableResolutions?: unknown[] | null, canBeDownloaded?: unknown, minAgeRestriction?: number, publicationDate?: unknown }): { errorsMessages: errorType[] } | undefined => {
     const errorsMessages: errorType[] = []
     if (!title || title.length > 40) {
         errorsMessages.push({message: 'Error', field: 'title'})
@@ -75,7 +75,10 @@ const validateBody = ({
         errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
     }
     if (!(typeof publicationDate === 'undefined')) {
-        if (!publicationDate?.match(dataRegex)) {
+        if (typeof publicationDate !== "string") {
+            errorsMessages.push({message: 'Error', field: 'publicationDate'})
+
+        } else if (!publicationDate?.match(dataRegex)) {
             errorsMessages.push({message: 'Error', field: 'publicationDate'})
         }
     }

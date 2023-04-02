@@ -28,6 +28,16 @@ type videosType = {
     availableResolutions?: resolutions[] | null;
 }
 
+const validateAvailableResolution = (resolution: unknown[]): boolean => {
+    for (let i = 0; i < resolution.length; i++){
+        // @ts-ignore
+        if (!Object.values(resolutions).includes(resolution[i])){
+            return true
+        }
+    }
+    return false
+}
+
 type errorType = {
     message: string
     field: string
@@ -41,16 +51,18 @@ const validateBody = ({
                           canBeDownloaded,
                           minAgeRestriction,
                           publicationDate
-                      }: { title?: string, author?: string, availableResolutions?: resolutions[] | null, canBeDownloaded?: unknown, minAgeRestriction?: number, publicationDate?: string }): { errorsMessages: errorType[] } | undefined => {
+                      }: { title?: string, author?: string, availableResolutions?: unknown[] | null, canBeDownloaded?: unknown, minAgeRestriction?: number, publicationDate?: string }): { errorsMessages: errorType[] } | undefined => {
     const errorsMessages: errorType[] = []
     if (!title || title.length > 40) {
         errorsMessages.push({message: 'Error', field: 'title'})
     }
     if (!author || author.length > 20) {
-        errorsMessages.push({message: 'Error', field: 'author'})
+        errorsMessages.push({message: 'Error', field: 'author'}) 
     }
     if (!availableResolutions) {
-        errorsMessages.push({message: 'Error', field: 'availableResolutions'}) ////// whats if they put 'invalid? '
+        errorsMessages.push({message: 'Error', field: 'availableResolutions'}) // how to check if they put not from array resolution ?
+    } else if (validateAvailableResolution(availableResolutions)) {
+        errorsMessages.push({message: 'Error', field: 'availableResolutions'})
     }
     if (!(typeof canBeDownloaded === 'undefined')) {
         if (!(typeof canBeDownloaded === 'boolean')) {
@@ -148,3 +160,6 @@ app.put('/videos/:id', (req, res) => {
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
+
+
+

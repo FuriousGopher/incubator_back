@@ -31,9 +31,9 @@ type videosType = {
 const dataRegex = /^[0-9]{4}-((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01])|(0[469]|11)-(0[1-9]|[12][0-9]|30)|(02)-(0[1-9]|[12][0-9]))T(0[0-9]|1[0-9]|2[0-3]):(0[0-9]|[1-5][0-9]):(0[0-9]|[1-5][0-9])\.[0-9]{3}Z$/
 
 const validateAvailableResolution = (resolution: unknown[]): boolean => {
-    for (let i = 0; i < resolution.length; i++){
+    for (let i = 0; i < resolution.length; i++) {
         // @ts-ignore
-        if (!Object.values(resolutions).includes(resolution[i])){
+        if (!Object.values(resolutions).includes(resolution[i])) {
             return true
         }
     }
@@ -59,7 +59,7 @@ const validateBody = ({
         errorsMessages.push({message: 'Error', field: 'title'})
     }
     if (!author || author.length > 20) {
-        errorsMessages.push({message: 'Error', field: 'author'}) 
+        errorsMessages.push({message: 'Error', field: 'author'})
     }
     if (!availableResolutions) {
         errorsMessages.push({message: 'Error', field: 'availableResolutions'})
@@ -74,11 +74,11 @@ const validateBody = ({
     if (minAgeRestriction < 1 || minAgeRestriction > 19) {
         errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
     }
-
-    if (!publicationDate?.match(dataRegex)) {
-        errorsMessages.push({message: 'Error', field: 'publicationDate'})
+    if (!(typeof publicationDate === 'undefined')) {
+        if (!publicationDate?.match(dataRegex)) {
+            errorsMessages.push({message: 'Error', field: 'publicationDate'})
+        }
     }
-
     if (errorsMessages.length > 0) {
         return {errorsMessages}
     } else {

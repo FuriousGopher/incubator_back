@@ -61,9 +61,7 @@ const validateBody = ({
         errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
     }
 
-    if (!(publicationDate === new Date().toISOString())) {
-        errorsMessages.push({message: 'Error', field: 'publicationDate'})
-    }
+
     if (errorsMessages.length > 0) {
         return {errorsMessages}
     } else {

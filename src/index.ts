@@ -56,9 +56,9 @@ const validateBody = ({
             errorsMessages.push({message: 'Error', field: 'canBeDownloaded'})
         }
     }
-    //if (!minAgeRestriction || minAgeRestriction <= 1 || minAgeRestriction > 19) {
-     //   errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})///
-   // }//
+    if (!minAgeRestriction || null || minAgeRestriction > 19) {
+        errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
+    }
     if (errorsMessages.length > 0) {
         return {errorsMessages}
     } else {

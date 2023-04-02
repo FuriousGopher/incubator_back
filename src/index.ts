@@ -40,7 +40,7 @@ const validateBody = ({
                           availableResolutions,
                           canBeDownloaded,
                           minAgeRestriction
-                      }: { title?: string, author?: string, availableResolutions?: resolutions[], canBeDownloaded?: unknown, minAgeRestriction?: number | null }): { errorsMessages: errorType[] } | undefined => {
+                      }: { title?: string, author?: string, availableResolutions?: resolutions[] | null, canBeDownloaded?: unknown, minAgeRestriction?: number | null }): { errorsMessages: errorType[] } | undefined => {
     const errorsMessages: errorType[] = []
     if (!title || title.length > 40) {
         errorsMessages.push({message: 'Error', field: 'title'})

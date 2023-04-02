@@ -71,7 +71,7 @@ const validateBody = ({
             errorsMessages.push({message: 'Error', field: 'canBeDownloaded'})
         }
     }
-    if (minAgeRestriction < 1 || minAgeRestriction > 19) {
+    if (minAgeRestriction && minAgeRestriction < 1 || minAgeRestriction && minAgeRestriction > 19) {
         errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
     }
     if (!(typeof publicationDate === 'undefined')) {

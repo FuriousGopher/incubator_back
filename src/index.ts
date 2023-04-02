@@ -39,8 +39,9 @@ const validateBody = ({
                           author,
                           availableResolutions,
                           canBeDownloaded,
-                          minAgeRestriction
-                      }: { title?: string, author?: string, availableResolutions?: resolutions[] | null, canBeDownloaded?: unknown, minAgeRestriction?: number }): { errorsMessages: errorType[] } | undefined => {
+                          minAgeRestriction,
+                          publicationDate
+                      }: { title?: string, author?: string, availableResolutions?: resolutions[] | null, canBeDownloaded?: unknown, minAgeRestriction?: number, publicationDate?: string }): { errorsMessages: errorType[] } | undefined => {
     const errorsMessages: errorType[] = []
     if (!title || title.length > 40) {
         errorsMessages.push({message: 'Error', field: 'title'})
@@ -49,7 +50,7 @@ const validateBody = ({
         errorsMessages.push({message: 'Error', field: 'author'})
     }
     if (!availableResolutions) {
-        errorsMessages.push({message: 'Error', field: 'availableResolutions'})
+        errorsMessages.push({message: 'Error', field: 'availableResolutions'}) ////// whats if they put 'invalid? '
     }
     if (!(typeof canBeDownloaded === 'undefined')) {
         if (!(typeof canBeDownloaded === 'boolean')) {
@@ -58,6 +59,10 @@ const validateBody = ({
     }
     if (minAgeRestriction < 1 || minAgeRestriction > 19) {
         errorsMessages.push({message: 'Error', field: 'minAgeRestriction'})
+    }
+
+    if (!(publicationDate === new Date().toISOString())) {
+        errorsMessages.push({message: 'Error', field: 'publicationDate'})
     }
     if (errorsMessages.length > 0) {
         return {errorsMessages}
@@ -74,7 +79,7 @@ app.get('/', (req, res) => {
 })
 app.get('/videos', (req: Request, res: Response) => {
     res.status(200).send(videos)
-}) // why not work?
+})
 app.get('/videos/:id', (req: Request, res: Response) => {
     let id = +req.params.id;
     let video = videos.find(c => c.id === id);
@@ -102,11 +107,11 @@ app.post('/videos', (req: Request, res: Response) => {
     };
     videos.push(newVideo)
     res.status(201).send(newVideo)
-}); // why date difference ?
+});
 app.delete('/testing/all-data', (req: Request, res: Response) => {
     videos = []
     res.sendStatus(204).send('All data is deleted')
-}) // Test pass
+})
 app.delete('/videos/:id', (req: Request, res: Response) => {
     for (let i = 0; i < videos.length; i++) {
         if (videos[i].id === +req.params.id) {
@@ -116,7 +121,7 @@ app.delete('/videos/:id', (req: Request, res: Response) => {
         }
     }
     res.send(404)
-}); // Test pass
+});
 app.put('/videos/:id', (req, res) => {
     const id = +req.params.id;
     const videoIndex = videos.findIndex(c => c.id === id);

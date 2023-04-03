@@ -24,7 +24,7 @@ describe('/courses', () => {
         it (`shouldn't create course with incorrect input data`, async ()=>{
             await request(app)
                 .post('/courses')
-                .send({ title: ''})
+                .send({ title: 'ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg'})
                 .expect(400)
 
         })

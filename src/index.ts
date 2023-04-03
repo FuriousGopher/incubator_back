@@ -1,10 +1,13 @@
 import express, {Request, Response} from 'express'
+import {videosRouter} from "./routes/videos-router";
 
 export const app = express()
 const port = 3004
 
 const jsonBodyMiddleware = express.json()
 app.use(jsonBodyMiddleware)
+
+app.use('/test', videosRouter )
 
 enum resolutions {
     P144 = 'P144',

@@ -1,11 +1,14 @@
-import {Request, Response, Router} from 'express'
+import {Router} from 'express'
+import {
+    createVideo,
+    deleteVideoById,
+    getAllVideos,
+    getVideoById, updateVideoById
+} from "../controllers/videoController";
 export const videosRouter = Router()
 
-const test = [{id: 1, name: "test"}]
-
-
-videosRouter.get('/', (req: Request, res: Response) => {
-
-    res.send(test)
-
-})
+videosRouter.get('/', getAllVideos)
+videosRouter.get('/:id', getVideoById);
+videosRouter.post('/', createVideo);
+videosRouter.delete('/:id',deleteVideoById );
+videosRouter.put('/:id', updateVideoById );

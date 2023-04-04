@@ -65,7 +65,7 @@ const validateBody = ({
     }
     if (!availableResolutions) {
         errorsMessages.push({message: 'Error', field: 'availableResolutions'})
-    } else if (!validateAvailableResolution(availableResolutions)) {
+    } else if (validateAvailableResolution(availableResolutions)) {
         errorsMessages.push({message: 'Error', field: 'availableResolutions'})
     }
     if (!(typeof canBeDownloaded === 'undefined')) {

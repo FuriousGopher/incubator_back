@@ -3,7 +3,7 @@ import {Request, Response} from 'express'
 import {VideosType} from "../types/videoTypes";
 import {validateBody} from "../validators/videoValidators";
 
- let videos: VideosType[] = []
+let videos: VideosType[] = []
 
 export const getVideoById = (req: Request, res: Response) => {
     let id = +req.params.id;

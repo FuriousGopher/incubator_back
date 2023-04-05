@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 
-let blogs= ['1']
+let blogs= ['test Blog']
 
 export const getAllBlogs = (req: Request, res: Response) => {
     res.status(200).send(blogs)

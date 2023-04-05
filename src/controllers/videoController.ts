@@ -36,7 +36,7 @@ export const createVideo = (req: Request, res: Response) => {
     videos.push(newVideo)
     res.status(201).send(newVideo)
 }
-export const deleteAllVideos = (req: Request, res: Response) => {
+export const deleteEverything = (req: Request, res: Response) => {
     videos = []
     res.sendStatus(204).send('All data is deleted')
 }

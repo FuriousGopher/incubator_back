@@ -8,7 +8,6 @@ export type VideosType = {
     publicationDate?: string | null;
     availableResolutions?: Resolutions[] | null;
 }
-
 export enum Resolutions {
     P144 = 'P144',
     P240 = 'P240',
@@ -19,3 +18,7 @@ export enum Resolutions {
     P1440 = 'P1440',
     P2160 = 'P2160',
 }
+
+
+
+

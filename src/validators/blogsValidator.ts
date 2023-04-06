@@ -5,11 +5,17 @@ function isValidUrl(url: string) {
     return regex.test(url);
 }
 
-export const validatePostAndPutMethodsForPostsBody = ({
+export const validatePostAndPutMethodsForBlogsBody = ({
+                                                          id,
                                                           name,
                                                           description,
                                                           websiteUrl
-                                                      }: { name: string, description: string, websiteUrl: string }): {
+                                                      }: {
+    id: string,
+    name: string,
+    description: string,
+    websiteUrl: string
+}): {
     errorsMessages: ErrorType[]
 } | undefined => {
     const errorsMessages: ErrorType[] = []

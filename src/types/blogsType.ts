@@ -1,6 +1,6 @@
 export type BlogsType = {
     id: string;
-    title: string;
+    name: string;
     description: string;
     websiteUrl: string;
 }

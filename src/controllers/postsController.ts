@@ -7,7 +7,6 @@ let posts: PostsType [] = [];
 export const getAllPosts = (req: Request, res: Response) => {
     res.status(200).send(posts)
 } //// ready
-
 export const getPostsById = (req: Request, res: Response) => {
     let id = req.params.id;
     const post = posts.find(post => post.id === id);
@@ -17,7 +16,6 @@ export const getPostsById = (req: Request, res: Response) => {
         res.status(404).send('Post not found');
     }
 } ////// ready
-
 export const createNewPost = (req: Request, res: Response) => {
     const errors = validatePostAndPutMethodsForPostsBody(req.body)
     if (errors?.errorsMessages) {
@@ -32,13 +30,11 @@ export const createNewPost = (req: Request, res: Response) => {
         blogId: req.body.blogId,
         blogName: req.body.blogNmae,
     };
-    // @ts-ignore
     posts.push(newPost)
     res.status(201).send(newPost)
 
 
 } //// check where we take id and blogName? ready
-
 export const deletePostsById = (req: Request, res: Response) => {
     const id = req.params.id;
     const index = posts.findIndex(post => post.id === id);

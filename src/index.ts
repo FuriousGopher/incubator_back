@@ -22,7 +22,6 @@ app.use('/blogs', blogsRouter)
 
 app.use('/posts', postsRouter)
 
-
 testRouter.delete('/all-data', deleteEverything)
 
 app.use('/', (req: Request, res: Response) => {

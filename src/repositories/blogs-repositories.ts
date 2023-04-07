@@ -1,6 +1,6 @@
 import {BlogsType} from "../types/blogsType";
 
-const blogs = []  as BlogsType[]
+export const blogs = []  as BlogsType[]
 
 export const blogsRepositories = {
 

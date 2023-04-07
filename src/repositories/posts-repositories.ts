@@ -1,6 +1,6 @@
 import {PostsType} from "../types/postsType";
 
-let posts: PostsType [] = [];
+export let posts: PostsType [] = [];
 
 
 export const postsRepositories = {

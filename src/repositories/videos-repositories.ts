@@ -1,4 +1,6 @@
 import {VideosType} from "../types/videoTypes";
+import {blogs} from "./blogs-repositories";
+import {posts} from "./posts-repositories";
 
 let videos: VideosType[] = []
 
@@ -36,9 +38,12 @@ export const videosRepositories = {
         }
         return false;
     },
+    deleteEverything(videos: any[]): any[] {
+        videos.length = 0;
+        blogs.length = 0;
+        posts.length = 0;
 
-    deleteEverything() {
-        return videos = [];
+        return videos;
     },
 
     updateVideoById(id: number, video: VideosType) {

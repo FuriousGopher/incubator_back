@@ -26,7 +26,7 @@ export const videosRepositories = {
             publicationDate: new Date(new Date().getTime() + 48 * 60 * 60 * 1000).toISOString(),
         };
         videos.push(newVideo)
-        return video
+        return newVideo
     },
 
     deleteVideoById(id: number) {

@@ -2,7 +2,6 @@ import {Request, Response} from 'express'
 import {validatePostAndPutMethodsForBlogsBody} from "../validators/blogsValidator";
 import {blogsRepositories} from "../repositories/blogs-repositories";
 
-
 export const getAllBlogs = (req: Request, res: Response) => {
     const blogs = blogsRepositories.getAllBlogs()
     if (blogs) {
@@ -21,6 +20,7 @@ export const getBlogById = (req: Request, res: Response) => {
     }
 } ////// ready
 export const createNewBlog = (req: Request, res: Response) => {
+    
     const errors = validatePostAndPutMethodsForBlogsBody(req.body)
     if (errors?.errorsMessages) {
         res.status(400).send(errors)

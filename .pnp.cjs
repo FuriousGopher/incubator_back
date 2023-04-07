@@ -33,6 +33,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:18.15.11"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["express", "npm:4.18.2"],\
+            ["express-validator", "npm:6.15.0"],\
             ["jest", "virtual:f3303e5fb2cea51b96cf60df4da101c5cd86d91374fb0e37861f3b35c05f281e01577104337fbb084d9f9a922c856f8b9b53c8ded89ebbd218b547d0779e7d8e#npm:29.5.0"],\
             ["nodemon", "npm:2.0.22"],\
             ["npx", "npm:10.2.2"],\
@@ -1579,6 +1580,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@types/node", "npm:18.15.11"],\
             ["@types/supertest", "npm:2.0.12"],\
             ["express", "npm:4.18.2"],\
+            ["express-validator", "npm:6.15.0"],\
             ["jest", "virtual:f3303e5fb2cea51b96cf60df4da101c5cd86d91374fb0e37861f3b35c05f281e01577104337fbb084d9f9a922c856f8b9b53c8ded89ebbd218b547d0779e7d8e#npm:29.5.0"],\
             ["nodemon", "npm:2.0.22"],\
             ["npx", "npm:10.2.2"],\
@@ -3603,6 +3605,17 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["express-validator", [\
+        ["npm:6.15.0", {\
+          "packageLocation": "./.yarn/cache/express-validator-npm-6.15.0-4293d82a9a-05c6883c7c.zip/node_modules/express-validator/",\
+          "packageDependencies": [\
+            ["express-validator", "npm:6.15.0"],\
+            ["lodash", "npm:4.17.21"],\
+            ["validator", "npm:13.9.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["extend", [\
         ["npm:3.0.2", {\
           "packageLocation": "./.yarn/cache/extend-npm-3.0.2-e1ca07ac54-a50a8309ca.zip/node_modules/extend/",\
@@ -3770,7 +3783,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["dezalgo", "npm:1.0.4"],\
             ["hexoid", "npm:1.0.0"],\
             ["once", "npm:1.4.0"],\
-            ["qs", "npm:6.11.0"]\
+            ["qs", "npm:6.11.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -5630,6 +5643,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["lodash", [\
+        ["npm:4.17.21", {\
+          "packageLocation": "./.yarn/cache/lodash-npm-4.17.21-6382451519-eb835a2e51.zip/node_modules/lodash/",\
+          "packageDependencies": [\
+            ["lodash", "npm:4.17.21"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["lodash._baseindexof", [\
         ["npm:3.1.0", {\
           "packageLocation": "./.yarn/cache/lodash._baseindexof-npm-3.1.0-33cc4e3a6b-64780b5e4f.zip/node_modules/lodash._baseindexof/",\
@@ -7323,6 +7345,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           ],\
           "linkType": "HARD"\
         }],\
+        ["npm:6.11.1", {\
+          "packageLocation": "./.yarn/cache/qs-npm-6.11.1-1dedced93e-82ee78ef12.zip/node_modules/qs/",\
+          "packageDependencies": [\
+            ["qs", "npm:6.11.1"],\
+            ["side-channel", "npm:1.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }],\
         ["npm:6.4.1", {\
           "packageLocation": "./.yarn/cache/qs-npm-6.4.1-6ed403c084-d05cb45a9a.zip/node_modules/qs/",\
           "packageDependencies": [\
@@ -8350,7 +8380,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["formidable", "npm:2.1.2"],\
             ["methods", "npm:1.1.2"],\
             ["mime", "npm:2.6.0"],\
-            ["qs", "npm:6.11.0"],\
+            ["qs", "npm:6.11.1"],\
             ["semver", "npm:7.3.8"]\
           ],\
           "linkType": "HARD"\
@@ -9018,6 +9048,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["validate-npm-package-name", "npm:3.0.0"],\
             ["builtins", "npm:1.0.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["validator", [\
+        ["npm:13.9.0", {\
+          "packageLocation": "./.yarn/cache/validator-npm-13.9.0-54b07e9e81-e2c936f041.zip/node_modules/validator/",\
+          "packageDependencies": [\
+            ["validator", "npm:13.9.0"]\
           ],\
           "linkType": "HARD"\
         }]\

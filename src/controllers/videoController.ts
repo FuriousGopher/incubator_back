@@ -29,11 +29,6 @@ export const createVideo = (req: Request, res: Response) => {
     const newVideo = videosRepositories.createVideo(req.body)
     res.status(201).send(newVideo)
 }
-export const deleteEverything = (req: Request, res: Response) => {
-    const everythingIsDeleted = videosRepositories.deleteEverything([])
-    if (everythingIsDeleted){
-    res.sendStatus(204).send('All data is deleted')}
-}
 export const deleteVideoById = (req: Request, res: Response) => {
     const id: number = +req.params.id;
     const isDeleted = videosRepositories.deleteVideoById(id)

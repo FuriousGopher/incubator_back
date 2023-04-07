@@ -1,6 +1,6 @@
 import {Router} from "express";
 import {createNewPost, deletePostsById, getAllPosts, getPostsById, updatePostById} from "../controllers/postsController";
-import {loginValidationRules, validateLogin} from "../authorizationFun/authorization";
+import {loginValidationRules, validateLogin} from "../midlewares/authorization";
 export const postsRouter = Router()
 
 postsRouter.get('/', getAllPosts)

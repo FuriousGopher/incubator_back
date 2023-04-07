@@ -1,15 +1,18 @@
 import {Request, Response} from 'express'
 import {validatePostAndPutMethodsForPostsBody} from "../validators/postValidator";
-import {PostsType} from "../types/postsType";
+import {postsRepositories} from "../repositories/posts-repositories";
 
-let posts: PostsType [] = [];
 
 export const getAllPosts = (req: Request, res: Response) => {
-    res.status(200).send(posts)
+    const posts = postsRepositories.getAllPosts()
+    if (posts){
+        res.status(200).send(posts)
+    } else {
+    res.status(404).send('Posts not found')}
 } //// ready
 export const getPostsById = (req: Request, res: Response) => {
     let id = req.params.id;
-    const post = posts.find(post => post.id === id);
+    const post = postsRepositories.getPostsById(id)
     if (post) {
         res.status(200).send(post);
     } else {
@@ -22,24 +25,16 @@ export const createNewPost = (req: Request, res: Response) => {
         res.status(400).send(errors)
         return;
     }
-    const newPost = {
-        id: req.body.id,
-        title: req.body.title,
-        shortDescription: req.body.shortDescription,
-        content: req.body.content,
-        blogId: req.body.blogId,
-        blogName: req.body.blogNmae,
-    };
-    posts.push(newPost)
+    const newPost = postsRepositories.createNewPost(req.body)
+
     res.status(201).send(newPost)
 
 
 } //// check where we take id and blogName? ready
 export const deletePostsById = (req: Request, res: Response) => {
     const id = req.params.id;
-    const index = posts.findIndex(post => post.id === id);
-    if (index !== -1) {
-        posts.splice(index, 1);
+    const isDeleted = postsRepositories.deletePostsById(id)
+    if (isDeleted){
         res.sendStatus(204);
     } else {
         res.sendStatus(404);
@@ -47,22 +42,15 @@ export const deletePostsById = (req: Request, res: Response) => {
 } //// ready
 export const updatePostById = (req: Request, res: Response) => {
     const id = req.params.id;
-    const postIndex = posts.findIndex(post => post.id === id);
     const errors = validatePostAndPutMethodsForPostsBody(req.body)
     if (errors?.errorsMessages) {
         res.status(400).send(errors)
         return;
     }
-    if (postIndex >= 0) {
-        posts[postIndex] = {
-            id,
-            shortDescription: req.body.shortDescription,
-            title: req.body.title,
-            content: req.body.content,
-            blogId: req.body.blogId,
-        };
+    const isUpdated = postsRepositories.updatePostById(id, req.body)
+    if (isUpdated){
         res.sendStatus(204);
     } else {
-        res.status(404).send('Posts not found');
+        res.status(404).send('Post not found');
     }
 } /// ready

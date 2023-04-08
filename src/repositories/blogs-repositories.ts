@@ -1,6 +1,11 @@
 import {BlogsType} from "../types/blogsType";
 
-export const blogs = []  as BlogsType[]
+export const blogs = [{
+    id: "test",
+    name: "testName",
+    description: "testDescription",
+    websiteUrl: "testWebsiteUrl",
+}]  as BlogsType[]
 
 export const blogsRepositories = {
 

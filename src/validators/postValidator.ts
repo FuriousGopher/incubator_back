@@ -17,9 +17,9 @@ export const validatePostAndPutMethodsForPostsBody = ({
     if (!content || content.length > 1000) {
         errorsMessages.push({message: 'content max length 1000', field: 'content'})
     }
-    if (!blogId ) {
+    /*if (!blogId ) {
         errorsMessages.push({message: 'blogId must be included', field: 'blogId'})
-    }
+    }*/   ///check?
     if (errorsMessages.length > 0) {
         return {errorsMessages}
     } else {

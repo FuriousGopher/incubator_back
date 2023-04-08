@@ -19,7 +19,7 @@ export const validatePostAndPutMethodsForBlogsBody = ({
     errorsMessages: ErrorType[]
 } | undefined => {
     const errorsMessages: ErrorType[] = []
-    if (!name || name.length > 15) {
+    if (!name?.trim() || name.length > 15) {
         errorsMessages.push({message: 'name max length 15', field: 'name'})
     }
     if (!description || description.length > 500) {

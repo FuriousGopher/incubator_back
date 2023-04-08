@@ -3,7 +3,7 @@ import {body, validationResult, Meta} from "express-validator";
 
 const Body = body("Authorization")
 
-const validaterFunctioin = (value: any, { req, location, path }: Meta) => {
+export const validaterFunctioin = (value: any, { req, location, path }: Meta) => {
     const encoded = req.headers?.authorization.split(" ")[1];
     if (!encoded) {
         throw new Error("Invalid authorization header format");

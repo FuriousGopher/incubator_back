@@ -5,7 +5,12 @@ const Body = body("Authorization")
 
 export const validaterFunctioin = (value: any, { req, location, path }: Meta) => {
     const encoded = req.headers?.authorization.split(" ")[1];
-    if (!encoded) {
+    const name = req.headers?.authorization.split(" ")[0];
+    console.log(name)
+    console.log(encoded)
+    if (name !== "Basic"){
+        throw new Error("Invalid authorization header format");
+    } else if (!encoded) {
         throw new Error("Invalid authorization header format");
     }
     const decoded = Buffer.from(encoded, "base64").toString("utf-8");
@@ -15,6 +20,7 @@ export const validaterFunctioin = (value: any, { req, location, path }: Meta) =>
     }
     return true;
 }
+
 export const loginValidationRules = [
         body()
         .notEmpty()

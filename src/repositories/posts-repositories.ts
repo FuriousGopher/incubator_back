@@ -17,18 +17,15 @@ export const postsRepositories = {
 
     createNewPost(post: PostsType) {
         const foundBlog  = blogs.find(blog => blog.id === post.blogId);
+        if (!foundBlog) return
         const newPost = {
             id: uuid(),
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,
-            blogId: post.id,
-            blogName: post.blogName,
+            blogId: foundBlog.id,
+            blogName: foundBlog.name,
         };
-        if (foundBlog) {
-            newPost.blogId = foundBlog.id;
-            newPost.blogName = foundBlog.name;
-        }
 
         posts.push(newPost)
         return newPost

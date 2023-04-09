@@ -19,7 +19,7 @@ export const validatePostAndPutMethodsForPostsBody = ({
     }
     if (!blogId ) {
         errorsMessages.push({message: 'blogId must be included', field: 'blogId'})
-    }   ///check?
+    }
     if (errorsMessages.length > 0) {
         return {errorsMessages}
     } else {

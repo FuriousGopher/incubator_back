@@ -2,10 +2,10 @@ import {BlogsType} from "../types/blogsType";
 import { uuid } from 'uuidv4';
 
 export const blogs = [{
-    id: "test",
-    name: "testName",
-    description: "testDescription",
-    websiteUrl: "testWebsiteUrl",
+    id: "testBlog",
+    name: "testNameBlog",
+    description: "testDescriptionBlog",
+    websiteUrl: "https://www.youtube.com",
 }]  as BlogsType[]
 
 export const blogsRepositories = {
@@ -42,7 +42,7 @@ export const blogsRepositories = {
         const blogIndex = blogs.findIndex(blog => blog.id === id);
         if (blogIndex >= 0) {
             blogs[blogIndex] = {
-                id: blog.id,
+                id: blogs[blogIndex].id,
                 name: blog.name,
                 description: blog.description,
                 websiteUrl: blog.websiteUrl

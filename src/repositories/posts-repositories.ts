@@ -2,7 +2,14 @@ import {PostsType} from "../types/postsType";
 import {blogs} from "./blogs-repositories";
 import {uuid} from "uuidv4";
 
-export let posts: PostsType [] = [];
+export let posts: PostsType [] = [{
+    id: "testPost",
+    title: "testTittlePost",
+    shortDescription: "testShortDescription",
+    content: "testContent",
+    blogId: "testBlogId",
+    blogName: "testBlogName"
+}];
 
 
 export const postsRepositories = {
@@ -44,12 +51,12 @@ export const postsRepositories = {
         const postIndex = posts.findIndex(post => post.id === id);
         if (postIndex >= 0) {
             posts[postIndex] = {
-                id: post.id,
+                id: posts[postIndex].id,
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
                 blogId: post.blogId,
-                blogName: post.blogName
+                blogName: posts[postIndex].blogName
             }
             return true
         } else { return false }

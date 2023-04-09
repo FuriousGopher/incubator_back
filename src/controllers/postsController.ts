@@ -26,11 +26,15 @@ export const createNewPost = (req: Request, res: Response) => {
         return;
     }
     const newPost = postsRepositories.createNewPost(req.body)
+    if (!newPost){
+        res.status(400).send([{ message: "blogId", field: "blogId not found" }] )
+        return;
+    }
 
     res.status(201).send(newPost)
 
 
-} //// check where we take id and blogName? ready
+}
 export const deletePostsById = (req: Request, res: Response) => {
     const id = req.params.id;
     const isDeleted = postsRepositories.deletePostsById(id)

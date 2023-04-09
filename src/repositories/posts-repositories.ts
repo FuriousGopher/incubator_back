@@ -17,7 +17,6 @@ export const postsRepositories = {
 
     createNewPost(post: PostsType) {
         const foundBlog  = blogs.find(blog => blog.id === post.blogId);
-
         const newPost = {
             id: uuid(),
             title: post.title,

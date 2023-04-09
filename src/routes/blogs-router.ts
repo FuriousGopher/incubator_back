@@ -1,7 +1,7 @@
 import {Router} from "express";
 
 import {createNewBlog, deleteBlogById, getAllBlogs, getBlogById, updateBlogById} from "../controllers/blogsController";
-import {loginValidationRules, validateLogin} from "../midlewares/authorization";
+import {loginValidationRules, validateLogin} from "../middlewares/authorization";
 
 export const blogsRouter = Router()
 

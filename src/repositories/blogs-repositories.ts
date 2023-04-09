@@ -19,7 +19,6 @@ export const blogsRepositories = {
 
     createNewBlog(blog: BlogsType) {
         const newBlog = {
-            id: blog.id,
             name: blog.name,
             description: blog.description,
             websiteUrl: blog.websiteUrl

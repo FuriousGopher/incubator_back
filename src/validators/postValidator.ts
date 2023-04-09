@@ -1,6 +1,10 @@
 import {ErrorType} from "../types/errorType";
+import {BlogsType} from "../types/blogsType";
+import {blogs} from "../repositories/blogs-repositories";
 
-
+function blogExists(blogId: string, blogs: BlogsType[]): boolean {
+    return blogs.some(blog => blog.id === blogId);
+}
 export const validatePostAndPutMethodsForPostsBody = ({
                                  title,
                                  shortDescription,
@@ -19,6 +23,8 @@ export const validatePostAndPutMethodsForPostsBody = ({
     }
     if (!blogId ) {
         errorsMessages.push({message: 'blogId must be included', field: 'blogId'})
+    } else if (!blogExists(blogId, blogs)) {
+        errorsMessages.push({ message: 'blogId doesnt match', field: 'blogId' });
     }
     if (errorsMessages.length > 0) {
         return {errorsMessages}

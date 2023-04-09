@@ -21,23 +21,11 @@ export const getPostsById = (req: Request, res: Response) => {
 } ////// ready
 export const createNewPost = (req: Request, res: Response) => {
     const errors = validatePostAndPutMethodsForPostsBody(req.body)
-    let newPost = {} as any
-    if (!errors?.errorsMessages.find(error => error.field === 'blogId')){
-        newPost = postsRepositories.createNewPost(req.body)
-    }
-    if (!newPost && errors){
-        res.status(400).send([...errors.errorsMessages , { message: "blogId not found", field: "blogId" }] )
+    if (errors?.errorsMessages) {
+        res.status(400).send(errors)
         return;
     }
-    if (errors){
-        res.status(400).send(errors.errorsMessages )
-        return;
-    }
-    if (!newPost){
-        res.status(400).send([{ message: "blogId not found", field: "blogId" }] )
-        return;
-    }
-
+    const newPost = postsRepositories.createNewPost(req.body)
     res.status(201).send(newPost)
 }
 export const deletePostsById = (req: Request, res: Response) => {
@@ -62,4 +50,4 @@ export const updatePostById = (req: Request, res: Response) => {
     } else {
         res.status(404).send('Post not found');
     }
-} /// ready
+}

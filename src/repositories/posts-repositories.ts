@@ -1,6 +1,6 @@
 import {PostsType} from "../types/postsType";
-import {blogs} from "./blogs-repositories";
 import {uuid} from "uuidv4";
+
 
 export let posts: PostsType [] = [{
     id: "testPost",
@@ -23,15 +23,14 @@ export const postsRepositories = {
     },
 
     createNewPost(post: PostsType) {
-        const foundBlog  = blogs.find(blog => blog.id === post.blogId);
-        if (!foundBlog) return
+
         const newPost = {
             id: uuid(),
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,
-            blogId: foundBlog.id,
-            blogName: foundBlog.name,
+            blogId: post.id,
+            blogName: post.blogName,
         };
 
         posts.push(newPost)
@@ -55,7 +54,7 @@ export const postsRepositories = {
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
-                blogId: post.blogId,
+                blogId: post.id,
                 blogName: posts[postIndex].blogName
             }
             return true

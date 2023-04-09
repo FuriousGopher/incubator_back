@@ -20,7 +20,6 @@ export const getBlogById = (req: Request, res: Response) => {
     }
 } ////// ready
 export const createNewBlog = (req: Request, res: Response) => {
-    
     const errors = validatePostAndPutMethodsForBlogsBody(req.body)
     if (errors?.errorsMessages) {
         res.status(400).send(errors)

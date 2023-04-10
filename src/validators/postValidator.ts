@@ -14,6 +14,8 @@ export const validatePostAndPutMethodsForPostsBody = [
         .withMessage('title max length 30')
         .notEmpty(),
     body('shortDescription')
+        .isString()
+        .trim()
         .isLength({ max: 100 })
         .withMessage('shortDescription max length 100')
         .notEmpty(),

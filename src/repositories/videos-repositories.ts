@@ -1,4 +1,4 @@
-import {VideosType} from "../types/videoTypes";
+import {VideosType} from "../models/videoTypes";
 
 export let videos: VideosType[] = []
 
@@ -9,7 +9,7 @@ export const videosRepositories = {
     },
 
     getAllVideos() {
-        return videos.length ? videos : undefined;
+        return videos
     },
 
     createVideo(video: VideosType) {

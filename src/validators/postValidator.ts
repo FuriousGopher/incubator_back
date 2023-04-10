@@ -1,9 +1,9 @@
-import {body, validationResult} from 'express-validator';
-import { BlogsType } from '../types/blogsType';
+import {body} from 'express-validator';
+import { BlogsType } from '../models/blogsType';
 import { blogs } from '../repositories/blogs-repositories';
 
-function blogExists(blogId: string, blogs: BlogsType[]): boolean {
-    return blogs.some((blog) => blog.id === blogId);
+function blogExists(blogId: string, blogs: BlogsType[]): BlogsType | undefined {
+    return blogs.find((blog) => blog.id === blogId);
 }
 
 export const validatePostAndPutMethodsForPostsBody = [

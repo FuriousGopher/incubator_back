@@ -1,4 +1,4 @@
-import {PostsType} from "../types/postsType";
+import {PostsType} from "../models/postsType";
 import {uuid} from "uuidv4";
 import {blogs} from "./blogs-repositories";
 
@@ -16,7 +16,7 @@ export let posts: PostsType [] = [{
 export const postsRepositories = {
 
     getAllPosts() {
-        return posts.length ? posts : undefined;
+        return posts ;
     },
 
     getPostsById(id: string): PostsType | undefined {

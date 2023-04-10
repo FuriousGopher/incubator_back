@@ -5,8 +5,6 @@ export const getAllBlogs = (req: Request, res: Response) => {
     const blogs = blogsRepositories.getAllBlogs()
     if (blogs) {
         res.status(200).send(blogs);
-    } else {
-        res.status(404).send('Blogs not found');
     }
 } //// ready
 export const getBlogById = (req: Request, res: Response) => {

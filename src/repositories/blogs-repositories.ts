@@ -1,4 +1,4 @@
-import {BlogsType} from "../types/blogsType";
+import {BlogsType} from "../models/blogsType";
 import {uuid} from 'uuidv4';
 
 export const blogs = [{
@@ -15,7 +15,7 @@ export const blogsRepositories = {
     },
 
     getAllBlogs() {
-        return blogs.length ? blogs : undefined;
+        return blogs
     },
 
     createNewBlog(blog: BlogsType) {

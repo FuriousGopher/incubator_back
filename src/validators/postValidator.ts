@@ -8,6 +8,8 @@ function blogExists(blogId: string, blogs: BlogsType[]): boolean {
 
 export const validatePostAndPutMethodsForPostsBody = [
     body('title')
+        .isString()
+        .trim()
         .isLength({ max: 30 })
         .withMessage('title max length 30')
         .notEmpty(),
@@ -16,6 +18,8 @@ export const validatePostAndPutMethodsForPostsBody = [
         .withMessage('shortDescription max length 100')
         .notEmpty(),
     body('content')
+        .isString()
+        .trim()
         .isLength({ max: 1000 })
         .withMessage('content max length 1000')
         .notEmpty(),

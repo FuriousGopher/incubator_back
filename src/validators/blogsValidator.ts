@@ -6,9 +6,9 @@ export const validatePostAndPutMethodsForBlogsBody = [
     body('name')
         .isString()
         .isLength({ max: 15 })
+        .withMessage('name max length 15')
         .trim()
         .notEmpty()
-        .withMessage('name max length 15')
         .withMessage('name should not contain spaces'),
     body('description')
         .isLength({ max: 500 })

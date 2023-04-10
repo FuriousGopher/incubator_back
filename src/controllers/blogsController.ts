@@ -1,5 +1,4 @@
 import {Request, Response} from 'express'
-import {validatePostAndPutMethodsForBlogsBody} from "../validators/blogsValidator";
 import {blogsRepositories} from "../repositories/blogs-repositories";
 
 export const getAllBlogs = (req: Request, res: Response) => {

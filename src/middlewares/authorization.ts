@@ -1,7 +1,6 @@
-import {Request, Response} from "express";
-import {body, validationResult, Meta} from "express-validator";
+import {body, Meta} from "express-validator";
 
-const Body = body("Authorization")
+/*const Body = body("Authorization")*/
 
 export const validaterFunctioin = (value: any, { req, location, path }: Meta) => {
     const encoded = req.headers?.authorization.split(" ")[1];

@@ -1,12 +1,12 @@
 import {BlogsType} from "../types/blogsType";
-import { uuid } from 'uuidv4';
+import {uuid} from 'uuidv4';
 
 export const blogs = [{
     id: "testBlog",
     name: "testNameBlog",
     description: "testDescriptionBlog",
     websiteUrl: "https://www.youtube.com",
-}]  as BlogsType[]
+}] as BlogsType[]
 
 export const blogsRepositories = {
 
@@ -47,7 +47,9 @@ export const blogsRepositories = {
                 description: blog.description,
                 websiteUrl: blog.websiteUrl
             }
-         return true
-        } else { return false }
+            return true
+        } else {
+            return false
+        }
     }
 }

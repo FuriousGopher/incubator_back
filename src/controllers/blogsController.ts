@@ -27,7 +27,7 @@ export const createNewBlog = (req: Request, res: Response) => {
     }
     const newBlog = blogsRepositories.createNewBlog(req.body)
     res.status(201).send(newBlog)
-} //// check where we take id and blogName?
+} //// ready
 export const deleteBlogById = (req: Request, res: Response) => {
     const id = req.params.id;
     const isDeleted = blogsRepositories.deleteBlogById(id)

@@ -27,7 +27,7 @@ export const createNewPost = (req: Request, res: Response) => {
     }
     const newPost = postsRepositories.createNewPost(req.body)
     res.status(201).send(newPost)
-}
+}  ////// ready
 export const deletePostsById = (req: Request, res: Response) => {
     const id = req.params.id;
     const isDeleted = postsRepositories.deletePostsById(id)
@@ -50,4 +50,4 @@ export const updatePostById = (req: Request, res: Response) => {
     } else {
         res.status(404).send('Post not found');
     }
-}
+}  ////// ready

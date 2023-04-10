@@ -1,8 +1,6 @@
 import {body, validationResult} from 'express-validator';
-import { ErrorType } from '../types/errorType';
 import { BlogsType } from '../types/blogsType';
 import { blogs } from '../repositories/blogs-repositories';
-import {Request, Response, NextFunction} from "express";
 
 function blogExists(blogId: string, blogs: BlogsType[]): boolean {
     return blogs.some((blog) => blog.id === blogId);

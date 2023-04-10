@@ -1,6 +1,7 @@
-import {body, Meta} from "express-validator";
+import {Request, Response} from "express";
+import {body, validationResult, Meta} from "express-validator";
 
-/*const Body = body("Authorization")*/
+const Body = body("Authorization")
 
 export const validaterFunctioin = (value: any, { req, location, path }: Meta) => {
     const encoded = req.headers?.authorization.split(" ")[1];
@@ -27,3 +28,17 @@ export const loginValidationRules = [
         .bail()
         .custom(validaterFunctioin)
 ];
+export const validateLogin = (
+    req: Request,
+    res: Response,
+    next: any
+) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) {
+        return next();
+    }
+    const extractedErrors = errors.array().map((error) => error.msg);
+    return res.status(401).json({
+        errorsMessages: extractedErrors,
+    });
+};

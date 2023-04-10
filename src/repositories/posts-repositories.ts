@@ -59,7 +59,7 @@ export const postsRepositories = {
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
-                blogId: post.id,
+                blogId: post.blogId,
                 blogName: posts[postIndex].blogName
             }
             return true

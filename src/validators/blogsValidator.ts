@@ -23,10 +23,10 @@ export const validatePostAndPutMethodsForBlogsBody = [
 export const validationMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const errorMessages: ErrorType[] = errors.array().map((error) => {
+        const errorMessages: ErrorType[] = errors.array({onlyFirstError: true}).map((error) => {
             return { message: error.msg, field: error.param };
         });
-        return res.status(400).json({ errors: errorMessages });
+        return res.status(400).json({ errorsMessages: errorMessages });
     }
     next();
 }

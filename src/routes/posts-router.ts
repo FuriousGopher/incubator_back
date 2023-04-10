@@ -9,4 +9,4 @@ postsRouter.get('/', getAllPosts)
 postsRouter.get('/:id', getPostsById);
 postsRouter.post('/', loginValidationRules,validatePostAndPutMethodsForPostsBody, validateLogin, validationMiddleware, createNewPost);
 postsRouter.delete('/:id', loginValidationRules, validateLogin, deletePostsById);
-postsRouter.put('/:id', loginValidationRules,validatePostAndPutMethodsForPostsBody, validateLogin, validationMiddleware, updatePostById );
+postsRouter.put('/:id', validatePostAndPutMethodsForPostsBody, loginValidationRules, validateLogin, validationMiddleware, updatePostById );

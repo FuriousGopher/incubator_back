@@ -5,8 +5,8 @@ import {validatePostAndPutMethodsForBlogsBody} from "../validators/blogsValidato
 
 export const blogsRouter = Router()
 
-blogsRouter.get('/',   validatePostAndPutMethodsForBlogsBody, getAllBlogs);
-blogsRouter.get('/:id',validatePostAndPutMethodsForBlogsBody, getBlogById);
+blogsRouter.get('/', getAllBlogs);
+blogsRouter.get('/:id', getBlogById);
 blogsRouter.post('/', loginValidationRules, validateLogin, validatePostAndPutMethodsForBlogsBody, createNewBlog);
-blogsRouter.delete('/:id', loginValidationRules, validateLogin, validatePostAndPutMethodsForBlogsBody, deleteBlogById );
-blogsRouter.put('/:id', loginValidationRules, validateLogin, validatePostAndPutMethodsForBlogsBody, updateBlogById );
+blogsRouter.delete('/:id', loginValidationRules, validateLogin, deleteBlogById);
+blogsRouter.put('/:id', loginValidationRules, validateLogin, validatePostAndPutMethodsForBlogsBody, updateBlogById);

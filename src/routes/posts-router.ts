@@ -7,5 +7,5 @@ export const postsRouter = Router()
 postsRouter.get('/', getAllPosts)
 postsRouter.get('/:id', getPostsById);
 postsRouter.post('/', loginValidationRules,validatePostAndPutMethodsForPostsBody, validateLogin, createNewPost);
-postsRouter.delete('/:id', loginValidationRules,validatePostAndPutMethodsForPostsBody, validateLogin, deletePostsById);
+postsRouter.delete('/:id', loginValidationRules, validateLogin, deletePostsById);
 postsRouter.put('/:id', loginValidationRules,validatePostAndPutMethodsForPostsBody, validateLogin,  updatePostById );

@@ -28,17 +28,3 @@ export const loginValidationRules = [
         .bail()
         .custom(validaterFunctioin)
 ];
-export const validateLogin = (
-    req: Request,
-    res: Response,
-    next: any
-) => {
-    const errors = validationResult(req);
-    if (errors.isEmpty()) {
-        return next();
-    }
-    const extractedErrors = errors.array().map((error) => error.msg);
-    return res.status(401).json({
-        errors: extractedErrors,
-    });
-};

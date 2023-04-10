@@ -26,6 +26,8 @@ export const validatePostAndPutMethodsForPostsBody = [
         .withMessage('content max length 1000')
         .notEmpty(),
     body('blogId')
+        .isString()
+        .trim()
         .notEmpty()
         .withMessage('blogId must be included')
         .custom((value, { req }) => {

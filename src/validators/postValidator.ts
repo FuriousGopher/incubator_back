@@ -16,7 +16,7 @@ export const validatePostAndPutMethodsForPostsBody = [
     body('shortDescription')
         .isString()
         .trim()
-        .isLength({ max: 100 })
+        .isLength({ max: 100, min: 1})
         .withMessage('shortDescription max length 100')
         .notEmpty(),
     body('content')

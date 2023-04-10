@@ -20,11 +20,6 @@ export const getBlogById = (req: Request, res: Response) => {
     }
 } ////// ready
 export const createNewBlog = (req: Request, res: Response) => {
-    const errors = validatePostAndPutMethodsForBlogsBody(req.body)
-    if (errors?.errorsMessages) {
-        res.status(400).send(errors)
-        return;
-    }
     const newBlog = blogsRepositories.createNewBlog(req.body)
     res.status(201).send(newBlog)
 } //// ready
@@ -39,11 +34,6 @@ export const deleteBlogById = (req: Request, res: Response) => {
 } ///// ready
 export const updateBlogById = (req: Request, res: Response) => {
     const id = req.params.id;
-    const errors = validatePostAndPutMethodsForBlogsBody(req.body)
-    if (errors?.errorsMessages) {
-        res.status(400).send(errors)
-        return;
-    }
     const isUpdated =  blogsRepositories.updateBlogById(id, req.body)
     if (isUpdated){
         res.sendStatus(204);

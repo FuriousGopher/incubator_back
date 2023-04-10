@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
-import {validatePostAndPutMethodsForPostsBody} from "../validators/postValidator";
 import {postsRepositories} from "../repositories/posts-repositories";
+
 
 
 export const getAllPosts = (req: Request, res: Response) => {
@@ -20,11 +20,6 @@ export const getPostsById = (req: Request, res: Response) => {
     }
 } ////// ready
 export const createNewPost = (req: Request, res: Response) => {
-    const errors = validatePostAndPutMethodsForPostsBody(req.body)
-    if (errors?.errorsMessages) {
-        res.status(400).send(errors)
-        return;
-    }
     const newPost = postsRepositories.createNewPost(req.body)
     res.status(201).send(newPost)
 }  ////// ready
@@ -39,11 +34,6 @@ export const deletePostsById = (req: Request, res: Response) => {
 } //// ready
 export const updatePostById = (req: Request, res: Response) => {
     const id = req.params.id;
-    const errors = validatePostAndPutMethodsForPostsBody(req.body)
-    if (errors?.errorsMessages) {
-        res.status(400).send(errors)
-        return;
-    }
     const isUpdated = postsRepositories.updatePostById(id, req.body)
     if (isUpdated){
         res.sendStatus(204);

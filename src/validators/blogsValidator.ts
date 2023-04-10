@@ -1,41 +1,33 @@
-import {ErrorType} from "../types/errorType";
+import {body, validationResult} from 'express-validator';
+import { ErrorType } from '../types/errorType';
+import {Request, Response, NextFunction} from "express";
 
-function isValidUrl(url: string) {
-    const regex = /^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/;
-    return regex.test(url);
-}
+export const validatePostAndPutMethodsForBlogsBody = [
+    body('name')
+        .isLength({ max: 15 })
+        .withMessage('name max length 15')
+        .matches(/^[^\s]+$/)
+        .withMessage('name should not contain spaces'),
+    body('description')
+        .isLength({ max: 500 })
+        .withMessage('description max length 500'),
+    body('websiteUrl')
+        .isLength({ max: 100 })
+        .withMessage('websiteUrl max length 100')
+        .isURL()
+        .withMessage('Invalid URL'),
+    (req: Request, res: Response, next: NextFunction) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            const errorMessages: ErrorType[] = errors.array().map((error) => {
+                return { message: error.msg, field: error.param };
+            });
+            return res.status(400).json({ errors: errorMessages });
+        }
+        next();
+    },
+];
 
-export const validatePostAndPutMethodsForBlogsBody = ({
-                                                          id,
-                                                          name,
-                                                          description,
-                                                          websiteUrl
-                                                      }: {
-    id: string,
-    name: string,
-    description: string,
-    websiteUrl: string
-}): {
-    errorsMessages: ErrorType[]
-} | undefined => {
-    const errorsMessages: ErrorType[] = []
-    if (!name?.trim() || name.length > 15) {
-        errorsMessages.push({message: 'name max length 15', field: 'name'})
-    }
-    if (!description || description.length > 500) {
-        errorsMessages.push({message: 'description max length 500', field: 'description'})
-    }
-    if (!websiteUrl || websiteUrl.length > 100) {
-        errorsMessages.push({message: 'websiteUrl max length 100', field: 'websiteUrl'});
-    } else if (!isValidUrl(websiteUrl)) {
-        errorsMessages.push({message: 'Invalid URL', field: 'websiteUrl'});
-    }
-    if (errorsMessages.length > 0) {
-        return {errorsMessages}
-    } else {
-        return
-    }
-}
 
 
 

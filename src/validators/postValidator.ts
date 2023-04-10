@@ -30,14 +30,4 @@ export const validatePostAndPutMethodsForPostsBody = [
             }
             return true;
         }),
-    (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const errorMessages: ErrorType[] = errors.array().map((error) => {
-                return { message: error.msg, field: error.param };
-            });
-            return res.status(400).json({ errors: errorMessages });
-        }
-         next();
-    },
 ];

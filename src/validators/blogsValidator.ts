@@ -16,18 +16,17 @@ export const validatePostAndPutMethodsForBlogsBody = [
         .withMessage('websiteUrl max length 100')
         .isURL()
         .withMessage('Invalid URL'),
-    (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            const errorMessages: ErrorType[] = errors.array().map((error) => {
-                return { message: error.msg, field: error.param };
-            });
-            return res.status(400).json({ errors: errorMessages });
-        }
-        next();
-    },
 ];
 
-
+export const validationMiddleware = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        const errorMessages: ErrorType[] = errors.array().map((error) => {
+            return { message: error.msg, field: error.param };
+        });
+        return res.status(400).json({ errors: errorMessages });
+    }
+    next();
+}
 
 

@@ -23,14 +23,19 @@ export const postsRepositories = {
         return posts.find(post => post.id === id);
     },
     createNewPost(post: PostsType) {
-        const blog = blogs.find(blog => blog.name === post.blogName);
+
+        const blog = blogs.find((blog) => blog.id === post.blogId);
+        if (!blog) {
+            throw new Error(`Blog with id ${post.blogId} not found`);
+        }
+
         const newPost = {
             id: uuid(),
             title: post.title,
             shortDescription: post.shortDescription,
             content: post.content,
             blogId: post.blogId,
-            blogName: post.blogName,
+            blogName: blog.name,
         };
 
         posts.push(newPost)

@@ -26,7 +26,7 @@ export const postsRepositories = {
 
         const blog = blogs.find((blog) => blog.id === post.blogId);
         if (!blog) {
-            throw new Error(`Blog with id ${post.blogId} not found`);
+            return false
         }
 
         const newPost = {

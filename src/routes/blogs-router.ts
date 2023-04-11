@@ -1,12 +1,13 @@
 import {Router} from "express";
 import {createNewBlog, deleteBlogById, getAllBlogs, getBlogById, updateBlogById} from "../controllers/blogsController";
-import {loginValidationRules, validateLogin} from "../middlewares/authorization";
-import {validatePostAndPutMethodsForBlogsBody, validationMiddleware} from "../validators/blogsValidator";
+import {validatePostAndPutMethodsForBlogsBody} from "../validators/blogsValidator";
+import {checkAuthorization} from "../middlewares/checkAuthorization";
+import {validationMiddleware} from "../middlewares/ValidationErorrsMiddleware";
 
 export const blogsRouter = Router()
 
 blogsRouter.get('/', getAllBlogs);
 blogsRouter.get('/:id', getBlogById);
-blogsRouter.post('/', loginValidationRules,validateLogin, validatePostAndPutMethodsForBlogsBody, validationMiddleware, createNewBlog);
-blogsRouter.delete('/:id', loginValidationRules,validateLogin, deleteBlogById);
-blogsRouter.put('/:id', loginValidationRules,validateLogin, validatePostAndPutMethodsForBlogsBody, validationMiddleware, updateBlogById);
+blogsRouter.post('/', checkAuthorization, validatePostAndPutMethodsForBlogsBody, validationMiddleware, createNewBlog);
+blogsRouter.delete('/:id', checkAuthorization, deleteBlogById);
+blogsRouter.put('/:id', checkAuthorization, validatePostAndPutMethodsForBlogsBody, validationMiddleware, updateBlogById);

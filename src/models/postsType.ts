@@ -1,5 +1,3 @@
-import {BlogsType} from "./blogsType";
-
 export type PostsType = {
     id: string;
     title: string;

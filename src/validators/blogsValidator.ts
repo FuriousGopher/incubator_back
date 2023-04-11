@@ -1,6 +1,4 @@
-import {body, validationResult} from 'express-validator';
-import { ErrorType } from '../types/errorType';
-import {Request, Response, NextFunction} from "express";
+import {body} from 'express-validator';
 
 export const validatePostAndPutMethodsForBlogsBody = [
     body('name')
@@ -19,16 +17,5 @@ export const validatePostAndPutMethodsForBlogsBody = [
         .isURL()
         .withMessage('Invalid URL'),
 ];
-
-export const validationMiddleware = (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        const errorMessages: ErrorType[] = errors.array({onlyFirstError: true}).map((error) => {
-            return { message: error.msg, field: error.param };
-        });
-        return res.status(400).json({ errorsMessages: errorMessages });
-    }
-    next();
-}
 
 

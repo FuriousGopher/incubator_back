@@ -6,14 +6,14 @@ import {
     getPostsById,
     updatePostById
 } from "../controllers/postsController";
-import {loginValidationRules, validateLogin} from "../middlewares/authorization";
 import {validatePostAndPutMethodsForPostsBody} from "../validators/postValidator";
-import {validationMiddleware} from "../validators/blogsValidator";
+import {checkAuthorization} from "../middlewares/checkAuthorization";
+import {validationMiddleware} from "../middlewares/ValidationErorrsMiddleware";
 
 export const postsRouter = Router()
 
 postsRouter.get('/', getAllPosts)
 postsRouter.get('/:id', getPostsById);
-postsRouter.post('/', loginValidationRules, validateLogin, validatePostAndPutMethodsForPostsBody, validationMiddleware,  createNewPost);
-postsRouter.delete('/:id', loginValidationRules, validateLogin, deletePostsById);
-postsRouter.put('/:id', loginValidationRules, validateLogin, validatePostAndPutMethodsForPostsBody, validationMiddleware, updatePostById);
+postsRouter.post('/', checkAuthorization, validatePostAndPutMethodsForPostsBody, validationMiddleware,  createNewPost);
+postsRouter.delete('/:id',checkAuthorization, deletePostsById);
+postsRouter.put('/:id',checkAuthorization, validatePostAndPutMethodsForPostsBody, validationMiddleware, updatePostById);

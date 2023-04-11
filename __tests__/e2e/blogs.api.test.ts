@@ -4,13 +4,18 @@ import {app} from '../../src'
 
 
 
-
+describe('Delete all DB', ()=>{
+    it('delete all db', async ()=>{
+        const response = await request(app).delete('/testing/all-data');
+        expect(response.status).toEqual(204);
+    })
+}) //// work
 describe('getAllBlogs endpoint', () => {
 
     it('should all blogs', async () => {
         const response = await request(app).get('/blogs');
         expect(response.status).toEqual(200);
-        expect(response.text).toEqual([]);
+        expect(response.text).toEqual("[]");
     });
 }); ///ready
 

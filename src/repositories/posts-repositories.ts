@@ -1,6 +1,6 @@
 import {PostsType} from "../models/postsType";
 import {uuid} from "uuidv4";
-import {blogs} from "./blogs-repositories";
+import {__blogs} from "./blogs-repositories";
 
 
 export let posts: PostsType [] = [{
@@ -24,7 +24,7 @@ export const postsRepositories = {
     },
     async createNewPost(post: PostsType) {
 
-        const blog = blogs.find((blog) => blog.id === post.blogId);
+        const blog = __blogs.find((blog) => blog.id === post.blogId);
         if (!blog) {
             return false
         }

@@ -21,7 +21,7 @@ export const getAllVideos = async (req: Request, res: Response) => {
     }
 }
 export const createVideo =async (req: Request, res: Response) => {
-    const newVideo = videosRepositories.createVideo(req.body)
+    const newVideo = await videosRepositories.createVideo(req.body)
     res.status(201).send(newVideo)
 }
 export const deleteVideoById =async (req: Request, res: Response) => {

@@ -1,6 +1,6 @@
 import {body} from 'express-validator';
 import { BlogsType } from '../models/blogsType';
-import { blogs } from '../repositories/blogs-repositories';
+import { __blogs } from '../repositories/blogs-repositories';
 
 function blogExists(blogId: string, blogs: BlogsType[]): BlogsType | undefined {
     return blogs.find((blog) => blog.id === blogId);
@@ -31,7 +31,7 @@ export const validatePostAndPutMethodsForPostsBody = [
         .notEmpty()
         .withMessage('blogId must be included')
         .custom((value, { req }) => {
-            if (!blogExists(value, blogs)) {
+            if (!blogExists(value, __blogs)) {
                 throw new Error('blogId doesnt match');
             }
             return true;

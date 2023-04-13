@@ -1,7 +1,6 @@
 import {BlogsType} from "../models/blogsType";
 import {uuid} from 'uuidv4';
-import {FindCursor, WithId} from "mongodb";
-import {client} from "./db";
+
 
 export const __blogs = [{
     id: "testBlog",
@@ -12,8 +11,8 @@ export const __blogs = [{
 
 export const blogsRepositories = {
 
-    async getBlogById(id: string): Promise<FindCursor<WithId<BlogsType>>> {
-        return client.db("blogs").collection<BlogsType>("blog").find({id: id}) /////// work ?
+    async getBlogById(id: string): Promise<BlogsType | undefined> {
+        return __blogs.find(blog => blog.id === id);
     },
 
     async getAllBlogs() {
@@ -27,7 +26,6 @@ export const blogsRepositories = {
             description: blog.description,
             websiteUrl: blog.websiteUrl
         };
-        await client.db("blogs").collection<BlogsType>("blog").insertOne(newBlog)
         __blogs.push(newBlog)
         return newBlog
     },

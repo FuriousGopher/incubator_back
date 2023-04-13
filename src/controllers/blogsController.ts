@@ -1,40 +1,41 @@
 import {Request, Response} from 'express'
 import {blogsRepositories} from "../repositories/blogs-repositories";
+import {HttpStatusCode} from "../types/HTTP-Response";
 
-export const getAllBlogs = (req: Request, res: Response) => {
-    const blogs = blogsRepositories.getAllBlogs()
+export const getAllBlogs = async (req: Request, res: Response) => {
+    const blogs = await blogsRepositories.getAllBlogs()
     if (blogs) {
-        res.status(200).send(blogs);
+        res.status(HttpStatusCode.OK).send(blogs);
     }
 } //// ready
-export const getBlogById = (req: Request, res: Response) => {
+export const getBlogById = async (req: Request, res: Response) => {
     let id = req.params.id;
-    const blog = blogsRepositories.getBlogById(id)
+    const blog = await blogsRepositories.getBlogById(id)
     if (blog) {
-        res.status(200).send(blog);
+        res.status(HttpStatusCode.OK).send(blog);
     } else {
-        res.status(404).send('Blog not found');
+        res.status(HttpStatusCode.NotFound).send('Blog not found');
     }
-} ////// ready
-export const createNewBlog = (req: Request, res: Response) => {
-    const newBlog = blogsRepositories.createNewBlog(req.body)
+} ////// ready hw3
+export const createNewBlog = async (req: Request, res: Response) => {
+    const newBlog = await blogsRepositories.createNewBlog(req.body)
     res.status(201).send(newBlog)
 } //// ready
-export const deleteBlogById = (req: Request, res: Response) => {
+export const deleteBlogById = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const isDeleted = blogsRepositories.deleteBlogById(id)
+    const isDeleted = await blogsRepositories.deleteBlogById(id)
     if (isDeleted){
-    res.sendStatus(204);
+    res.sendStatus(HttpStatusCode.NoContent);
 } else {
-    res.sendStatus(404);
+    res.sendStatus(HttpStatusCode.NotFound);
 }
 } ///// ready
-export const updateBlogById = (req: Request, res: Response) => {
+export const updateBlogById = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const isUpdated =  blogsRepositories.updateBlogById(id, req.body)
+    const isUpdated = await blogsRepositories.updateBlogById(id, req.body)
     if (isUpdated){
-        res.sendStatus(204);
+        res.sendStatus(HttpStatusCode.NoContent);
     } else {
-        res.status(404).send('Blog not found');
+        res.status(HttpStatusCode.NotFound).send('Blog not found');
     }
 } ///// ready

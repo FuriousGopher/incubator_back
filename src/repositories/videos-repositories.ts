@@ -4,15 +4,15 @@ export let videos: VideosType[] = []
 
 export const videosRepositories = {
 
-    getVideoById(id: number): VideosType | undefined {
+    async getVideoById(id: number): Promise<VideosType | undefined> {
         return videos.find(c => c.id === id);
     },
 
-    getAllVideos() {
+    async getAllVideos() {
         return videos
     },
 
-    createVideo(video: VideosType) {
+    async createVideo(video: VideosType) {
         const newVideo = {
             id: +(new Date()),
             title: video.title,
@@ -27,7 +27,7 @@ export const videosRepositories = {
         return newVideo
     },
 
-    deleteVideoById(id: number) {
+    async deleteVideoById(id: number) {
         for (let i = 0; i < videos.length; i++) {
             if (videos[i].id === id) {
                 videos.splice(i, 1);
@@ -38,7 +38,7 @@ export const videosRepositories = {
     },
 
 
-    updateVideoById(id: number, video: VideosType) {
+    async updateVideoById(id: number, video: VideosType) {
         const videoIndex = videos.findIndex(c => c.id === id);
         if (videoIndex >= 0) {
             videos[videoIndex] = {

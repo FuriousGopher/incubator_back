@@ -15,14 +15,14 @@ export let posts: PostsType [] = [{
 
 export const postsRepositories = {
 
-    getAllPosts() {
-        return posts ;
+    async getAllPosts() {
+        return posts;
     },
 
-    getPostsById(id: string): PostsType | undefined {
+    async getPostsById(id: string): Promise<PostsType | undefined> {
         return posts.find(post => post.id === id);
     },
-    createNewPost(post: PostsType) {
+    async createNewPost(post: PostsType) {
 
         const blog = blogs.find((blog) => blog.id === post.blogId);
         if (!blog) {
@@ -42,7 +42,7 @@ export const postsRepositories = {
         return newPost
     },
 
-    deletePostsById(id: string) {
+    async deletePostsById(id: string) {
         const index = posts.findIndex(post => post.id === id);
         if (index !== -1) {
             posts.splice(index, 1);
@@ -51,7 +51,7 @@ export const postsRepositories = {
         return false
     },
 
-    updatePostById(id: string, post: PostsType) {
+    async updatePostById(id: string, post: PostsType) {
         const postIndex = posts.findIndex(post => post.id === id);
         if (postIndex >= 0) {
             posts[postIndex] = {
@@ -63,6 +63,8 @@ export const postsRepositories = {
                 blogName: posts[postIndex].blogName
             }
             return true
-        } else { return false }
+        } else {
+            return false
+        }
     }
 }

@@ -10,15 +10,15 @@ export const blogs = [{
 
 export const blogsRepositories = {
 
-    getBlogById(id: string): BlogsType | undefined {
+    async getBlogById(id: string): Promise<BlogsType | undefined> {
         return blogs.find(blog => blog.id === id);
     },
 
-    getAllBlogs() {
+    async getAllBlogs() {
         return blogs
     },
 
-    createNewBlog(blog: BlogsType) {
+    async createNewBlog(blog: BlogsType) {
         const newBlog = {
             id: uuid(),
             name: blog.name,
@@ -29,7 +29,7 @@ export const blogsRepositories = {
         return newBlog
     },
 
-    deleteBlogById(id: string) {
+    async deleteBlogById(id: string) {
         const index = blogs.findIndex(blog => blog.id === id);
         if (index !== -1) {
             blogs.splice(index, 1);
@@ -38,7 +38,7 @@ export const blogsRepositories = {
         return false
     },
 
-    updateBlogById(id: string, blog: BlogsType) {
+    async updateBlogById(id: string, blog: BlogsType) {
         const blogIndex = blogs.findIndex(blog => blog.id === id);
         if (blogIndex >= 0) {
             blogs[blogIndex] = {

@@ -7,7 +7,7 @@ export const getAllBlogs = async (req: Request, res: Response) => {
     if (blogs) {
         res.status(HttpStatusCode.OK).send(blogs);
     }
-} //// ready
+}
 export const getBlogById = async (req: Request, res: Response) => {
     let id = req.params.id;
     const blog = await blogsRepositories.getBlogById(id)
@@ -16,11 +16,11 @@ export const getBlogById = async (req: Request, res: Response) => {
     } else {
         res.status(HttpStatusCode.NotFound).send('Blog not found');
     }
-} ////// ready hw3
+}
 export const createNewBlog = async (req: Request, res: Response) => {
     const newBlog = await blogsRepositories.createNewBlog(req.body)
     res.status(201).send(newBlog)
-} //// ready
+}
 export const deleteBlogById = async (req: Request, res: Response) => {
     const id = req.params.id;
     const isDeleted = await blogsRepositories.deleteBlogById(id)
@@ -29,7 +29,7 @@ export const deleteBlogById = async (req: Request, res: Response) => {
 } else {
     res.sendStatus(HttpStatusCode.NotFound);
 }
-} ///// ready
+}
 export const updateBlogById = async (req: Request, res: Response) => {
     const id = req.params.id;
     const isUpdated = await blogsRepositories.updateBlogById(id, req.body)
@@ -39,3 +39,5 @@ export const updateBlogById = async (req: Request, res: Response) => {
         res.status(HttpStatusCode.NotFound).send('Blog not found');
     }
 } ///// ready
+
+

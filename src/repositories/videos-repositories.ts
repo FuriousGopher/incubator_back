@@ -9,10 +9,10 @@ export const videosRepositories = {
     },
 
     async getAllVideos() {
-        return videos
+        return videos;
     },
 
-    async createVideo(video: VideosType) {
+    async createVideo(video:  VideosType) {
         const newVideo = {
             id: +(new Date()),
             title: video.title,

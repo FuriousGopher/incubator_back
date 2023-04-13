@@ -8,7 +8,7 @@ if (!mongoURI){
 }
 export const client = new MongoClient(mongoURI);
 
-
+// const for git
 console.log(process.env.MONGO_URL)
 export async function runDb() {
     try {

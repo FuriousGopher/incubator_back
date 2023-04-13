@@ -1,7 +1,7 @@
 import {BlogsType} from "../models/blogsType";
 import {uuid} from 'uuidv4';
-import {FindCursor, WithId} from "mongodb";
-import {client} from "./db";
+import {WithId} from "mongodb";
+import {blogsCollection} from "../models/dbCollections";
 
 export const __blogs = [{
     id: "testBlog",
@@ -12,12 +12,12 @@ export const __blogs = [{
 
 export const blogsRepositories = {
 
-    async getBlogById(id: string): Promise<FindCursor<WithId<BlogsType>>> {
-        return client.db("blogs").collection<BlogsType>("blog").find({id: id}) /////// work ?
+    async getBlogById(id: string): Promise<WithId<BlogsType> | null> {
+        return blogsCollection.findOne({id: id})
     },
 
     async getAllBlogs() {
-        return __blogs
+        return blogsCollection.find().toArray();
     },
 
     async createNewBlog(blog: BlogsType) {
@@ -27,32 +27,24 @@ export const blogsRepositories = {
             description: blog.description,
             websiteUrl: blog.websiteUrl
         };
-        await client.db("blogs").collection<BlogsType>("blog").insertOne(newBlog)
-        __blogs.push(newBlog)
+        await blogsCollection.insertOne(newBlog)
         return newBlog
     },
 
     async deleteBlogById(id: string) {
-        const index = __blogs.findIndex(blog => blog.id === id);
-        if (index !== -1) {
-            __blogs.splice(index, 1);
-            return true
-        }
-        return false
+        const result = await blogsCollection.deleteOne({id: id})
+        return result.deletedCount === 1
     },
 
     async updateBlogById(id: string, blog: BlogsType) {
-        const blogIndex =  __blogs.findIndex(blog => blog.id === id);
-        if (blogIndex >= 0) {
-            __blogs[blogIndex] = {
-                id: __blogs[blogIndex].id,
-                name: blog.name,
-                description: blog.description,
-                websiteUrl: blog.websiteUrl
-            }
-            return true
-        } else {
-            return false
-        }
+        const result = await blogsCollection.updateOne({id: id},
+            {
+                $set: {
+                    name: blog.name,
+                    description: blog.description,
+                    websiteUrl: blog.websiteUrl
+                }
+            })
+        return result.matchedCount === 1
     }
 }

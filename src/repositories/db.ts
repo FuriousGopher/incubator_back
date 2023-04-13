@@ -1,15 +1,16 @@
 import {MongoClient} from 'mongodb'
-import dotenv from 'dotenv'
-
-
+import * as dotenv from 'dotenv'
 dotenv.config()
 
-const mongoURI = process.env.MONGO_URL || 'mongodb://0.0.0.0:27017'
+
+const mongoURI = process.env.MONGO_URL
+if (!mongoURI){
+    throw new Error('URL problem ')
+}
+export const client = new MongoClient(mongoURI);
 
 
 console.log(process.env.MONGO_URL)
-export const client = new MongoClient(mongoURI);
-
 export async function runDb() {
     try {
         await client.connect();

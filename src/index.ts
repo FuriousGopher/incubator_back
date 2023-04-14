@@ -30,6 +30,7 @@ app.use('/', (req: Request, res: Response) => {
     res.sendFile(file);
 })
 
+///test
 
 const startApp = async () => {
     await runDb()

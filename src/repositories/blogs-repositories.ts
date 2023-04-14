@@ -3,12 +3,6 @@ import {uuid} from 'uuidv4';
 import {WithId} from "mongodb";
 import {blogsCollection} from "../models/dbCollections";
 
-export const __blogs = [{
-    id: "testBlog",
-    name: "testNameBlog",
-    description: "testDescriptionBlog",
-    websiteUrl: "https://www.youtube.com",
-}] as BlogsType[]
 
 export const blogsRepositories = {
 

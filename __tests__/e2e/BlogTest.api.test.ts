@@ -2,20 +2,20 @@ import {app} from "../../src";
 
 const request = require('supertest');
 
-describe('posts API', () => {
+describe('blogs API', () => {
     const correctAuthorizationHeader = 'Basic ' + Buffer.from('admin:qwerty').toString('base64');
     const incorrectAuthorizationHeader = 'Basic ' + Buffer.from('wrong:creds').toString('base64');
 
-    describe('GET /posts', () => {
-        it('should return a list of posts', async () => {
-            const response = await request(app).get('/posts');
+    describe('GET /blogs', () => {
+        it('should return a list of blogs', async () => {
+            const response = await request(app).get('/blogs');
             expect(response.status).toBe(200);
             expect(response.body).toBeInstanceOf(Array);
         });
-    }); /// R
-    describe('GET /posts/:id', () => {
-        it('should return a post by id', async () => {
-            const response = await request(app).get('/posts/100');
+    });
+    describe('GET /blogs/:id', () => {
+        it('should return a blog by id', async () => {
+            const response = await request(app).get('/blogs/100');
             expect(response.status).toBe(200);
             expect(response.body).toMatchObject({id: '100'});
         });
@@ -24,22 +24,21 @@ describe('posts API', () => {
             const response = await request(app).get('/blogs/123456789012345678901234');
             expect(response.status).toBe(404);
         });
-    }); /// R
-    describe('POST /posts', () => {
-        it('should create a new post', async () => {
-            const newPost = {
-                "title": "mongoDBTest",
-                "shortDescription": "testShortDescription",
-                "content": "testContent",
-                "blogId": "101"
-
+    });
+    describe('POST /blogs', () => {
+        it('should create a new blog', async () => {
+            const newBlog = {
+                name: 'Test Blog',
+                description: 'This is a test blog',
+                websiteUrl: 'https://testblog.com',
             };
             const response = await request(app)
-                .post('/posts')
+                .post('/blogs')
                 .set('Authorization', correctAuthorizationHeader)
-                .send(newPost);
+                .send(newBlog);
             expect(response.status).toBe(201);
-            expect(response.body).toMatchObject(newPost);
+            expect(response.body).toMatchObject(newBlog);
+            expect(response.body).toHaveProperty('id');
         });
 
         it('should return a 401 error if the user is not authorized', async () => {
@@ -69,37 +68,35 @@ describe('posts API', () => {
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('errorsMessages');
         });
-    }); /// R
-    describe('PUT /posts/:id', () => {
-        it('should update a posts by id', async () => {
-            const updatedPost = {
-                "title": "UpdatedPost",
-                "shortDescription": "ivandec",
-                "content": "https://www.youtube.com",
-                "blogId": "101"
-
+    });
+    describe('PUT /blogs/:id', () => {
+        it('should update a blog by id', async () => {
+            const updatedBlog = {
+                name: 'Updated Blog',
+                description: 'This blog has been updated',
+                websiteUrl: 'https://updatedblog.com',
             };
             const response = await request(app)
-                .put('/posts/100')
+                .put('/blogs/100')
                 .set('Authorization', correctAuthorizationHeader)
-                .send(updatedPost);
+                .send(updatedBlog);
             expect(response.status).toBe(204);
         });
 
         it('should return a 401 error if the user is not authorized', async () => {
         });
-    }); /// R
-    describe('DELETE /blpostsogs/:id', () => {
-        it('should return 204 No Content on successful deletion of a post', async () => {
+    });
+    describe('DELETE /blogs/:id', () => {
+        it('should return 204 No Content on successful deletion of a blog', async () => {
 
             const deleteResponse = await request(app)
-                .delete(`/posts/100`)
+                .delete(`/blogs/100`)
                 .set('Authorization', 'Basic YWRtaW46cXdlcnR5');
 
             expect(deleteResponse.status).toBe(204);
         });
 
-        it('should return 404 Not Found if the post to delete does not exist', async () => {
+        it('should return 404 Not Found if the blog to delete does not exist', async () => {
             // delete a blog that does not exist
             const deleteResponse = await request(app)
                 .delete('/blogs/123456')
@@ -107,5 +104,5 @@ describe('posts API', () => {
 
             expect(deleteResponse.status).toBe(404);
         });
-    });  /////// R
-});
+    });
+}); //// all working

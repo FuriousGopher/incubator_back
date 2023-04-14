@@ -1,32 +1,24 @@
 import {PostsType} from "../models/postsType";
 import {uuid} from "uuidv4";
-import {__blogs} from "./blogs-repositories";
-
-
-export let posts: PostsType [] = [{
-    id: "testPost",
-    title: "testTittlePost",
-    shortDescription: "testShortDescription",
-    content: "testContent",
-    blogId: "testBlogId",
-    blogName: "testBlogName"
-}];
+import {blogsCollection, postsCollection} from "../models/dbCollections";
+import {WithId} from "mongodb";
 
 
 export const postsRepositories = {
 
     async getAllPosts() {
-        return posts;
+        return postsCollection.find().toArray();
     },
 
-    async getPostsById(id: string): Promise<PostsType | undefined> {
-        return posts.find(post => post.id === id);
+    async getPostsById(id: string): Promise<WithId<PostsType> | null> {
+        return postsCollection.findOne({id: id})
     },
+
     async createNewPost(post: PostsType) {
 
-        const blog = __blogs.find((blog) => blog.id === post.blogId);
+        const blog = await blogsCollection.findOne({id: post.blogId});
         if (!blog) {
-            return false
+            return false;
         }
 
         const newPost = {
@@ -36,35 +28,28 @@ export const postsRepositories = {
             content: post.content,
             blogId: post.blogId,
             blogName: blog.name,
+            createdAt: new Date().toISOString()
         };
 
-        posts.push(newPost)
+        await postsCollection.insertOne(newPost)
         return newPost
     },
 
     async deletePostsById(id: string) {
-        const index = posts.findIndex(post => post.id === id);
-        if (index !== -1) {
-            posts.splice(index, 1);
-            return true
-        }
-        return false
+        const result = await postsCollection.deleteOne({id: id})
+        return result.deletedCount === 1
     },
 
     async updatePostById(id: string, post: PostsType) {
-        const postIndex = posts.findIndex(post => post.id === id);
-        if (postIndex >= 0) {
-            posts[postIndex] = {
-                id: posts[postIndex].id,
-                title: post.title,
-                shortDescription: post.shortDescription,
-                content: post.content,
-                blogId: post.blogId,
-                blogName: posts[postIndex].blogName
-            }
-            return true
-        } else {
-            return false
-        }
+        const result = await postsCollection.updateOne({id: id},
+            {
+                $set: {
+                    title: post.title,
+                    shortDescription: post.shortDescription,
+                    content: post.content,
+                    blogId: post.blogId,
+                }
+            });
+        return result.matchedCount === 1;
     }
 }

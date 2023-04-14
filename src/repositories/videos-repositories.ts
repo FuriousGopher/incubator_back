@@ -1,18 +1,20 @@
 import {VideosType} from "../models/videoTypes";
+import {videosCollection} from "../models/dbCollections";
+import {WithId} from "mongodb";
 
 export let videos: VideosType[] = []
 
 export const videosRepositories = {
 
-    async getVideoById(id: number): Promise<VideosType | undefined> {
-        return videos.find(c => c.id === id);
+    async getVideoById(id: number): Promise<WithId<VideosType> | null> {
+        return videosCollection.findOne({id: id})
     },
 
     async getAllVideos() {
-        return videos;
+        return videosCollection.find().toArray();
     },
 
-    async createVideo(video:  VideosType) {
+    async createVideo(video: VideosType) {
         const newVideo = {
             id: +(new Date()),
             title: video.title,
@@ -23,40 +25,30 @@ export const videosRepositories = {
             createdAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
             publicationDate: new Date(new Date().getTime() + 48 * 60 * 60 * 1000).toISOString(),
         };
-        videos.push(newVideo)
+        await videosCollection.insertOne(newVideo)
         return newVideo
     },
 
     async deleteVideoById(id: number) {
-        for (let i = 0; i < videos.length; i++) {
-            if (videos[i].id === id) {
-                videos.splice(i, 1);
-                return true
-            }
-        }
-        return false;
+        const result = await videosCollection.deleteOne({id: id})
+        return result.deletedCount === 1
     },
 
-
     async updateVideoById(id: number, video: VideosType) {
-        const videoIndex = videos.findIndex(c => c.id === id);
-        if (videoIndex >= 0) {
-            videos[videoIndex] = {
-                id: id,
-                title: video.title,
-                author: video.author,
-                availableResolutions: video.availableResolutions || [],
-                canBeDownloaded: video.canBeDownloaded,
-                minAgeRestriction: video.minAgeRestriction,
-                createdAt: videos[videoIndex].createdAt,
-                publicationDate: video.publicationDate,
+        const result = await videosCollection.updateOne(
+            {id},
+            {
+                $set: {
+                    title: video.title,
+                    author: video.author,
+                    availableResolutions: video.availableResolutions || [],
+                    canBeDownloaded: video.canBeDownloaded,
+                    minAgeRestriction: video.minAgeRestriction,
+                },
             }
-            return true
-        } else {
-            return false
-        }
-
-    }
+        );
+        return result.modifiedCount !== 0;
+    },
 
 
 }

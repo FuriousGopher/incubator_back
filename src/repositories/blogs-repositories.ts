@@ -17,7 +17,7 @@ export const blogsRepositories = {
     },
 
     async getAllBlogs() {
-        return blogsCollection.find().toArray();
+        return blogsCollection.find({}).project({_id: false}).toArray();
     },
 
     async createNewBlog(blog: BlogsType) {
@@ -25,9 +25,11 @@ export const blogsRepositories = {
             id: uuid(),
             name: blog.name,
             description: blog.description,
-            websiteUrl: blog.websiteUrl
+            websiteUrl: blog.websiteUrl,
+            createdAt: new Date().toString(),
+            isMembership: false
         };
-        await blogsCollection.insertOne(newBlog)
+        await blogsCollection.insertOne({...newBlog})
         return newBlog
     },
 

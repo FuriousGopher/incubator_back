@@ -14,7 +14,7 @@ export async function runDb() {
     try {
         await client.connect();
 
-        await client.db("blogs").command({ping: 1});
+        await client.db("Cluster0").command({ping: 1});
         console.log("Connected successfully")
     } catch {
         console.log("Error to connect")

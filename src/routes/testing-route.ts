@@ -19,26 +19,3 @@ testRouter.delete('/all-data', async (req: Request, res: Response) => {
         res.status(500).send('Error deleting all data');
     }
 });
-
-
-// import {Router} from 'express'
-// import {Request, Response} from "express";
-// import {client} from "../repositories/db";
-//
-// export const testRouter = Router()
-//
-//
-// testRouter.delete('/all-data', async (req: Request, res: Response) => {
-//     async function deleteDatabase() {
-//         try {
-//             await client.connect();
-//             const database = client.db('videos');
-//             await database.dropDatabase();
-//             console.log('Database deleted successfully');
-//         } catch (error) {
-//             console.error('Error deleting database:', error);
-//         } finally {
-//             await client.close();
-//         }
-//     }
-// });

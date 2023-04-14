@@ -7,11 +7,11 @@ import {WithId} from "mongodb";
 export const postsRepositories = {
 
     async getAllPosts() {
-        return postsCollection.find().toArray();
+        return postsCollection.find().project({_id: false}).toArray();
     },
 
     async getPostsById(id: string): Promise<WithId<PostsType> | null> {
-        return postsCollection.findOne({id: id})
+        return postsCollection.findOne({id: id}, {projection: {_id: 0}});
     },
 
     async createNewPost(post: PostsType) {
@@ -31,7 +31,7 @@ export const postsRepositories = {
             createdAt: new Date().toISOString()
         };
 
-        await postsCollection.insertOne(newPost)
+        await postsCollection.insertOne({...newPost})
         return newPost
     },
 

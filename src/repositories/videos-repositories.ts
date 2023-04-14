@@ -7,11 +7,11 @@ export let videos: VideosType[] = []
 export const videosRepositories = {
 
     async getVideoById(id: number): Promise<WithId<VideosType> | null> {
-        return videosCollection.findOne({id: id})
+        return videosCollection.findOne({id: id}, {projection: {_id: 0}})
     },
 
     async getAllVideos() {
-        return videosCollection.find().toArray();
+        return videosCollection.find().project({_id: false}).toArray();
     },
 
     async createVideo(video: VideosType) {
@@ -25,7 +25,7 @@ export const videosRepositories = {
             createdAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
             publicationDate: new Date(new Date().getTime() + 48 * 60 * 60 * 1000).toISOString(),
         };
-        await videosCollection.insertOne(newVideo)
+        await videosCollection.insertOne({...newVideo})
         return newVideo
     },
 

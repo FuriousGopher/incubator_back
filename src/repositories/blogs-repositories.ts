@@ -13,7 +13,7 @@ export const __blogs = [{
 export const blogsRepositories = {
 
     async getBlogById(id: string): Promise<WithId<BlogsType> | null> {
-        return blogsCollection.findOne({id: id})
+        return blogsCollection.findOne({id: id}, {projection: {_id: 0}})
     },
 
     async getAllBlogs() {

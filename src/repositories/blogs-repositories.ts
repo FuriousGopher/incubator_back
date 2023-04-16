@@ -10,10 +10,14 @@ export const blogsRepositories = {
         return blogsCollection.findOne({id: id}, {projection: {_id: 0}})
     },
 
-    async getAllBlogs() {
-        return blogsCollection.find({}).project({_id: false}).toArray();
+    async getAllBlogs(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1, searchNameTerm: string | null) {
+        let filter = {}
+        if (searchNameTerm) {
+            const regex = new RegExp(searchNameTerm, 'i');
+            filter = {"name": {$regex: regex}}
+        }
+        return blogsCollection.find(filter).sort({[sortBy]: sortDirection}).skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0).limit(nPerPage).project({_id: false}).toArray();
     },
-
     async createNewBlog(blog: BlogsType) {
         const newBlog = {
             id: uuid(),

@@ -3,7 +3,7 @@ import {VideosType} from "./videoTypes";
 import {PostsType} from "./postsType";
 import {client} from "../repositories/db";
 
-const dbVideos = client.db('videos')
+export const dbVideos = client.db('videos')
 const dbPosts = client.db('posts')
 const dbBlogs = client.db('blogs')
 export const blogsCollection = dbBlogs.collection<BlogsType>("blogs")

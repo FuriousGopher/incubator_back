@@ -51,5 +51,11 @@ export const postsRepositories = {
                 }
             });
         return result.matchedCount === 1;
+    },
+
+    async getPostsByBlogId(blogId: string) {
+        return  await postsCollection.find({ blogId: blogId }).toArray()
+
     }
+
 }

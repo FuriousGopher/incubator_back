@@ -1,7 +1,8 @@
 import {BlogsType} from "../models/blogsType";
 import {uuid} from 'uuidv4';
 import {WithId} from "mongodb";
-import {blogsCollection} from "../models/dbCollections";
+import {blogsCollection, postsCollection} from "../models/dbCollections";
+import {PostsType} from "../models/postsType";
 
 
 export const blogsRepositories = {
@@ -46,5 +47,20 @@ export const blogsRepositories = {
                 }
             })
         return result.matchedCount === 1
-    }
+    },
+
+    async createNewPostByBlogId(post: PostsType, blogId: string, blogName: string) {
+        const newPost = {
+            id: uuid(),
+            title: post.title,
+            shortDescription: post.shortDescription,
+            content: post.content,
+            blogId: blogId,
+            blogName: blogName,
+            createdAt: new Date().toISOString()
+        };
+
+        await postsCollection.insertOne({...newPost})
+        return newPost
+    },
 }

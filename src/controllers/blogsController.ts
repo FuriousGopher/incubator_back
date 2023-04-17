@@ -2,16 +2,11 @@ import {Request, Response} from 'express'
 import {blogsRepositories} from "../repositories/blogs-repositories";
 import {HttpStatusCode} from "../types/HTTP-Response";
 import {postsRepositories} from "../repositories/posts-repositories";
+import {MethodGetAllReqQuery} from "../types/queryRepo";
 
-type GetAllBlogsReqQuery = {
-    searchNameTerm: string;
-    sortBy: string;
-    sortDirection: string;
-    pageNumber: number;
-    pageSize: number;
-}
-export const getAllBlogs = async (req: Request<{}, {}, {}, GetAllBlogsReqQuery>, res: Response) => {
-    const query: GetAllBlogsReqQuery = {
+
+export const getAllBlogs = async (req: Request<{}, {}, {}, MethodGetAllReqQuery>, res: Response) => {
+    const query: MethodGetAllReqQuery = {
         searchNameTerm: req.query.searchNameTerm ?? null,
         pageSize: req.query.pageSize ?? 10,
         pageNumber: req.query.pageNumber ?? 1,
@@ -54,7 +49,7 @@ export const updateBlogById = async (req: Request, res: Response) => {
     } else {
         res.status(HttpStatusCode.NotFound).send('Blog not found');
     }
-}
+};
 export const getAllPostsByBlogId = async (req: Request, res: Response) => {
     const blogId = req.params.blogId;
     const posts = await postsRepositories.getPostsByBlogId(blogId);
@@ -63,6 +58,21 @@ export const getAllPostsByBlogId = async (req: Request, res: Response) => {
     } else {
         res.status(HttpStatusCode.NotFound).send('Posts not found');
     }
+
+
+};
+export const createNewPostByBlogId = async (req: Request, res: Response) => {
+    const blogId = req.params.blogId;
+    if (!blogId) {
+        return res.status(400).send('Blog Id is incorrect');
+    }
+    const blog = await blogsRepositories.getBlogById(blogId);
+    if (!blog) {
+        return res.status(404).send('Blog not found');
+    }
+    const newPostByBlogId = await blogsRepositories.createNewPostByBlogId(req.body, blogId, blog.name)
+    res.status(201).send(newPostByBlogId)
+
 };
 
 

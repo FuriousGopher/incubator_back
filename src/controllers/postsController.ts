@@ -1,19 +1,18 @@
 import {Request, Response} from 'express'
 import {postsRepositories} from "../repositories/posts-repositories";
-import {MethodGetAllReqQuery} from "../types/queryRepo";
+import {MethodGetAllReqQueryAll, MethodGetAllReqQueryById} from "../types/queryRepo";
 
 
 
-export const getAllPosts = async (req: Request<{}, {}, {}, MethodGetAllReqQuery>, res: Response) => {
-    const query: MethodGetAllReqQuery = {
-        searchNameTerm: req.query.searchNameTerm ?? null,
+export const getAllPosts = async (req: Request<{}, {}, {}, MethodGetAllReqQueryAll>, res: Response) => {
+    const query: MethodGetAllReqQueryById = {
         pageSize: req.query.pageSize ?? 10,
         pageNumber: req.query.pageNumber ?? 1,
         sortBy: req.query.sortBy ?? "createdAt",
         sortDirection: req.query.sortDirection ?? "desc"
     }
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
-    const posts = await postsRepositories.getAllPosts(query.pageNumber, query.pageSize, query.sortBy, sortDirection, query.searchNameTerm)
+    const posts = await postsRepositories.getAllPosts(query.pageNumber, query.pageSize, query.sortBy, sortDirection)
     if (posts){
         res.status(200).send(posts)
     } else {

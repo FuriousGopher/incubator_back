@@ -6,13 +6,8 @@ import {WithId} from "mongodb";
 
 export const postsRepositories = {
 
-    async getAllPosts(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1, searchNameTerm: string | null) {
-        let filter = {}
-        if (searchNameTerm) {
-            const regex = new RegExp(searchNameTerm, 'i');
-            filter = {"name": {$regex: regex}}
-        }
-        return postsCollection.find(filter).sort({[sortBy]: sortDirection}).skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0).limit(nPerPage).project({_id: false}).toArray();
+    async getAllPosts(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1) {
+        return postsCollection.find().sort({[sortBy]: sortDirection}).skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0).limit(nPerPage).project({_id: false}).toArray();
     },
 
     async getPostsById(id: string): Promise<WithId<PostsType> | null> {
@@ -58,8 +53,8 @@ export const postsRepositories = {
         return result.matchedCount === 1;
     },
 
-    async getPostsByBlogId(blogId: string) {
-        return  await postsCollection.find({ blogId: blogId }).toArray()
+    async getPostsByBlogId(blogId: string,pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1,) {
+        return  await postsCollection.find({ blogId: blogId }, {projection: {_id: 0}}).sort({[sortBy]: sortDirection}).skip(pageNumber > 0 ? ((pageNumber - 1) * nPerPage) : 0).limit(nPerPage).toArray()
 
     }
 

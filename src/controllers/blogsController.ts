@@ -2,11 +2,11 @@ import {Request, Response} from 'express'
 import {blogsRepositories} from "../repositories/blogs-repositories";
 import {HttpStatusCode} from "../types/HTTP-Response";
 import {postsRepositories} from "../repositories/posts-repositories";
-import {MethodGetAllReqQuery} from "../types/queryRepo";
+import {MethodGetAllReqQueryAll, MethodGetAllReqQueryById} from "../types/queryRepo";
 
 
-export const getAllBlogs = async (req: Request<{}, {}, {}, MethodGetAllReqQuery>, res: Response) => {
-    const query: MethodGetAllReqQuery = {
+export const getAllBlogs = async (req: Request<{}, {}, {}, MethodGetAllReqQueryAll>, res: Response) => {
+    const query: MethodGetAllReqQueryAll = {
         searchNameTerm: req.query.searchNameTerm ?? null,
         pageSize: req.query.pageSize ?? 10,
         pageNumber: req.query.pageNumber ?? 1,
@@ -50,10 +50,17 @@ export const updateBlogById = async (req: Request, res: Response) => {
         res.status(HttpStatusCode.NotFound).send('Blog not found');
     }
 };
-export const getAllPostsByBlogId = async (req: Request, res: Response) => {
+export const getAllPostsByBlogId = async (req: Request<{blogId: string}, {}, {}, MethodGetAllReqQueryAll>, res: Response) => {
+    const query: MethodGetAllReqQueryById = {
+        pageSize: req.query.pageSize ?? 10,
+        pageNumber: req.query.pageNumber ?? 1,
+        sortBy: req.query.sortBy ?? "createdAt",
+        sortDirection: req.query.sortDirection ?? "desc"
+    }
+    const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
     const blogId = req.params.blogId;
-    const posts = await postsRepositories.getPostsByBlogId(blogId);
-    if (posts) {
+    const posts = await postsRepositories.getPostsByBlogId(blogId,query.pageNumber, query.pageSize, query.sortBy, sortDirection);
+    if (posts.length > 0) {
         res.status(HttpStatusCode.OK).send(posts);
     } else {
         res.status(HttpStatusCode.NotFound).send('Posts not found');

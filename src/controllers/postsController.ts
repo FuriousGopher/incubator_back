@@ -5,7 +5,7 @@ import { HttpStatusCode } from '../types/HTTP-Response';
 
 export const getAllPosts = async (req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllReqQueryAll>, res: Response) => {
   const query: MethodGetAllReqQueryById = {
-    pageSize: req.query.pageSize ?? 10,
+    pageSize: Number(req.query.pageSize) || 10,
     pageNumber: req.query.pageNumber ?? 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
@@ -14,7 +14,7 @@ export const getAllPosts = async (req: Request<NonNullable<unknown>, NonNullable
   const { posts, totalNumberOfPosts, totalNumberOfPages, pageSize, currentPage } = await postsRepositories.getAllPosts(query.pageNumber, query.pageSize, query.sortBy, sortDirection);
   if (posts) {
     res.status(HttpStatusCode.OK).send({
-      pagesCount: totalNumberOfPages,
+      pagesCount: +totalNumberOfPages,
       page: +currentPage,
       pageSize,
       totalCount: totalNumberOfPosts,

@@ -23,7 +23,7 @@ export const getAllPosts = async (req: Request<NonNullable<unknown>, NonNullable
   } else {
     res.status(HttpStatusCode.NotFound).send('Posts not found');
   }
-}; //// ready
+};
 export const getPostsById = async (req: Request, res: Response) => {
   const id = req.params.id;
   const post = await postsRepositories.getPostsById(id);
@@ -32,7 +32,7 @@ export const getPostsById = async (req: Request, res: Response) => {
   } else {
     res.status(404).send('Post not found');
   }
-}; ////// ready
+};
 export const createNewPost = async (req: Request, res: Response) => {
   const newPost = await postsRepositories.createNewPost(req.body);
   res.status(201).send(newPost);
@@ -45,7 +45,7 @@ export const deletePostsById = async (req: Request, res: Response) => {
   } else {
     res.sendStatus(404);
   }
-}; //// ready
+};
 export const updatePostById = async (req: Request, res: Response) => {
   const id = req.params.id;
   const isUpdated = await postsRepositories.updatePostById(id, req.body);
@@ -54,4 +54,4 @@ export const updatePostById = async (req: Request, res: Response) => {
   } else {
     res.status(404).send('Post not found');
   }
-}; ////// ready
+};

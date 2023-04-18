@@ -14,7 +14,7 @@ export const getAllPosts = async (req: Request<NonNullable<unknown>, NonNullable
   const { posts, totalNumberOfPosts, totalNumberOfPages, pageSize, currentPage } = await postsRepositories.getAllPosts(query.pageNumber, query.pageSize, query.sortBy, sortDirection);
   if (posts) {
     res.status(HttpStatusCode.OK).send({
-      pageCount: totalNumberOfPages,
+      pagesCount: totalNumberOfPages,
       page: +currentPage,
       pageSize,
       totalCount: totalNumberOfPosts,

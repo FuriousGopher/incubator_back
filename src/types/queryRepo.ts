@@ -1,17 +1,14 @@
 export type MethodGetAllReqQueryAll = {
-    searchNameTerm: string;
-    sortBy: string;
-    sortDirection: string;
-    pageNumber: number;
-    pageSize: number;
-}
+  searchNameTerm: string;
+  sortBy: string;
+  sortDirection: string;
+  pageNumber: number;
+  pageSize: number;
+};
 
 export type MethodGetAllReqQueryById = {
-    sortBy: string;
-    sortDirection: string;
-    pageNumber: number;
-    pageSize: number;
-}
-
-
-
+  sortBy: string;
+  sortDirection: string;
+  pageNumber: number;
+  pageSize: number;
+};

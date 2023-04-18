@@ -7,7 +7,8 @@
     "watch": "tsc -w",
     "dev": "nodemon dist/src/index.js",
     "test": "jest",
-    "run": "node /dist/src/index.js"
+    "run": "node /dist/src/index.js",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {
     "@types/supertest": "^2.0.12",
@@ -28,7 +29,13 @@
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.10",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
     "dotenv": "^16.0.3",
+    "eslint": "8.22.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.3.2",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.3"
   }

@@ -1,17 +1,25 @@
 import { Request, Response } from 'express';
 import { postsRepositories } from '../repositories/posts-repositories';
-import { MethodGetAllReqQueryAll, MethodGetAllReqQueryById } from '../types/queryRepo';
+import { MethodGetAllReqQueryById } from '../types/queryType';
 import { HttpStatusCode } from '../types/HTTP-Response';
 
-export const getAllPosts = async (req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllReqQueryAll>, res: Response) => {
-  const query: MethodGetAllReqQueryById = {
+export const getAllPosts = async (
+  req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllReqQueryById>,
+  res: Response,
+) => {
+  const query = {
     pageSize: Number(req.query.pageSize) || 10,
-    pageNumber: req.query.pageNumber ?? 1,
+    pageNumber: Number(req.query.pageNumber) ?? 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
   const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
-  const { posts, totalNumberOfPosts, totalNumberOfPages, pageSize, currentPage } = await postsRepositories.getAllPosts(query.pageNumber, query.pageSize, query.sortBy, sortDirection);
+  const { posts, totalNumberOfPosts, totalNumberOfPages, pageSize, currentPage } = await postsRepositories.getAllPosts(
+    query.pageNumber,
+    query.pageSize,
+    query.sortBy,
+    sortDirection,
+  );
   if (posts) {
     res.status(HttpStatusCode.OK).send({
       pagesCount: +totalNumberOfPages,

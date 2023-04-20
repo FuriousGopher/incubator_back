@@ -2,13 +2,16 @@ import { Request, Response } from 'express';
 import { blogsRepositories } from '../repositories/blogs-repositories';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { postsRepositories } from '../repositories/posts-repositories';
-import { MethodGetAllReqQueryAll, MethodGetAllReqQueryById } from '../types/queryRepo';
+import { MethodGetAllPostsReqQuery, MethodGetAllReqQueryById } from '../types/queryType';
 
-export const getAllBlogs = async (req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllReqQueryAll>, res: Response) => {
-  const query: MethodGetAllReqQueryAll = {
+export const getAllBlogs = async (
+  req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllPostsReqQuery>,
+  res: Response,
+) => {
+  const query = {
     searchNameTerm: req.query.searchNameTerm ?? null,
     pageSize: Number(req.query.pageSize) || 10,
-    pageNumber: req.query.pageNumber ?? 1,
+    pageNumber: Number(req.query.pageNumber) ?? 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
@@ -68,19 +71,25 @@ export const getAllPostsByBlogId = async (
     },
     NonNullable<unknown>,
     NonNullable<unknown>,
-    MethodGetAllReqQueryAll
+    MethodGetAllReqQueryById
   >,
   res: Response,
 ) => {
-  const query: MethodGetAllReqQueryById = {
+  const query = {
     pageSize: Number(req.query.pageSize) || 10,
-    pageNumber: req.query.pageNumber ?? 1,
+    pageNumber: Number(req.query.pageNumber) ?? 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
   const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
   const blogId = req.params.blogId;
-  const { posts, totalNumberOfPages, pageSize, currentPage, totalNumberOfPosts } = await postsRepositories.getPostsByBlogId(blogId, query.pageNumber, query.pageSize, query.sortBy, sortDirection);
+  const { posts, totalNumberOfPages, pageSize, currentPage, totalNumberOfPosts } = await postsRepositories.getPostsByBlogId(
+    blogId,
+    query.pageNumber,
+    query.pageSize,
+    query.sortBy,
+    sortDirection,
+  );
   if (totalNumberOfPosts !== 0) {
     res.status(HttpStatusCode.OK).send({
       pagesCount: totalNumberOfPages,

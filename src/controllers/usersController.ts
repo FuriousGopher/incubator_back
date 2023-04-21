@@ -33,7 +33,7 @@ export const getAllUsers = async (
 ) => {
   const query = {
     pageSize: Number(req.query.pageSize) || 10,
-    pageNumber: Number(req.query.pageNumber) ?? 1,
+    pageNumber: Number(req.query.pageNumber) || 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
     searchEmailTerm: req.query.searchEmailTerm ?? null,

@@ -11,7 +11,7 @@ export const getAllBlogs = async (
   const query = {
     searchNameTerm: req.query.searchNameTerm ?? null,
     pageSize: Number(req.query.pageSize) || 10,
-    pageNumber: Number(req.query.pageNumber) ?? 1,
+    pageNumber: Number(req.query.pageNumber) || 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
@@ -77,7 +77,7 @@ export const getAllPostsByBlogId = async (
 ) => {
   const query = {
     pageSize: Number(req.query.pageSize) || 10,
-    pageNumber: Number(req.query.pageNumber) ?? 1,
+    pageNumber: Number(req.query.pageNumber) || 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };

@@ -49,6 +49,7 @@ export const usersRepositories = {
       pageSize: nPerPage,
     };
   },
+
   async findByLoginOrEmail(loginOrEmail: string) {
     return await usersCollection.findOne({ $or: [{ email: loginOrEmail }, { login: loginOrEmail }] });
   },

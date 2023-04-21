@@ -46,16 +46,3 @@ export const getAllUsers = async (
     res.status(HttpStatusCode.NotFound).send('Users not found');
   }
 };
-
-// export const checkCredentials = async (loginOrEmail: string, password: string) => {
-//   const user = await usersRepositories.findByLoginOrEmail(loginOrEmail);
-//   if (!user) {
-//     return res.status(HttpStatusCode.NotFound).send('Invalid login or email')
-//   }
-//   await _generateHash(password, await genSalt(4));
-//   return user.password === password;
-// };
-//
-// export const checkResult (req: Request, res: Response) => {
-//   const result this.checkCredentials()
-// }

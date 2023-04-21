@@ -1,13 +1,7 @@
 import { usersRepositories } from '../repositories/users-repositories';
+import { _generateHash } from '../helpFunction';
+import { GetAllUsersQueryType } from '../DTO/QueryForUsers';
 
-type GetAllUsersQueryType = {
-  pageSize: number;
-  pageNumber: number;
-  sortBy: string;
-  sortDirection: string;
-  searchEmailTerm: string;
-  searchLoginTerm: string;
-};
 export const usersServes = {
   async getAllUsers(query: GetAllUsersQueryType) {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
@@ -28,5 +22,11 @@ export const usersServes = {
       searchLoginTerm: query.searchLoginTerm,
       items: userResponse.users,
     };
+  },
+  async checkCredentials(loginOrEmail: string, password: string) {
+    const user = await usersRepositories.findByLoginOrEmail(loginOrEmail);
+    if (!user) return false;
+    const passwordHash = await _generateHash(password, user.password);
+    return user.password === passwordHash;
   },
 };

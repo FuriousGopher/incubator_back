@@ -5,9 +5,9 @@ import { postsRouter } from './routes/posts-router';
 import bodyParser from 'body-parser';
 import { testRouter } from './routes/testing-route';
 import { runDb } from './repositories/db';
-// import { authRouter } from './routes/auth-router';
 import { usersRouter } from './routes/users-router';
 import { checkAuthorization } from './middlewares/checkAuthorization';
+import { authRouter } from './routes/auth-router';
 
 export const app = express();
 
@@ -27,7 +27,7 @@ app.use('/blogs', blogsRouter);
 
 app.use('/posts', postsRouter);
 
-/// app.use('/auth', authRouter);
+app.use('/auth', authRouter);
 
 app.use('/users', checkAuthorization, usersRouter);
 

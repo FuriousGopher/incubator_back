@@ -38,7 +38,7 @@ export const usersRepositories = {
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
       .limit(nPerPage)
-      .project({ _id: false })
+      .project({ _id: false, password: false })
       .toArray();
     const totalNumberOfPosts = await usersCollection.countDocuments(filter);
     return {

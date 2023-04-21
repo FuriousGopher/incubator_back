@@ -18,8 +18,8 @@ export const usersServes = {
       page: +userResponse.currentPage,
       pageSize: userResponse.pageSize,
       totalCount: userResponse.totalNumberOfPosts,
-      searchEmailTerm: query.searchEmailTerm,
-      searchLoginTerm: query.searchLoginTerm,
+      // searchEmailTerm: query.searchEmailTerm,
+      // searchLoginTerm: query.searchLoginTerm,
       items: userResponse.users,
     };
   },

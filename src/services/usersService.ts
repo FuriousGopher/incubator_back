@@ -1,7 +1,6 @@
 import { usersRepositories } from '../repositories/users-repositories';
 import { _generateHash } from '../helpFunction';
 import { GetAllUsersQueryType } from '../DTO/QueryForUsers';
-import { Document } from 'mongodb';
 
 export const usersService = {
   async getAllUsers(query: GetAllUsersQueryType) {
@@ -14,28 +13,13 @@ export const usersService = {
       query.searchEmailTerm,
       query.searchLoginTerm,
     );
-    const returnObject: {
-      pagesCount: number;
-      page: number;
-      pageSize: number;
-      totalCount: number;
-      items: Document[];
-      searchEmailTerm?: string;
-      searchLoginTerm?: string;
-    } = {
+    return {
       pagesCount: +userResponse.totalNumberOfPages,
       page: +userResponse.currentPage,
       pageSize: userResponse.pageSize,
       totalCount: userResponse.totalNumberOfPosts,
       items: userResponse.users,
     };
-    if (query.searchEmailTerm) {
-      returnObject.searchEmailTerm = query.searchEmailTerm;
-    }
-    if (query.searchLoginTerm) {
-      returnObject.searchLoginTerm = query.searchLoginTerm;
-    }
-    return returnObject;
   },
   async checkCredentials(loginOrEmail: string, password: string) {
     const user = await usersRepositories.findByLoginOrEmail(loginOrEmail);

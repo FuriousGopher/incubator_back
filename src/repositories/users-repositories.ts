@@ -26,11 +26,14 @@ export const usersRepositories = {
 
   async getAllUsers(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1, searchEmailTerm: string, searchLoginTerm: string) {
     const filter: any = {};
+    if (searchLoginTerm || searchEmailTerm) {
+      filter.$or = [];
+    }
     if (searchEmailTerm) {
-      filter.email = { $regex: searchEmailTerm, $options: 'i' };
+      filter.$or.push({ email: { $regex: searchEmailTerm, $options: 'i' } });
     }
     if (searchLoginTerm) {
-      filter.login = { $regex: searchLoginTerm, $options: 'i' };
+      filter.$or.push({ login: { $regex: searchLoginTerm, $options: 'i' } });
     }
     console.log(filter);
     const foundUsers = await usersCollection

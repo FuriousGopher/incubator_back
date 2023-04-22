@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
 import { HttpStatusCode } from '../types/HTTP-Response';
-import { usersRepositories } from '../repositories/users-repositories';
 import { CreatedUsertype } from '../types/userType';
 import { MethodGetAllUsersReqQuery } from '../types/queryType';
-import { usersServes } from '../serves/usersServes';
+import { usersService } from '../domain/usersService';
 
 export const createNewUser = async (req: Request, res: Response) => {
   const { email, login, password } = req.body;
-  const newUser = await usersRepositories.createNewUser({ email, login, password });
+  const newUser = await usersService.createNewUser(email, login, password);
   const createdUser: CreatedUsertype = {
     id: newUser.id,
     login: newUser.login,
@@ -19,14 +18,13 @@ export const createNewUser = async (req: Request, res: Response) => {
 
 export const deleteUserById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const isDeleted = await usersRepositories.deleteUserById(id);
+  const isDeleted = await usersService.deleteUserById(id);
   if (isDeleted) {
     res.sendStatus(204);
   } else {
     res.sendStatus(404);
   }
 };
-
 export const getAllUsers = async (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllUsersReqQuery>,
   res: Response,
@@ -39,7 +37,7 @@ export const getAllUsers = async (
     searchEmailTerm: req.query.searchEmailTerm ?? null,
     searchLoginTerm: req.query.searchLoginTerm ?? null,
   };
-  const response = await usersServes.getAllUsers(query);
+  const response = await usersService.getAllUsers(query);
   if (response.items) {
     res.status(HttpStatusCode.OK).send(response);
   } else {

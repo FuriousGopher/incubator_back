@@ -1,9 +1,9 @@
-import { usersServes } from '../serves/usersServes';
+import { usersService } from '../domain/usersService';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { Request, Response } from 'express';
 
 export const checkResultAuth = async (req: Request, res: Response) => {
-  const result = await usersServes.checkCredentials(req.body.loginOrEmail, req.body.password);
+  const result = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
   if (result) {
     res.status(HttpStatusCode.NoContent).send();
   } else {

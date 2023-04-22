@@ -66,18 +66,18 @@ export const postsRepositories = {
     return result.matchedCount === 1;
   },
 
-  async getPostsByBlogId(blogId: string, pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1) {
+  async getPostsByBlogId(blogId: string, pageNumber: number, nPerPage: number, sortBy: string, sortDirection: -1 | 1) {
     const foundPosts = await postsCollection
       .find({ blogId: blogId }, { projection: { _id: 0 } })
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
-      .limit(nPerPage)
+      .limit(Number(nPerPage))
       .toArray();
     const totalNumberOfDocuments = await postsCollection.countDocuments({ blogId: blogId });
     return {
       posts: foundPosts,
       totalNumberOfPosts: totalNumberOfDocuments,
-      currentPage: pageNumber,
+      currentPage: +pageNumber,
       totalNumberOfPages: Math.ceil(totalNumberOfDocuments / nPerPage),
       pageSize: nPerPage,
     };

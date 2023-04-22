@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { blogsRepositories } from '../repositories/blogs-repositories';
 import { HttpStatusCode } from '../types/HTTP-Response';
-import { postsRepositories } from '../repositories/posts-repositories';
-import { MethodGetAllPostsReqQuery, MethodGetAllReqQueryById } from '../types/queryType';
+import { MethodGetAllPostsReqQuery } from '../types/queryType';
+import { blogsService } from '../domain/blogsService';
+import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
 
 export const getAllBlogs = async (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllPostsReqQuery>,
@@ -15,27 +16,16 @@ export const getAllBlogs = async (
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
-  const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
-  const { blogs, totalNumberOfBlogs, totalNumberOfPages, pageSize, currentPage } = await blogsRepositories.getAllBlogs(
-    query.pageNumber,
-    query.pageSize,
-    query.sortBy,
-    sortDirection,
-    query.searchNameTerm,
-  );
-  if (blogs) {
-    res.status(HttpStatusCode.OK).send({
-      pagesCount: totalNumberOfPages,
-      page: +currentPage,
-      pageSize,
-      totalCount: totalNumberOfBlogs,
-      items: blogs,
-    });
+  const response = await blogsService.getAllBlogs(query);
+  if (response.items) {
+    res.status(HttpStatusCode.OK).send(response);
+  } else {
+    res.status(HttpStatusCode.NotFound).send('Blogs not found');
   }
 };
 export const getBlogById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const blog = await blogsRepositories.getBlogById(id);
+  const blog = await blogsService.getBlogById(id);
   if (blog) {
     res.status(HttpStatusCode.OK).send(blog);
   } else {
@@ -43,12 +33,12 @@ export const getBlogById = async (req: Request, res: Response) => {
   }
 };
 export const createNewBlog = async (req: Request, res: Response) => {
-  const newBlog = await blogsRepositories.createNewBlog(req.body);
+  const newBlog = await blogsService.createNewBlog(req.body);
   res.status(201).send(newBlog);
 };
 export const deleteBlogById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const isDeleted = await blogsRepositories.deleteBlogById(id);
+  const isDeleted = await blogsService.deleteBlogById(id);
   if (isDeleted) {
     res.sendStatus(HttpStatusCode.NoContent);
   } else {
@@ -57,7 +47,7 @@ export const deleteBlogById = async (req: Request, res: Response) => {
 };
 export const updateBlogById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const isUpdated = await blogsRepositories.updateBlogById(id, req.body);
+  const isUpdated = await blogsService.updateBlogById(id, req.body);
   if (isUpdated) {
     res.sendStatus(HttpStatusCode.NoContent);
   } else {
@@ -71,35 +61,23 @@ export const getAllPostsByBlogId = async (
     },
     NonNullable<unknown>,
     NonNullable<unknown>,
-    MethodGetAllReqQueryById
+    GetAllBlogsQueryType
   >,
   res: Response,
 ) => {
   const query = {
+    searchNameTerm: req.query.searchNameTerm ?? null,
     pageSize: Number(req.query.pageSize) || 10,
     pageNumber: Number(req.query.pageNumber) || 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
-  const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
   const blogId = req.params.blogId;
-  const { posts, totalNumberOfPages, pageSize, currentPage, totalNumberOfPosts } = await postsRepositories.getPostsByBlogId(
-    blogId,
-    query.pageNumber,
-    query.pageSize,
-    query.sortBy,
-    sortDirection,
-  );
-  if (totalNumberOfPosts !== 0) {
-    res.status(HttpStatusCode.OK).send({
-      pagesCount: totalNumberOfPages,
-      page: +currentPage,
-      pageSize,
-      totalCount: totalNumberOfPosts,
-      items: posts,
-    });
+  const response = await blogsService.getAllPostsByBlogId(query, blogId);
+  if (response.items.length) {
+    res.status(HttpStatusCode.OK).send(response);
   } else {
-    res.status(HttpStatusCode.NotFound).send('Posts not found');
+    res.status(HttpStatusCode.NotFound).send('Blogs not found');
   }
 };
 export const createNewPostByBlogId = async (req: Request, res: Response) => {
@@ -111,6 +89,6 @@ export const createNewPostByBlogId = async (req: Request, res: Response) => {
   if (!blog) {
     return res.status(404).send('Blog not found');
   }
-  const newPostByBlogId = await blogsRepositories.createNewPostByBlogId(req.body, blogId, blog.name);
+  const newPostByBlogId = await blogsService.createNewPostByBlogId(req.body, blogId, blog.name);
   res.status(201).send(newPostByBlogId);
 };

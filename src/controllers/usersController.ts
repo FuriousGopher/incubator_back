@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { CreatedUsertype } from '../types/userType';
 import { MethodGetAllUsersReqQuery } from '../types/queryType';
-import { usersService } from '../domain/usersService';
+import { usersService } from '../services/usersService';
 
 export const createNewUser = async (req: Request, res: Response) => {
   const { email, login, password } = req.body;

@@ -1,4 +1,4 @@
-import { usersService } from '../domain/usersService';
+import { usersService } from '../services/usersService';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { Request, Response } from 'express';
 

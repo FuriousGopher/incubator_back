@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { blogsRepositories } from '../repositories/blogs-repositories';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { MethodGetAllPostsReqQuery } from '../types/queryType';
-import { blogsService } from '../domain/blogsService';
+import { blogsService } from '../services/blogsService';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
 
 export const getAllBlogs = async (

@@ -18,8 +18,8 @@ export const usersService = {
       page: +userResponse.currentPage,
       pageSize: userResponse.pageSize,
       totalCount: userResponse.totalNumberOfPosts,
-      //searchEmailTerm: query.searchEmailTerm, TODO check how to put only if exist
-      //searchLoginTerm: query.searchLoginTerm,
+      searchEmailTerm: query.searchEmailTerm,
+      searchLoginTerm: query.searchLoginTerm,
       items: userResponse.users,
     };
   },

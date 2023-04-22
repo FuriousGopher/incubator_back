@@ -1,13 +1,8 @@
-import express, { Response, Request } from 'express';
-import { videosRouter } from './routes/videos-router';
-import { blogsRouter } from './routes/blogs-router';
-import { postsRouter } from './routes/posts-router';
+import express from 'express';
 import bodyParser from 'body-parser';
-import { testRouter } from './routes/testing-route';
 import { runDb } from './repositories/db';
-import { usersRouter } from './routes/users-router';
-import { checkAuthorization } from './middlewares/checkAuthorization';
-import { authRouter } from './routes/auth-router';
+import { router } from './router/allRoutes';
+import cors from 'cors';
 
 export const app = express();
 
@@ -17,25 +12,11 @@ const jsonBodyMiddleware = express.json();
 
 app.use(bodyParser());
 
+app.use(cors());
+
 app.use(jsonBodyMiddleware);
 
-app.use('/videos', videosRouter);
-
-app.use('/testing', testRouter);
-
-app.use('/blogs', blogsRouter);
-
-app.use('/posts', postsRouter);
-
-app.use('/auth', authRouter);
-
-app.use('/users', checkAuthorization, usersRouter);
-
-app.use('/', (req: Request, res: Response) => {
-  const file = __dirname + '/home.html';
-  res.sendFile(file);
-});
-
+app.use(router);
 const startApp = async () => {
   await runDb();
   app.listen(port, () => {

@@ -9,9 +9,9 @@ export const blogsService = {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
     const blogsResponse = await blogsRepositories.getAllBlogs(query.pageNumber, query.pageSize, query.sortBy, sortDirection, query.searchNameTerm);
     return {
-      pageSize: blogsResponse.pageSize,
       pagesCount: blogsResponse.totalNumberOfPages,
-      pageNumber: blogsResponse.currentPage,
+      page: blogsResponse.currentPage,
+      pageSize: blogsResponse.pageSize,
       totalCount: blogsResponse.totalNumberOfBlogs,
       items: blogsResponse.blogs,
     };

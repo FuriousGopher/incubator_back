@@ -16,9 +16,8 @@ export type MethodGetAllUsersReqQuery = {
 };
 
 export type MethodGetAllReqQueryById = {
-  searchNameTerm: null;
   sortBy: string;
   sortDirection: string;
   pageNumber: number;
-  pageSize: string;
+  pageSize: number;
 };

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { postsRepositories } from '../repositories/posts-repositories';
 import { MethodGetAllReqQueryById } from '../types/queryType';
 import { HttpStatusCode } from '../types/HTTP-Response';
+import { postsService } from '../services/postsService';
 
 export const getAllPosts = async (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllReqQueryById>,
@@ -13,28 +13,16 @@ export const getAllPosts = async (
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
-  const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
-  const { posts, totalNumberOfPosts, totalNumberOfPages, pageSize, currentPage } = await postsRepositories.getAllPosts(
-    query.pageNumber,
-    query.pageSize,
-    query.sortBy,
-    sortDirection,
-  );
-  if (posts) {
-    res.status(HttpStatusCode.OK).send({
-      pagesCount: +totalNumberOfPages,
-      page: +currentPage,
-      pageSize,
-      totalCount: totalNumberOfPosts,
-      items: posts,
-    });
+  const response = await postsService.getAllPosts(query);
+  if (response.items) {
+    res.status(HttpStatusCode.OK).send(response);
   } else {
     res.status(HttpStatusCode.NotFound).send('Posts not found');
   }
 };
 export const getPostsById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const post = await postsRepositories.getPostsById(id);
+  const post = await postsService.getPostsById(id);
   if (post) {
     res.status(200).send(post);
   } else {
@@ -42,12 +30,12 @@ export const getPostsById = async (req: Request, res: Response) => {
   }
 };
 export const createNewPost = async (req: Request, res: Response) => {
-  const newPost = await postsRepositories.createNewPost(req.body);
+  const newPost = await postsService.createNewPost(req.body);
   res.status(201).send(newPost);
-}; ////// ready
+};
 export const deletePostsById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const isDeleted = await postsRepositories.deletePostsById(id);
+  const isDeleted = await postsService.deletePostsById(id);
   if (isDeleted) {
     res.sendStatus(204);
   } else {
@@ -56,7 +44,7 @@ export const deletePostsById = async (req: Request, res: Response) => {
 };
 export const updatePostById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const isUpdated = await postsRepositories.updatePostById(id, req.body);
+  const isUpdated = await postsService.updatePostById(id, req.body);
   if (isUpdated) {
     res.sendStatus(204);
   } else {

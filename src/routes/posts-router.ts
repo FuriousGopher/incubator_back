@@ -7,6 +7,8 @@ import { validationMiddleware } from '../middlewares/ValidationErorrsMiddleware'
 export const postsRouter = Router();
 
 postsRouter.get('/', getAllPosts);
+postsRouter.get('/:id/comments');
+postsRouter.post('/:id/comments');
 postsRouter.get('/:id', getPostsById);
 postsRouter.post('/', checkAuthorization, validatePostAndPutMethodsForPostsBody, validationMiddleware, createNewPost);
 postsRouter.delete('/:id', checkAuthorization, deletePostsById);

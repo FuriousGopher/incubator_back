@@ -25,12 +25,28 @@ export const usersService = {
     const user = await usersRepositories.findByLoginOrEmail(loginOrEmail);
     if (!user) return false;
     const passwordHash = await _generateHash(password, user.password);
-    return user.password === passwordHash;
+    const findUser = user.password === passwordHash;
+    if (findUser) {
+      return {
+        id: user.id,
+        login: user.login,
+        email: user.email,
+        createdAt: user.createdAt,
+      };
+    } else {
+      return false;
+    }
   },
   async deleteUserById(id: string) {
     return await usersRepositories.deleteUserById(id);
   },
   async createNewUser(email: string, login: string, password: string) {
     return await usersRepositories.createNewUser({ email, login, password });
+  },
+  async findUserById(id: string) {
+    return await usersRepositories.findUserById(id);
+  },
+  async getUser(id: string) {
+    return await usersRepositories.findUserById(id);
   },
 };

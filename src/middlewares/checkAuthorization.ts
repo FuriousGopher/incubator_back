@@ -7,8 +7,8 @@ export function checkAuthorization(req: Request, res: Response, next: NextFuncti
   }
 
   const splitHeaderAuth = authHeader.split(' ')[1];
-  const headerAutch = Buffer.from(splitHeaderAuth, 'base64').toString('ascii');
-  const [login, password] = headerAutch.split(':');
+  const headerAuth = Buffer.from(splitHeaderAuth, 'base64').toString('ascii');
+  const [login, password] = headerAuth.split(':');
 
   if (login !== 'admin' || password !== 'qwerty') {
     return res.status(401).json({ error: 'Unauthorized' });

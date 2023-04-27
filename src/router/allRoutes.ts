@@ -6,6 +6,7 @@ import { authRouter } from '../routes/auth-router';
 import { checkAuthorization } from '../middlewares/checkAuthorization';
 import { usersRouter } from '../routes/users-router';
 import express, { Request, Response } from 'express';
+import { commentsRouter } from '../routes/comments-router';
 
 export const router = express.Router();
 
@@ -14,6 +15,8 @@ router.use('/videos', videosRouter);
 router.use('/testing', testRouter);
 
 router.use('/blogs', blogsRouter);
+
+router.use('/comments', commentsRouter);
 
 router.use('/posts', postsRouter);
 

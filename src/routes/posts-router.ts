@@ -3,12 +3,15 @@ import { createNewPost, deletePostsById, getAllPosts, getPostsById, updatePostBy
 import { validatePostAndPutMethodsForPostsBody } from '../validators/postValidator';
 import { checkAuthorization } from '../middlewares/checkAuthorization';
 import { validationMiddleware } from '../middlewares/ValidationErorrsMiddleware';
+import { checkTokenAuth } from '../middlewares/checkTokenAuth';
+import { validatorForCommentByPostId } from '../validators/commentValidator';
+import { createNewCommentByPostId } from '../controllers/commentsController';
 
 export const postsRouter = Router();
 
 postsRouter.get('/', getAllPosts);
 postsRouter.get('/:id/comments');
-postsRouter.post('/:id/comments');
+postsRouter.post('/:postId/comments', checkTokenAuth, validatorForCommentByPostId, validationMiddleware, createNewCommentByPostId);
 postsRouter.get('/:id', getPostsById);
 postsRouter.post('/', checkAuthorization, validatePostAndPutMethodsForPostsBody, validationMiddleware, createNewPost);
 postsRouter.delete('/:id', checkAuthorization, deletePostsById);

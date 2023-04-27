@@ -57,35 +57,6 @@ export const usersRepositories = {
     return await usersCollection.findOne({ $or: [{ email: loginOrEmail }, { login: loginOrEmail }] });
   },
   async findUserById(id: string) {
-    try {
-      return await usersCollection.findOne({ id });
-    } catch (e) {
-      console.error(e);
-    }
+    return await usersCollection.findOne({ id });
   },
 };
-
-class MainClass {
-  private readonly id: string;
-  constructor(id: string) {
-    this.id = id;
-  }
-  protected getId() {
-    return this.id;
-  }
-}
-class SecondClass extends MainClass {
-  private readonly name: string;
-  constructor(id: string, name: string) {
-    super(id);
-    this.name = name;
-  }
-
-  public getIdWithName() {
-    const id = this.getId();
-    return `${this.name}/${id}`;
-  }
-}
-
-const classExempl = new SecondClass('1', 'IvanLoh');
-const str = classExempl.getIdWithName();

@@ -83,12 +83,12 @@ export const getAllPostsByBlogId = async (
 export const createNewPostByBlogId = async (req: Request, res: Response) => {
   const blogId = req.params.blogId;
   if (!blogId) {
-    return res.status(400).send('Blog Id is incorrect');
+    return res.status(HttpStatusCode.BadRequest).send('Blog Id is incorrect');
   }
   const blog = await blogsRepositories.getBlogById(blogId);
   if (!blog) {
-    return res.status(404).send('Blog not found');
+    return res.status(HttpStatusCode.NotFound).send('Blog not found');
   }
   const newPostByBlogId = await blogsService.createNewPostByBlogId(req.body, blogId, blog.name);
-  res.status(201).send(newPostByBlogId);
+  res.status(HttpStatusCode.Created).send(newPostByBlogId);
 };

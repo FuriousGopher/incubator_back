@@ -35,7 +35,6 @@ export const usersRepositories = {
     if (searchLoginTerm) {
       filter.$or.push({ login: { $regex: searchLoginTerm, $options: 'i' } });
     }
-    console.log(filter);
     const foundUsers = await usersCollection
       .find(filter)
       .sort({ [sortBy]: sortDirection })

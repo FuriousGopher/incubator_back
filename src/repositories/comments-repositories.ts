@@ -2,6 +2,7 @@ import { CommentType } from '../models/commentType';
 import { uuid } from 'uuidv4';
 import { commentCollection } from '../models/dbCollections';
 import { UserModel } from '../types/userType';
+import { EnhancedOmit, InferIdType } from 'mongodb';
 
 export const commentsRepositories = {
   async createNewCommentByPostId(comment: CommentType, user: NonNullable<UserModel>, postId: string) {
@@ -33,5 +34,31 @@ export const commentsRepositories = {
       totalNumberOfPages: Math.ceil(totalNumberOfDocuments / nPerPage),
       pageSize: nPerPage,
     };
+  },
+  async getCommentById(id: string) {
+    return commentCollection.findOne({ id: id }, { projection: { _id: 0, postId: 0 } });
+  },
+  async updateCommentById(comment: CommentType, commentId: string) {
+    const result = await commentCollection.updateOne(
+      { id: commentId },
+      {
+        $set: {
+          content: comment.content,
+        },
+      },
+    );
+    return result.matchedCount === 1;
+  },
+  async checkCommentUserId(commentId: string, user: EnhancedOmit<UserModel, '_id'> & { _id: InferIdType<UserModel> }) {
+    const comment = await commentCollection.findOne({ id: commentId });
+    if (!comment) {
+      return false;
+    }
+    const { id } = user;
+    return comment.commentatorInfo.userId === id;
+  },
+  async deleteCommentById(id: string) {
+    const result = await commentCollection.deleteOne({ id: id });
+    return result.deletedCount === 1;
   },
 };

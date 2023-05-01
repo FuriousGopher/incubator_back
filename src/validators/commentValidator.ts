@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-export const validatorForCommentByPostId = [
+export const validatorForComment = [
   body('content')
     .isString()
     .trim()

@@ -6,9 +6,6 @@ import { usersRepositories } from '../repositories/users-repositories';
 
 export const createNewCommentByPostId = async (req: Request, res: Response) => {
   const postId = req.params.postId;
-  if (!postId) {
-    return res.status(HttpStatusCode.BadRequest).send('Post Id is incorrect');
-  }
   const post = await postsRepositories.getPostsById(postId);
   if (!post) {
     return res.status(HttpStatusCode.NotFound).send('Post not found');
@@ -20,6 +17,14 @@ export const createNewCommentByPostId = async (req: Request, res: Response) => {
   if (!user) {
     return res.status(HttpStatusCode.Unauthorized).send('User not found');
   }
-  const newCommentByPostId = await commentsService.createNewCommentByPostId(req.body, user);
-  res.status(HttpStatusCode.Created).send(newCommentByPostId);
+  const newCommentByPostId = await commentsService.createNewCommentByPostId(req.body, user, postId);
+  res.status(HttpStatusCode.Created).send({
+    id: newCommentByPostId.id,
+    content: newCommentByPostId.content,
+    commentatorInfo: {
+      userId: newCommentByPostId.commentatorInfo.userId,
+      userLogin: newCommentByPostId.commentatorInfo.userLogin,
+    },
+    createdAt: newCommentByPostId.createdAt,
+  });
 };

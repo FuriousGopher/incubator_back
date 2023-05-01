@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createNewPost, deletePostsById, getAllPosts, getPostsById, updatePostById } from '../controllers/postsController';
+import { createNewPost, deletePostsById, getAllCommentsByPostId, getAllPosts, getPostsById, updatePostById } from '../controllers/postsController';
 import { validatePostAndPutMethodsForPostsBody } from '../validators/postValidator';
 import { checkAuthorization } from '../middlewares/checkAuthorization';
 import { validationMiddleware } from '../middlewares/ValidationErorrsMiddleware';
@@ -10,7 +10,7 @@ import { createNewCommentByPostId } from '../controllers/commentsController';
 export const postsRouter = Router();
 
 postsRouter.get('/', getAllPosts);
-postsRouter.get('/:id/comments');
+postsRouter.get('/:postId/comments', getAllCommentsByPostId);
 postsRouter.post('/:postId/comments', checkTokenAuth, validatorForCommentByPostId, validationMiddleware, createNewCommentByPostId);
 postsRouter.get('/:id', getPostsById);
 postsRouter.post('/', checkAuthorization, validatePostAndPutMethodsForPostsBody, validationMiddleware, createNewPost);

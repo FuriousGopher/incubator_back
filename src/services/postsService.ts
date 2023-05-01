@@ -1,6 +1,8 @@
 import { MethodGetAllReqQueryById } from '../types/queryType';
 import { postsRepositories } from '../repositories/posts-repositories';
 import { PostsType } from '../models/postsType';
+import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
+import { commentsRepositories } from '../repositories/comments-repositories';
 
 export const postsService = {
   async getAllPosts(query: MethodGetAllReqQueryById) {
@@ -25,5 +27,16 @@ export const postsService = {
   },
   async updatePostById(id: string, post: PostsType) {
     return await postsRepositories.updatePostById(id, post);
+  },
+  async getAllCommentsByPostId(query: GetAllBlogsQueryType, postId: string) {
+    const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
+    const blogsResponse = await commentsRepositories.getAllCommentsByPostId(postId, query.pageNumber, query.pageSize, query.sortBy, sortDirection);
+    return {
+      pageSize: blogsResponse.pageSize,
+      pagesCount: blogsResponse.totalNumberOfPages,
+      page: +blogsResponse.currentPage,
+      totalCount: blogsResponse.totalNumberOfPosts,
+      items: blogsResponse.comments,
+    };
   },
 };

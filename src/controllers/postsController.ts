@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { MethodGetAllReqQueryById } from '../types/queryType';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { postsService } from '../services/postsService';
+import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
 
 export const getAllPosts = async (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllReqQueryById>,
@@ -49,5 +50,32 @@ export const updatePostById = async (req: Request, res: Response) => {
     res.sendStatus(204);
   } else {
     res.status(404).send('Post not found');
+  }
+};
+
+export const getAllCommentsByPostId = async (
+  req: Request<
+    {
+      postId: string;
+    },
+    NonNullable<unknown>,
+    NonNullable<unknown>,
+    GetAllBlogsQueryType
+  >,
+  res: Response,
+) => {
+  const query = {
+    searchNameTerm: req.query.searchNameTerm ?? null,
+    pageSize: Number(req.query.pageSize) || 10,
+    pageNumber: Number(req.query.pageNumber) || 1,
+    sortBy: req.query.sortBy ?? 'createdAt',
+    sortDirection: req.query.sortDirection ?? 'desc',
+  };
+  const postId = req.params.postId;
+  const response = await postsService.getAllCommentsByPostId(query, postId);
+  if (response.items.length) {
+    res.status(HttpStatusCode.OK).send(response);
+  } else {
+    res.status(HttpStatusCode.NotFound).send('Post not found');
   }
 };

@@ -22,8 +22,8 @@ export const getUser = async (req: Request, res: Response) => {
     return;
   }
   res.status(HttpStatusCode.Created).send({
-    userId: user.id,
     email: user.email,
     login: user.login,
+    userId: user.id,
   });
 };

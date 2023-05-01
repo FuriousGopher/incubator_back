@@ -31,7 +31,6 @@ export const postsRepositories = {
     if (!blog) {
       return false;
     }
-
     const newPost = {
       id: uuid(),
       title: post.title,

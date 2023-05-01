@@ -2,7 +2,6 @@ import { CommentType } from '../models/commentType';
 import { uuid } from 'uuidv4';
 import { commentCollection } from '../models/dbCollections';
 import { UserModel } from '../types/userType';
-import { EnhancedOmit, InferIdType } from 'mongodb';
 
 export const commentsRepositories = {
   async createNewCommentByPostId(comment: CommentType, user: NonNullable<UserModel>, postId: string) {
@@ -49,13 +48,12 @@ export const commentsRepositories = {
     );
     return result.matchedCount === 1;
   },
-  async checkCommentUserId(commentId: string, user: EnhancedOmit<UserModel, '_id'> & { _id: InferIdType<UserModel> }) {
+  async checkCommentUserId(commentId: string, userId: string) {
     const comment = await commentCollection.findOne({ id: commentId });
     if (!comment) {
       return false;
     }
-    const { id } = user;
-    return comment.commentatorInfo.userId === id;
+    return comment.commentatorInfo.userId === userId;
   },
   async deleteCommentById(id: string) {
     const result = await commentCollection.deleteOne({ id: id });

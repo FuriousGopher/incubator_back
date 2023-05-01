@@ -1,10 +1,30 @@
 import { CommentType } from '../models/commentType';
 import { commentsRepositories } from '../repositories/comments-repositories';
-import { UserModel } from '../types/userType';
+import { postsRepositories } from '../repositories/posts-repositories';
+import { HttpStatusCode } from '../types/HTTP-Response';
+import { usersService } from './usersService';
+import { HttpError } from '../types/errorType';
 
 export const commentsService = {
-  async createNewCommentByPostId(comment: CommentType, user: NonNullable<UserModel>, postId: string) {
-    return await commentsRepositories.createNewCommentByPostId(comment, user, postId);
+  async createNewCommentByPostId(comment: CommentType, userId: string, postId: string) {
+    try {
+      const user = await usersService.findUserById(userId);
+      if (!user) {
+        throw new HttpError('User not found', HttpStatusCode.Unauthorized);
+      }
+      const post = await postsRepositories.getPostsById(postId);
+      if (!post) {
+        throw new HttpError('Post not found', HttpStatusCode.NotFound);
+      }
+      return await commentsRepositories.createNewCommentByPostId(comment, user, postId);
+    } catch (e: unknown) {
+      console.error(e);
+      if (e instanceof HttpError) {
+        throw e;
+      } else {
+        throw new HttpError('Server error', HttpStatusCode.InternalServerError);
+      }
+    }
   },
 
   async getCommentById(id: string) {
@@ -15,5 +35,8 @@ export const commentsService = {
   },
   async deleteCommentById(id: string) {
     return await commentsRepositories.deleteCommentById(id);
+  },
+  async checkCommentUserId(commentId: string, userId: string) {
+    return await commentsRepositories.checkCommentUserId(commentId, userId);
   },
 };

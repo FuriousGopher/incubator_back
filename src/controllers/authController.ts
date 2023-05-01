@@ -7,7 +7,7 @@ export const checkResultAuth = async (req: Request, res: Response) => {
   const result = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
   if (result) {
     const token = await jwtService.createJWT(result);
-    res.status(HttpStatusCode.Created).send(token);
+    res.status(HttpStatusCode.OK).send(token);
   } else {
     res.status(HttpStatusCode.Unauthorized).send('The password or login is wrong');
   }

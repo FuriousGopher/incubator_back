@@ -78,5 +78,7 @@ export const deleteCommentById = async (req: Request, res: Response) => {
   const deleted = await commentsService.deleteCommentById(commentId);
   if (deleted) {
     res.sendStatus(HttpStatusCode.NoContent);
+  } else {
+    res.sendStatus(HttpStatusCode.InternalServerError);
   }
 };

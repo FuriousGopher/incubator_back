@@ -73,8 +73,7 @@ export const deleteCommentById = async (req: Request, res: Response) => {
   }
   const isCommentOwner = await commentsService.checkCommentUserId(commentId, user.id);
   if (!isCommentOwner) {
-    res.status(HttpStatusCode.Forbidden).send('User is not the owner of the comment');
-    return;
+    return res.status(HttpStatusCode.Forbidden).send('User is not the owner of the comment');
   }
   const deleted = await commentsService.deleteCommentById(commentId);
   if (deleted) {

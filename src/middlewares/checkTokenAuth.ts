@@ -13,11 +13,11 @@ export const checkTokenAuth = async (req: Request, res: Response, next: NextFunc
   if (userId) {
     const userModel = await usersService.findUserById(userId);
     if (!userModel) {
-      return res.send(HttpStatusCode.Unauthorized);
+      return res.sendStatus(HttpStatusCode.Unauthorized);
     }
     req.user = { id: userModel.id };
     next();
     return;
   }
-  res.send(HttpStatusCode.Unauthorized);
+  res.sendStatus(HttpStatusCode.Unauthorized);
 };

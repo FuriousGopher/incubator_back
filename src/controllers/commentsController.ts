@@ -65,11 +65,11 @@ export const deleteCommentById = async (req: Request, res: Response) => {
     return res.status(HttpStatusCode.NotFound).send('Comment not found');
   }
   if (!req.user?.id) {
-    return res.send(HttpStatusCode.Unauthorized);
+    return res.status(HttpStatusCode.Unauthorized).send('User Id not found');
   }
   const user = await usersService.findUserById(req.user?.id);
   if (!user) {
-    return false;
+    return res.status(HttpStatusCode.Forbidden).send('User is not found');
   }
   const isCommentOwner = await commentsService.checkCommentUserId(commentId, user.id);
   if (!isCommentOwner) {
@@ -78,6 +78,6 @@ export const deleteCommentById = async (req: Request, res: Response) => {
   }
   const deleted = await commentsService.deleteCommentById(commentId);
   if (deleted) {
-    res.status(HttpStatusCode.NoContent);
+    res.sendStatus(HttpStatusCode.NoContent);
   }
 };

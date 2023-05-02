@@ -55,6 +55,8 @@ export const updateCommentById = async (req: Request, res: Response) => {
   const updated = await commentsService.updateCommentById(req.body, commentId);
   if (updated) {
     res.sendStatus(HttpStatusCode.NoContent);
+  } else {
+    res.sendStatus(HttpStatusCode.InternalServerError);
   }
 };
 

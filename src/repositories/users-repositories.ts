@@ -1,7 +1,7 @@
-import { CreateUserDto, UserModel } from '../types/userType';
+import { CreateUserDto, UserAccountDBType, UserModel } from '../types/userType';
 import bcrypt from 'bcrypt';
 import { _generateHash } from '../helpFunction';
-import { usersCollection } from '../models/dbCollections';
+import { usersAccountsCollection, usersCollection } from '../models/dbCollections';
 import { uuid } from 'uuidv4';
 
 export const usersRepositories = {
@@ -57,5 +57,9 @@ export const usersRepositories = {
   },
   async findUserById(id: string) {
     return await usersCollection.findOne({ id });
+  },
+
+  async createUserByRegistration(newUser: UserAccountDBType) {
+    return usersAccountsCollection.insertOne(newUser);
   },
 };

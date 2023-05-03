@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import { settings } from '../settings';
 
 export const emailAdapter = {
-  async sendEmail(email: string, subject: string, message: string) {
+  async sendEmail(email: string, confirmationCode: string) {
     const transport = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -13,8 +13,11 @@ export const emailAdapter = {
     return await transport.sendMail({
       from: 'Ricky',
       to: email,
-      subject: subject,
-      html: message,
+      subject: 'BackEndIncubatorTest',
+      html: `<h1>Thank for your registration</h1>
+      <p>To finish registration please follow the link below:
+      <a href="https://incubator-back-9f22.vercel.app/registration-confirmation?code=${confirmationCode}">complete registration</a>
+      </p>`,
     });
   },
 };

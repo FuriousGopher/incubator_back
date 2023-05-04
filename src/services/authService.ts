@@ -13,7 +13,7 @@ export const authService = {
     const createdUser: UserAccountDBType = {
       id: uuid(),
       accountData: {
-        userName: newUser.login,
+        login: newUser.login,
         email: newUser.email,
         passwordHash: passwordHash,
         createdAt: new Date().toISOString(),
@@ -32,15 +32,15 @@ export const authService = {
     return createResult;
   },
 
-  async confirmEmail(code: string, email: string) {
-    const user = await usersRepositories.findByEmailInUsersAccountsCollection(email);
+  async confirmEmail(code: string) {
+    const user = await usersRepositories.findByCodeInUsersAccountsCollection(code);
     if (!user) return false;
     if (user.emailConfirmation.confirmationCode === code && user.emailConfirmation.expirationDate > new Date()) {
       return await usersRepositories.updateIsConfirmed(user.id);
     }
     return false;
   },
-  async findUserByIdInUsersAccountsCollection(id: string) {
-    return await usersRepositories.findUserByIdInUsersAccountsCollection(id);
+  async findUserById(id: string) {
+    return await usersRepositories.findUserById(id);
   },
 };

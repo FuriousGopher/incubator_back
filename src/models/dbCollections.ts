@@ -2,7 +2,7 @@ import { BlogsType } from './blogsType';
 import { VideosType } from './videoTypes';
 import { PostsType } from './postsType';
 import { client } from '../repositories/db';
-import { UserAccountDBType, UserModel } from '../types/userType';
+import { UserAccountDBType } from '../types/userType';
 import { CommentType } from './commentType';
 
 export const dbVideos = client.db('videos');
@@ -15,6 +15,6 @@ export const blogsCollection = dbBlogs.collection<BlogsType>('blogs');
 export const videosCollection = dbVideos.collection<VideosType>('videos');
 export const postsCollection = dbPosts.collection<PostsType>('posts');
 export const commentCollection = dbComment.collection<CommentType>('comment');
-export const usersCollection = dbUsers.collection<UserModel>('users');
+export const usersCollection = dbUsers.collection<UserAccountDBType>('users');
 export const usersAccountsCollection = dbAccounts.collection<UserAccountDBType>('accounts');
 export const collections = [blogsCollection, videosCollection, postsCollection, usersCollection, commentCollection, usersAccountsCollection];

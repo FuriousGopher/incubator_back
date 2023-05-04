@@ -17,22 +17,14 @@ export const getUser = async (req: Request, res: Response) => {
   if (!req.user?.id) {
     return res.send(HttpStatusCode.Unauthorized);
   }
-  const user = await usersService.getUser(req.user?.id);
-  if (!user) {
-    const userAccount = await authService.findUserByIdInUsersAccountsCollection(req.user?.id);
-    if (!userAccount) {
-      return res.sendStatus(HttpStatusCode.NotFound);
-    }
-    return res.status(HttpStatusCode.OK).send({
-      email: userAccount.accountData.email,
-      login: userAccount.accountData.userName,
-      userId: userAccount.id,
-    });
+  const userAccount = await authService.findUserById(req.user?.id);
+  if (!userAccount) {
+    return res.sendStatus(HttpStatusCode.NotFound);
   }
   return res.status(HttpStatusCode.OK).send({
-    email: user.email,
-    login: user.login,
-    userId: user.id,
+    email: userAccount.accountData.email,
+    login: userAccount.accountData.login,
+    userId: userAccount.id,
   });
 };
 
@@ -49,9 +41,12 @@ export const registrationOfUser = async (req: Request, res: Response) => {
 };
 
 export const codeConfirmation = async (req: Request, res: Response) => {
-  const result = await authService.confirmEmail(req.body.code, req.body.email);
+  let result;
+  if (req.query.code) {
+    result = await authService.confirmEmail(req.query.code as string);
+  }
   if (result) {
-    res.status(HttpStatusCode.NoContent).send('Email was verified. Account was activated');
+    res.status(HttpStatusCode.OK).send('Email was verified. Account was activated');
   } else {
     res.status(HttpStatusCode.BadRequest).send('Confirmation code is incorrect, expired or already been applied');
   }

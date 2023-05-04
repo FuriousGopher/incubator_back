@@ -16,7 +16,7 @@ export const emailAdapter = {
       subject: 'BackEndIncubatorTest',
       html: `<h1>Thank for your registration</h1>
       <p>To finish registration please follow the link below:
-      <a href="https://incubator-back-9f22.vercel.app/registration-confirmation?code=${confirmationCode}">complete registration</a>
+      <a href="https://705c-77-71-152-160.ngrok-free.app/auth/registration-confirmation?code=${confirmationCode}">complete registration</a>
       </p>`,
     });
   },

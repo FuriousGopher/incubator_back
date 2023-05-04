@@ -13,7 +13,7 @@ export type CreatedUsertype = Omit<UserModel, 'password'>;
 export type UserAccountDBType = {
   id: string;
   accountData: {
-    userName: string;
+    login: string;
     email: string;
     passwordHash: string;
     createdAt: string;

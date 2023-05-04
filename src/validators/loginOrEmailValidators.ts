@@ -4,3 +4,5 @@ export const loginOrEmailValidators = [
   body('loginOrEmail').isString().trim().notEmpty().withMessage('login or email required'),
   body('password').isString().trim().notEmpty().withMessage('password is required'),
 ];
+
+export const emailValidator = [body('email').isString().trim().isEmail().notEmpty().withMessage('email required')];

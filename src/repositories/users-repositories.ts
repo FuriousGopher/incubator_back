@@ -83,4 +83,7 @@ export const usersRepositories = {
     const result = await usersAccountsCollection.updateOne({ id }, { $set: { 'emailConfirmation.isConfirmed': true } });
     return result.modifiedCount === 1;
   },
+  async findUserByEmail(email: string) {
+    return await usersAccountsCollection.findOne({ 'accountData.email': email });
+  },
 };

@@ -40,7 +40,15 @@ export const authService = {
     }
     return false;
   },
+
   async findUserById(id: string) {
     return await usersRepositories.findUserById(id);
+  },
+
+  async resendingEmail(email: string) {
+    const user = await usersRepositories.findUserByEmail(email);
+    if (!user) return false;
+    if (user.emailConfirmation.isConfirmed) return false;
+    return await emailAdapter.sendEmail(user.accountData.email, user.emailConfirmation.confirmationCode);
   },
 };

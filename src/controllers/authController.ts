@@ -51,3 +51,15 @@ export const codeConfirmation = async (req: Request, res: Response) => {
     res.status(HttpStatusCode.BadRequest).send('Confirmation code is incorrect, expired or already been applied');
   }
 };
+
+export const resendEmailForRegistration = async (req: Request, res: Response) => {
+  if (!req.body.email) {
+    return res.status(HttpStatusCode.BadRequest).send('The inputModel has incorrect values or if email is already confirmed');
+  }
+  const result = await authService.resendingEmail(req.body.email);
+  if (result) {
+    res.sendStatus(HttpStatusCode.NoContent);
+  } else {
+    res.sendStatus(HttpStatusCode.BadRequest);
+  }
+};

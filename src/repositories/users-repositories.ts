@@ -55,11 +55,25 @@ export const usersRepositories = {
   async findByLoginOrEmail(loginOrEmail: string) {
     return await usersCollection.findOne({ $or: [{ email: loginOrEmail }, { login: loginOrEmail }] });
   },
+
+  async findByEmailInUsersAccountsCollection(loginOrEmail: string) {
+    return await usersAccountsCollection.findOne({ $or: [{ email: loginOrEmail }, { login: loginOrEmail }] });
+  },
+
   async findUserById(id: string) {
     return await usersCollection.findOne({ id });
   },
 
+  async findUserByIdInUsersAccountsCollection(id: string) {
+    return await usersAccountsCollection.findOne({ id });
+  },
+
   async createUserByRegistration(newUser: UserAccountDBType) {
     return usersAccountsCollection.insertOne(newUser);
+  },
+
+  async updateIsConfirmed(id: string) {
+    const result = await usersAccountsCollection.updateOne({ id }, { $set: { 'emailConfirmation.isConfirmed': true } });
+    return result.modifiedCount === 1;
   },
 };

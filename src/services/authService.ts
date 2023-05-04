@@ -31,4 +31,16 @@ export const authService = {
     await emailAdapter.sendEmail(createdUser.accountData.email, createdUser.emailConfirmation.confirmationCode);
     return createResult;
   },
+
+  async confirmEmail(code: string, email: string) {
+    const user = await usersRepositories.findByEmailInUsersAccountsCollection(email);
+    if (!user) return false;
+    if (user.emailConfirmation.confirmationCode === code && user.emailConfirmation.expirationDate > new Date()) {
+      return await usersRepositories.updateIsConfirmed(user.id);
+    }
+    return false;
+  },
+  async findUserByIdInUsersAccountsCollection(id: string) {
+    return await usersRepositories.findUserByIdInUsersAccountsCollection(id);
+  },
 };

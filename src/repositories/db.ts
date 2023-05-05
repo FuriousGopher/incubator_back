@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
 const mongoURI = process.env.MONGO_URL;
@@ -8,8 +9,8 @@ if (!mongoURI) {
 }
 export const client = new MongoClient(mongoURI);
 
-// const for git
 console.log(process.env.MONGO_URL);
+
 export async function runDb() {
   try {
     await client.connect();

@@ -57,6 +57,7 @@ export const usersRepositories = {
       .sort((a: any, b: any) => (a[sortBy] > b[sortBy] ? sortDirection : -sortDirection))
       .slice(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0, pageNumber > 0 ? pageNumber * nPerPage : nPerPage)
       .map((user: any) => ({
+        id: user.id,
         login: user.login,
         email: user.email,
         createdAt: user.createdAt,

@@ -9,9 +9,9 @@ export const createNewUser = async (req: Request, res: Response) => {
   const newUser = await usersService.createNewUser(email, login, password);
   const createdUser: CreatedUsertype = {
     id: newUser.id,
-    login: newUser.accountData.login,
-    email: newUser.accountData.email,
-    createdAt: newUser.accountData.createdAt,
+    login: newUser.login,
+    email: newUser.email,
+    createdAt: newUser.createdAt,
   };
   res.status(HttpStatusCode.Created).send(createdUser);
 };

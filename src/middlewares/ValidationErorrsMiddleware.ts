@@ -6,10 +6,10 @@ import { HttpStatusCode } from '../types/HTTP-Response';
 export const validationMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    const errorMessages: ErrorType[] = errors.array({ onlyFirstError: true }).map((error) => {
+    const errorsMessages: ErrorType[] = errors.array({ onlyFirstError: true }).map((error) => {
       return { message: error.msg, field: error.param };
     });
-    return res.status(HttpStatusCode.BadRequest).json({ errorsMessages: errorMessages });
+    return res.status(HttpStatusCode.BadRequest).json({ errorsMessages: errorsMessages });
   }
   next();
 };

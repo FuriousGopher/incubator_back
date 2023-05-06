@@ -1,26 +1,37 @@
-import { CreateUserDto, UserModel } from '../types/userType';
+import { CreateUserDto, UserAccountDBType } from '../types/userType';
 import bcrypt from 'bcrypt';
 import { _generateHash } from '../helpFunction';
-import { usersCollection } from '../models/dbCollections';
+import { usersAccountsCollection } from '../models/dbCollections';
 import { uuid } from 'uuidv4';
+import { add } from 'date-fns';
 
 export const usersRepositories = {
   async createNewUser(data: CreateUserDto) {
     const passwordSalt = await bcrypt.genSalt(4);
     const passwordHash = await _generateHash(data.password, passwordSalt);
-    const newUser: UserModel = {
+    const newUser: UserAccountDBType = {
       id: uuid(),
-      login: data.login,
-      email: data.email,
-      password: passwordHash,
-      createdAt: new Date().toISOString(),
+      accountData: {
+        login: data.login,
+        email: data.email,
+        passwordHash: passwordHash,
+        createdAt: new Date().toISOString(),
+      },
+      emailConfirmation: {
+        confirmationCode: uuid(),
+        expirationDate: add(new Date(), {
+          hours: 1,
+          minutes: 3,
+        }),
+        isConfirmed: true,
+      },
     };
-    await usersCollection.insertOne({ ...newUser });
+    await usersAccountsCollection.insertOne({ ...newUser });
     return newUser;
   },
 
   async deleteUserById(id: string) {
-    const result = await usersCollection.deleteOne({ id: id });
+    const result = await usersAccountsCollection.deleteOne({ id: id });
     return result.deletedCount === 1;
   },
 
@@ -35,16 +46,21 @@ export const usersRepositories = {
     if (searchLoginTerm) {
       filter.$or.push({ login: { $regex: searchLoginTerm, $options: 'i' } });
     }
-    const foundUsers = await usersCollection
+    const foundUsers = await usersAccountsCollection
       .find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
       .limit(nPerPage)
-      .project({ _id: false, password: false })
       .toArray();
-    const totalNumberOfPosts = await usersCollection.countDocuments(filter);
+    const items = foundUsers.map((user: any) => ({
+      id: user.id,
+      login: user.accountData.login,
+      email: user.accountData.email,
+      createdAt: user.accountData.createdAt,
+    }));
+    const totalNumberOfPosts = await usersAccountsCollection.countDocuments(filter);
     return {
-      users: foundUsers,
+      users: items,
       totalNumberOfPosts: totalNumberOfPosts,
       currentPage: pageNumber,
       totalNumberOfPages: Math.ceil(totalNumberOfPosts / nPerPage),
@@ -53,9 +69,26 @@ export const usersRepositories = {
   },
 
   async findByLoginOrEmail(loginOrEmail: string) {
-    return await usersCollection.findOne({ $or: [{ email: loginOrEmail }, { login: loginOrEmail }] });
+    return await usersAccountsCollection.findOne({ $or: [{ 'accountData.login': loginOrEmail }, { 'accountData.email': loginOrEmail }] });
   },
+
+  async findByCodeInUsersAccountsCollection(code: string) {
+    return await usersAccountsCollection.findOne({ 'emailConfirmation.confirmationCode': code });
+  },
+
   async findUserById(id: string) {
-    return await usersCollection.findOne({ id });
+    return await usersAccountsCollection.findOne({ id });
+  },
+
+  async createUserByRegistration(newUser: UserAccountDBType) {
+    return usersAccountsCollection.insertOne(newUser);
+  },
+
+  async updateIsConfirmed(id: string) {
+    const result = await usersAccountsCollection.updateOne({ id }, { $set: { 'emailConfirmation.isConfirmed': true } });
+    return result.modifiedCount === 1;
+  },
+  async findUserByEmail(email: string) {
+    return await usersAccountsCollection.findOne({ 'accountData.email': email });
   },
 };

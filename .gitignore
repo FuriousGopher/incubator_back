@@ -1,6 +1,7 @@
 node_modules
 .idea
-.env
+src/.env
 dist
 yarn-error.log
-.yarn
+/__tests__/
+src/settings.ts

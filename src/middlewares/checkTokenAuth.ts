@@ -5,7 +5,7 @@ import { usersService } from '../services/usersService';
 
 export const checkTokenAuth = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) {
-    res.send(HttpStatusCode.Unauthorized);
+    res.sendStatus(HttpStatusCode.Unauthorized);
     return;
   }
   const token = req.headers.authorization.split(' ')[1];
@@ -13,11 +13,11 @@ export const checkTokenAuth = async (req: Request, res: Response, next: NextFunc
   if (userId) {
     const userModel = await usersService.findUserById(userId);
     if (!userModel) {
-      return res.send(HttpStatusCode.Unauthorized);
+      return res.sendStatus(HttpStatusCode.Unauthorized);
     }
     req.user = { id: userModel.id };
     next();
     return;
   }
-  res.send(HttpStatusCode.Unauthorized);
+  res.sendStatus(HttpStatusCode.Unauthorized);
 };

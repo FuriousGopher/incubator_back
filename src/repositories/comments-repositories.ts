@@ -1,16 +1,23 @@
 import { CommentType } from '../models/commentType';
 import { uuid } from 'uuidv4';
 import { commentCollection } from '../models/dbCollections';
-import { UserModel } from '../types/userType';
+import { UserAccountDBType } from '../types/userType';
+import { EnhancedOmit, InferIdType } from 'mongodb';
 
 export const commentsRepositories = {
-  async createNewCommentByPostId(comment: CommentType, user: NonNullable<UserModel>, postId: string) {
+  async createNewCommentByPostId(
+    comment: CommentType,
+    user: EnhancedOmit<UserAccountDBType, '_id'> & {
+      _id: InferIdType<UserAccountDBType>;
+    },
+    postId: string,
+  ) {
     const newComment = {
       id: uuid(),
       content: comment.content,
       commentatorInfo: {
         userId: user.id,
-        userLogin: user.login,
+        userLogin: user.accountData.login,
       },
       createdAt: new Date().toISOString(),
       postId: postId,

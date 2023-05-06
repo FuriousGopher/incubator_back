@@ -24,14 +24,15 @@ export const usersService = {
   async checkCredentials(loginOrEmail: string, password: string) {
     const user = await usersRepositories.findByLoginOrEmail(loginOrEmail);
     if (!user) return false;
-    const passwordHash = await _generateHash(password, user.password);
-    const findUser = user.password === passwordHash;
+    if (!user.emailConfirmation.isConfirmed) return false;
+    const passwordHash = await _generateHash(password, user.accountData.passwordHash);
+    const findUser = user.accountData.passwordHash === passwordHash;
     if (findUser) {
       return {
         id: user.id,
-        login: user.login,
-        email: user.email,
-        createdAt: user.createdAt,
+        login: user.accountData.login,
+        email: user.accountData.email,
+        createdAt: user.accountData.createdAt,
       };
     } else {
       return false;
@@ -44,9 +45,6 @@ export const usersService = {
     return await usersRepositories.createNewUser({ email, login, password });
   },
   async findUserById(id: string) {
-    return await usersRepositories.findUserById(id);
-  },
-  async getUser(id: string) {
     return await usersRepositories.findUserById(id);
   },
 };

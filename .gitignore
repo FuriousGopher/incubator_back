@@ -4,3 +4,4 @@ src/.env
 dist
 yarn-error.log
 /__tests__/
+src/settings.ts

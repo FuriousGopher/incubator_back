@@ -36,26 +36,21 @@ export const registrationOfUser = async (req: Request, res: Response) => {
   };
   const createdUser = await authService.createUser(newUser);
   if (createdUser) {
-    res.status(HttpStatusCode.Created).send('Input data is accepted. Email with confirmation code will be send to passed email address');
+    res.sendStatus(HttpStatusCode.NoContent);
   }
 };
 
 export const codeConfirmation = async (req: Request, res: Response) => {
-  let result;
-  if (req.query.code) {
-    result = await authService.confirmEmail(req.query.code as string);
-  }
+  const code = req.body.code;
+  const result = await authService.confirmEmail(code);
   if (result) {
-    res.status(HttpStatusCode.OK).send('Email was verified. Account was activated');
+    res.sendStatus(HttpStatusCode.NoContent);
   } else {
-    res.status(HttpStatusCode.BadRequest).send('Confirmation code is incorrect, expired or already been applied');
+    res.sendStatus(HttpStatusCode.BadRequest);
   }
 };
 
 export const resendEmailForRegistration = async (req: Request, res: Response) => {
-  if (!req.body.email) {
-    return res.status(HttpStatusCode.BadRequest).send('The inputModel has incorrect values or if email is already confirmed');
-  }
   const result = await authService.resendingEmail(req.body.email);
   if (result) {
     res.sendStatus(HttpStatusCode.NoContent);

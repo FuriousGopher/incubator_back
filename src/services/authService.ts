@@ -35,10 +35,7 @@ export const authService = {
   async confirmEmail(code: string) {
     const user = await usersRepositories.findByCodeInUsersAccountsCollection(code);
     if (!user) return false;
-    if (user.emailConfirmation.confirmationCode === code && user.emailConfirmation.expirationDate > new Date()) {
-      return await usersRepositories.updateIsConfirmed(user.id);
-    }
-    return false;
+    return await usersRepositories.updateIsConfirmed(user.id);
   },
 
   async findUserById(id: string) {
@@ -48,7 +45,6 @@ export const authService = {
   async resendingEmail(email: string) {
     const user = await usersRepositories.findUserByEmail(email);
     if (!user) return false;
-    if (user.emailConfirmation.isConfirmed) return false;
     return await emailAdapter.sendEmail(user.accountData.email, user.emailConfirmation.confirmationCode);
   },
 };

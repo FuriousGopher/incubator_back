@@ -46,20 +46,22 @@ export const usersRepositories = {
     if (searchLoginTerm) {
       filter.$or.push({ login: { $regex: searchLoginTerm, $options: 'i' } });
     }
-    const foundUsers = await usersAccountsCollection
-      .find(filter)
-      .sort({ [sortBy]: sortDirection })
-      .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
-      .limit(nPerPage)
-      .project({ _id: false, password: false })
-      .toArray();
+    const foundUsers = await usersAccountsCollection.find(filter).toArray();
+    const items = foundUsers
+      .map((user: any) => ({
+        id: user.id,
+        login: user.accountData.login,
+        email: user.accountData.email,
+        createdAt: user.accountData.createdAt,
+      }))
+      .sort((a: any, b: any) => (a[sortBy] > b[sortBy] ? sortDirection : -sortDirection))
+      .slice(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0, pageNumber > 0 ? pageNumber * nPerPage : nPerPage)
+      .map((user: any) => ({
+        login: user.login,
+        email: user.email,
+        createdAt: user.createdAt,
+      }));
     const totalNumberOfPosts = await usersAccountsCollection.countDocuments(filter);
-    const items = foundUsers.map((user: any) => ({
-      id: user.id,
-      login: user.accountData.login,
-      email: user.accountData.email,
-      createdAt: user.accountData.createdAt,
-    }));
     return {
       users: items,
       totalNumberOfPosts: totalNumberOfPosts,
@@ -68,6 +70,40 @@ export const usersRepositories = {
       pageSize: nPerPage,
     };
   },
+
+  /*async getAllUsers(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1, searchEmailTerm: string, searchLoginTerm: string) {
+    const filter: any = {};
+    if (searchLoginTerm || searchEmailTerm) {
+      filter.$or = [];
+    }
+    if (searchEmailTerm) {
+      filter.$or.push({ email: { $regex: searchEmailTerm, $options: 'i' } });
+    }
+    if (searchLoginTerm) {
+      filter.$or.push({ login: { $regex: searchLoginTerm, $options: 'i' } });
+    }
+    const foundUsers = await usersAccountsCollection
+      .find(filter)
+      .sort({ [sortBy]: sortDirection })
+      .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
+      .limit(nPerPage)
+      .project({ _id: false, password: false })
+      .toArray();
+    const items = foundUsers.map((user: any) => ({
+      id: user.id,
+      login: user.accountData.login,
+      email: user.accountData.email,
+      createdAt: user.accountData.createdAt,
+    }));
+    const totalNumberOfPosts = await usersAccountsCollection.countDocuments(filter);
+    return {
+      users: items,
+      totalNumberOfPosts: totalNumberOfPosts,
+      currentPage: pageNumber,
+      totalNumberOfPages: Math.ceil(totalNumberOfPosts / nPerPage),
+      pageSize: nPerPage,
+    };
+  },*/
 
   async findByLoginOrEmail(loginOrEmail: string) {
     return await usersAccountsCollection.findOne({ $or: [{ 'accountData.login': loginOrEmail }, { 'accountData.email': loginOrEmail }] });

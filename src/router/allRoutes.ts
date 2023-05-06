@@ -24,6 +24,6 @@ router.use('/auth', authRouter);
 
 router.use('/users', checkAuthorization, usersRouter);
 router.use('/', (req: Request, res: Response) => {
-  const file = __dirname + '/home.html';
+  const file = __dirname + 'home.html';
   res.sendFile(file);
 });

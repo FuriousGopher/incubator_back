@@ -54,8 +54,14 @@ export const usersRepositories = {
       .project({ _id: false, password: false })
       .toArray();
     const totalNumberOfPosts = await usersAccountsCollection.countDocuments(filter);
+    const items = foundUsers.map((user: any) => ({
+      id: user.id,
+      login: user.accountData.login,
+      email: user.accountData.email,
+      createdAt: user.accountData.createdAt,
+    }));
     return {
-      users: foundUsers,
+      users: items,
       totalNumberOfPosts: totalNumberOfPosts,
       currentPage: pageNumber,
       totalNumberOfPages: Math.ceil(totalNumberOfPosts / nPerPage),

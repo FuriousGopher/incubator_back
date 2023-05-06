@@ -29,7 +29,8 @@
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
     "tsc": "^2.0.4",
-    "uuidv4": "^6.2.13"
+    "uuidv4": "^6.2.13",
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

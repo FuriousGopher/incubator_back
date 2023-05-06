@@ -3,4 +3,4 @@ node_modules
 src/.env
 dist
 yarn-error.log
-.yarn
+/__tests__/

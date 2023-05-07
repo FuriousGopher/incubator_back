@@ -45,6 +45,10 @@ export const authService = {
   async resendingEmail(email: string) {
     const user = await usersRepositories.findUserByEmail(email);
     if (!user) return false;
-    return await emailAdapter.sendEmail(user.accountData.email, user.emailConfirmation.confirmationCode);
+    const newConfirmationCode = uuid();
+    if (user) {
+      await emailAdapter.sendEmail(user.accountData.email, newConfirmationCode);
+    }
+    return usersRepositories.updateConfirmationCode(user.id, newConfirmationCode);
   },
 };

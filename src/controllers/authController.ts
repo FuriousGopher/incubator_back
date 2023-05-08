@@ -93,13 +93,7 @@ export const logOut = async (req: Request, res: Response) => {
   const findUserByRefreshToken = await authService.findUserByRefreshToken(cookieRefreshToken);
   if (findUserByRefreshToken) {
     await authService.addingNewRefreshToken(findUserByRefreshToken.id, '');
-    res
-      .cookie(REFRESH_TOKEN, '', {
-        httpOnly: true,
-        secure: true,
-      })
-      .status(HttpStatusCode.OK)
-      .send({ accessToken: '' });
+    res.sendStatus(HttpStatusCode.NoContent);
   } else {
     res.status(HttpStatusCode.Unauthorized).send('You are logOut');
   }

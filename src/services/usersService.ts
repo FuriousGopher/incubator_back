@@ -21,6 +21,7 @@ export const usersService = {
       items: userResponse.users,
     };
   },
+
   async checkCredentials(loginOrEmail: string, password: string) {
     const user = await usersRepositories.findByLoginOrEmail(loginOrEmail);
     if (!user) return false;
@@ -38,12 +39,15 @@ export const usersService = {
       return false;
     }
   },
+
   async deleteUserById(id: string) {
     return await usersRepositories.deleteUserById(id);
   },
+
   async createNewUser(email: string, login: string, password: string) {
     return await usersRepositories.createNewUser({ email, login, password });
   },
+
   async findUserById(id: string) {
     return await usersRepositories.findUserById(id);
   },

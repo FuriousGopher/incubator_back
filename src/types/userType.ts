@@ -23,4 +23,7 @@ export type UserAccountDBType = {
     expirationDate: any;
     isConfirmed: boolean;
   };
+  securityData: {
+    refreshToken: string;
+  };
 };

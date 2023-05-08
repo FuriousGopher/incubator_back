@@ -4,11 +4,21 @@ import { Request, Response } from 'express';
 import { jwtService } from '../aplication/jwt-service';
 import { authService } from '../services/authService';
 
-export const checkResultAuth = async (req: Request, res: Response) => {
+const REFRESH_TOKEN = 'refreshToken';
+
+export const loginAuth = async (req: Request, res: Response) => {
   const result = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
   if (result) {
     const token = await jwtService.createJWT(result);
-    res.status(HttpStatusCode.OK).send({ accessToken: token });
+    const refreshToken = await jwtService.createRefreshTokenJWT(result);
+    await authService.addingNewRefreshToken(result.id, refreshToken);
+    res
+      .cookie(REFRESH_TOKEN, refreshToken, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(HttpStatusCode.OK)
+      .send({ accessToken: token });
   } else {
     res.status(HttpStatusCode.Unauthorized).send('The password or login is wrong');
   }
@@ -56,5 +66,24 @@ export const resendEmailForRegistration = async (req: Request, res: Response) =>
     res.sendStatus(HttpStatusCode.NoContent);
   } else {
     res.sendStatus(HttpStatusCode.BadRequest);
+  }
+};
+
+export const refreshToken = async (req: Request, res: Response) => {
+  const cookieRefreshToken = req.cookies[REFRESH_TOKEN];
+  const findUserByRefreshToken = await authService.findUserByRefreshToken(cookieRefreshToken);
+  if (findUserByRefreshToken) {
+    const token = await jwtService.createJWT(findUserByRefreshToken);
+    const refreshToken = await jwtService.createRefreshTokenJWT(findUserByRefreshToken);
+    await authService.addingNewRefreshToken(findUserByRefreshToken.id, refreshToken);
+    res
+      .cookie(REFRESH_TOKEN, refreshToken, {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(HttpStatusCode.OK)
+      .send({ accessToken: token });
+  } else {
+    res.status(HttpStatusCode.Unauthorized).send('The password or login is wrong');
   }
 };

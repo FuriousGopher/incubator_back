@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { checkResultAuth, codeConfirmation, getUser, registrationOfUser, resendEmailForRegistration } from '../controllers/authController';
+import { codeConfirmation, getUser, loginAuth, refreshToken, registrationOfUser, resendEmailForRegistration } from '../controllers/authController';
 import { emailValidator, loginOrEmailValidators } from '../validators/loginOrEmailValidators';
 import { validationMiddleware } from '../middlewares/ValidationErorrsMiddleware';
 import { checkTokenAuth } from '../middlewares/checkTokenAuth';
@@ -11,9 +11,14 @@ import { validationEmailResend } from '../validators/validationForEmailReSend';
 
 export const authRouter = Router();
 
-authRouter.post('/login', loginOrEmailValidators, validationMiddleware, checkResultAuth);
+authRouter.post('/login', loginOrEmailValidators, validationMiddleware, loginAuth);
+
 authRouter.get('/me', checkTokenAuth, getUser);
+
+authRouter.post('/refresh-token', refreshToken);
+
 authRouter.post('/registration-confirmation', validationCodeInput, validationEmailConfirm, validationMiddleware, codeConfirmation);
+
 authRouter.post(
   '/registration',
   createUserValidator,
@@ -22,4 +27,5 @@ authRouter.post(
   validationMiddleware,
   registrationOfUser,
 );
+
 authRouter.post('/registration-email-resending', emailValidator, validationEmailResend, validationMiddleware, resendEmailForRegistration);

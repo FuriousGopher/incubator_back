@@ -26,6 +26,9 @@ export const authService = {
         }),
         isConfirmed: false,
       },
+      securityData: {
+        refreshToken: uuid(),
+      },
     };
     const createResult = usersRepositories.createUserByRegistration(createdUser);
     await emailAdapter.sendEmail(createdUser.accountData.email, createdUser.emailConfirmation.confirmationCode);
@@ -50,5 +53,23 @@ export const authService = {
       await emailAdapter.sendEmail(user.accountData.email, newConfirmationCode);
     }
     return usersRepositories.updateConfirmationCode(user.id, newConfirmationCode);
+  },
+
+  async addingNewRefreshToken(id: string, newRefreshToken: string) {
+    return await usersRepositories.addingNewRefreshToken(id, newRefreshToken);
+  },
+
+  async findUserByRefreshToken(refreshToken: string) {
+    const findUser = await usersRepositories.findUserByRefreshToken(refreshToken);
+    if (findUser) {
+      return {
+        id: findUser.id,
+        login: findUser.accountData.login,
+        email: findUser.accountData.email,
+        createdAt: findUser.accountData.createdAt,
+      };
+    } else {
+      return false;
+    }
   },
 };

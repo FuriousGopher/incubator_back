@@ -1,6 +1,6 @@
 node_modules
 .idea
-src/.env
+.env
 dist
 yarn-error.log
 /__tests__/

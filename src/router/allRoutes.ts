@@ -7,6 +7,7 @@ import { checkAuthorization } from '../middlewares/checkAuthorization';
 import { usersRouter } from '../routes/users-router';
 import express, { Request, Response } from 'express';
 import { commentsRouter } from '../routes/comments-router';
+import path from 'path';
 
 export const router = express.Router();
 
@@ -24,6 +25,6 @@ router.use('/auth', authRouter);
 
 router.use('/users', checkAuthorization, usersRouter);
 router.use('/', (req: Request, res: Response) => {
-  const file = __dirname + 'home.html';
-  res.sendFile(file);
+  const filePath = path.join(__dirname, '../home.html');
+  res.sendFile(filePath);
 });

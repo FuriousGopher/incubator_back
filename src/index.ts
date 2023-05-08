@@ -3,12 +3,15 @@ import bodyParser from 'body-parser';
 import { runDb } from './repositories/db';
 import { router } from './router/allRoutes';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 export const app = express();
 
 const port = process.env.PORT || 3004;
 
 const jsonBodyMiddleware = express.json();
+
+app.use(cookieParser());
 
 app.use(bodyParser());
 

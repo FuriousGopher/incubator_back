@@ -25,6 +25,9 @@ export const usersRepositories = {
         }),
         isConfirmed: true,
       },
+      securityData: {
+        refreshToken: uuid(),
+      },
     };
     await usersAccountsCollection.insertOne({ ...newUser });
     return newUser;
@@ -88,11 +91,22 @@ export const usersRepositories = {
     const result = await usersAccountsCollection.updateOne({ id }, { $set: { 'emailConfirmation.isConfirmed': true } });
     return result.modifiedCount === 1;
   },
+
   async updateConfirmationCode(id: string, newCode: string) {
     const result = await usersAccountsCollection.updateOne({ id }, { $set: { 'emailConfirmation.confirmationCode': newCode } });
     return result.modifiedCount === 1;
   },
+
   async findUserByEmail(email: string) {
     return await usersAccountsCollection.findOne({ 'accountData.email': email });
+  },
+
+  async addingNewRefreshToken(id: string, newRefreshToken: string) {
+    const result = await usersAccountsCollection.updateOne({ id }, { $set: { 'securityData.refreshToken': newRefreshToken } });
+    return result.modifiedCount === 1;
+  },
+
+  async findUserByRefreshToken(refreshToken: string) {
+    return await usersAccountsCollection.findOne({ 'securityData.refreshToken': refreshToken });
   },
 };

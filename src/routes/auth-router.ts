@@ -1,5 +1,13 @@
 import { Router } from 'express';
-import { codeConfirmation, getUser, loginAuth, refreshToken, registrationOfUser, resendEmailForRegistration } from '../controllers/authController';
+import {
+  codeConfirmation,
+  getUser,
+  loginAuth,
+  logOut,
+  refreshToken,
+  registrationOfUser,
+  resendEmailForRegistration,
+} from '../controllers/authController';
 import { emailValidator, loginOrEmailValidators } from '../validators/loginOrEmailValidators';
 import { validationMiddleware } from '../middlewares/ValidationErorrsMiddleware';
 import { checkTokenAuth } from '../middlewares/checkTokenAuth';
@@ -16,6 +24,8 @@ authRouter.post('/login', loginOrEmailValidators, validationMiddleware, loginAut
 authRouter.get('/me', checkTokenAuth, getUser);
 
 authRouter.post('/refresh-token', refreshToken);
+
+authRouter.post('/logout', logOut);
 
 authRouter.post('/registration-confirmation', validationCodeInput, validationEmailConfirm, validationMiddleware, codeConfirmation);
 

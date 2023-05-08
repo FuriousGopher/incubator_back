@@ -87,3 +87,20 @@ export const refreshToken = async (req: Request, res: Response) => {
     res.status(HttpStatusCode.Unauthorized).send('The password or login is wrong');
   }
 };
+
+export const logOut = async (req: Request, res: Response) => {
+  const cookieRefreshToken = req.cookies[REFRESH_TOKEN];
+  const findUserByRefreshToken = await authService.findUserByRefreshToken(cookieRefreshToken);
+  if (findUserByRefreshToken) {
+    await authService.addingNewRefreshToken(findUserByRefreshToken.id, '');
+    res
+      .cookie(REFRESH_TOKEN, '', {
+        httpOnly: true,
+        secure: true,
+      })
+      .status(HttpStatusCode.OK)
+      .send({ accessToken: '' });
+  } else {
+    res.status(HttpStatusCode.Unauthorized).send('You are logOut');
+  }
+};

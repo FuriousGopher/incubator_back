@@ -71,11 +71,11 @@ export const resendEmailForRegistration = async (req: Request, res: Response) =>
 
 export const refreshToken = async (req: Request, res: Response) => {
   const cookieRefreshToken = req.cookies[REFRESH_TOKEN];
-  const findUserByRefreshToken = await authService.findUserByRefreshToken(cookieRefreshToken);
-  if (findUserByRefreshToken) {
-    const token = await jwtService.createJWT(findUserByRefreshToken);
-    const refreshToken = await jwtService.createRefreshTokenJWT(findUserByRefreshToken);
-    await authService.addingNewRefreshToken(findUserByRefreshToken.id, refreshToken);
+  const foundUserByRefreshToken = await authService.findUserByRefreshToken(cookieRefreshToken);
+  if (foundUserByRefreshToken) {
+    const token = await jwtService.createJWT(foundUserByRefreshToken);
+    const refreshToken = await jwtService.createRefreshTokenJWT(foundUserByRefreshToken);
+    await authService.addingNewRefreshToken(foundUserByRefreshToken.id, refreshToken);
     res
       .cookie(REFRESH_TOKEN, refreshToken, {
         httpOnly: true,
@@ -90,11 +90,16 @@ export const refreshToken = async (req: Request, res: Response) => {
 
 export const logOut = async (req: Request, res: Response) => {
   const cookieRefreshToken = req.cookies[REFRESH_TOKEN];
-  const findUserByRefreshToken = await authService.findUserByRefreshToken(cookieRefreshToken);
-  if (findUserByRefreshToken) {
-    await authService.addingNewRefreshToken(findUserByRefreshToken.id, '');
-    res.sendStatus(HttpStatusCode.NoContent);
+  const foundUserByRefreshToken = await jwtService.getUserIdByToken(cookieRefreshToken);
+  if (foundUserByRefreshToken) {
+    const user = await authService.findUserById(foundUserByRefreshToken);
+    if (user) {
+      await authService.addingNewRefreshToken(user?.id, '');
+      res.sendStatus(HttpStatusCode.NoContent);
+    } else {
+      res.sendStatus(HttpStatusCode.Unauthorized);
+    }
   } else {
-    res.status(HttpStatusCode.Unauthorized).send('You are logOut');
+    res.sendStatus(HttpStatusCode.Unauthorized);
   }
 };

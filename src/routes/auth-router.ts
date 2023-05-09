@@ -16,6 +16,7 @@ import { validatorForUserExistEmail, validatorForUserExistLogin } from '../valid
 import { validationEmailConfirm } from '../validators/validatorForCodeConfirmation';
 import { validationCodeInput } from '../validators/validationInputForCodeConfirmation';
 import { validationEmailResend } from '../validators/validationForEmailReSend';
+import { validatorForRefreshToken } from '../validators/validatorForRefreshToken';
 
 export const authRouter = Router();
 
@@ -23,9 +24,9 @@ authRouter.post('/login', loginOrEmailValidators, validationMiddleware, loginAut
 
 authRouter.get('/me', checkTokenAuth, getUser);
 
-authRouter.post('/refresh-token', refreshToken);
+authRouter.post('/refresh-token', validatorForRefreshToken, refreshToken);
 
-authRouter.post('/logout', logOut);
+authRouter.post('/logout', validatorForRefreshToken, logOut);
 
 authRouter.post('/registration-confirmation', validationCodeInput, validationEmailConfirm, validationMiddleware, codeConfirmation);
 

@@ -55,7 +55,7 @@ export const authService = {
     return usersRepositories.updateConfirmationCode(user.id, newConfirmationCode);
   },
 
-  async addingNewRefreshToken(id: string, newRefreshToken: string) {
+  async addingNewRefreshToken(id: string | undefined, newRefreshToken: string) {
     return await usersRepositories.addingNewRefreshToken(id, newRefreshToken);
   },
 

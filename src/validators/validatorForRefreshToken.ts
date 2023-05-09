@@ -1,18 +1,24 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { jwtService } from '../aplication/jwt-service';
+import { authService } from '../services/authService';
+
+const REFRESH_TOKEN = 'refreshToken';
 
 export const validatorForRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
-  const cookieRefreshToken = req.cookies.refreshToken;
-  if (!cookieRefreshToken) {
-    res.sendStatus(401);
-    return;
-  }
+  try {
+    const cookieRefreshToken = req.cookies[REFRESH_TOKEN];
+    const userId = await jwtService.getUserIdByToken(cookieRefreshToken);
 
-  const checkRefreshToken = jwtService.getUserIdByToken(cookieRefreshToken);
-  if (!checkRefreshToken) {
-    res.sendStatus(401);
-    return;
-  }
+    if (userId) {
+      const user = await authService.findUserById(userId);
+      if (user?.securityData.refreshToken === cookieRefreshToken) {
+        return next();
+      }
+    }
 
-  next();
+    return res.sendStatus(401);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
 };

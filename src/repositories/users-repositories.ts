@@ -101,7 +101,7 @@ export const usersRepositories = {
     return await usersAccountsCollection.findOne({ 'accountData.email': email });
   },
 
-  async addingNewRefreshToken(id: string, newRefreshToken: string) {
+  async addingNewRefreshToken(id: string | undefined, newRefreshToken: string) {
     const result = await usersAccountsCollection.updateOne({ id }, { $set: { 'securityData.refreshToken': newRefreshToken } });
     return result.modifiedCount === 1;
   },

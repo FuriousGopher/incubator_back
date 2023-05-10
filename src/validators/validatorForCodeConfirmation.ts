@@ -7,6 +7,7 @@ export const validationEmailConfirm = body('code').custom(async (code) => {
     !result ||
     result.emailConfirmation.isConfirmed ||
     result.emailConfirmation.confirmationCode !== code ||
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     result.emailConfirmation.expirationDate! < new Date()
   ) {
     throw new Error('Confirmation code is incorrect, expired or already been applied');

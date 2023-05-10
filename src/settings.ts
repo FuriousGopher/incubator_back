@@ -3,4 +3,5 @@ export const settings = {
   JWT_SECRET: 'VERYBIGSECRET',
   MY_EMAIL: 'itbackincubator@gmail.com',
   EMAIL_PASS: 'egndewctflqznmbm',
+  MONGO: process.env.MONGO_URL,
 };

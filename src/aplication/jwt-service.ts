@@ -1,10 +1,10 @@
-import { CreatedUsertype } from '../types/userType';
+import { CreatedUsertype } from '../models/userType';
 import jwt from 'jsonwebtoken';
 import { settings } from '../settings';
 
 export const jwtService = {
   async createJWT(user: CreatedUsertype) {
-    return jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: '10s' });
+    return jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: '5m' });
   },
   async getUserIdByToken(token: string) {
     try {
@@ -17,6 +17,6 @@ export const jwtService = {
   },
 
   async createRefreshTokenJWT(user: CreatedUsertype) {
-    return jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: '20s' });
+    return jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: '5m' });
   },
 };

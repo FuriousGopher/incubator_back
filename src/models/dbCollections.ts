@@ -1,9 +1,11 @@
-import { BlogsType } from './blogsType';
+import { BlogType } from './blogType';
 import { VideosType } from './videoTypes';
-import { PostsType } from './postsType';
+import { PostType } from './postType';
 import { client } from '../repositories/db';
-import { UserAccountDBType, UserModel } from '../types/userType';
+import { UserAccountDBType, UserModel } from './userType';
 import { CommentType } from './commentType';
+import { UserDeviceDBType } from './userDeviceType';
+import { LogsType } from './logsType';
 
 export const dbVideos = client.db('videos');
 export const dbPosts = client.db('posts');
@@ -11,10 +13,26 @@ export const dbBlogs = client.db('blogs');
 export const dbUsers = client.db('users');
 export const dbComment = client.db('comment');
 export const dbAccounts = client.db('accounts');
-export const blogsCollection = dbBlogs.collection<BlogsType>('blogs');
+export const dbDevices = client.db('devices');
+export const dbLogs = client.db('logs');
+
+export const blogsCollection = dbBlogs.collection<BlogType>('blogs');
 export const videosCollection = dbVideos.collection<VideosType>('videos');
-export const postsCollection = dbPosts.collection<PostsType>('posts');
+export const postsCollection = dbPosts.collection<PostType>('posts');
 export const commentCollection = dbComment.collection<CommentType>('comment');
-export const usersCollection = dbUsers.collection<UserModel>('users'); // don't use anymore
+export const usersCollection = dbUsers.collection<UserModel>('users');
 export const usersAccountsCollection = dbAccounts.collection<UserAccountDBType>('accounts');
-export const collections = [blogsCollection, videosCollection, postsCollection, commentCollection, usersAccountsCollection, usersCollection];
+export const userDevicesCollection = dbDevices.collection<UserDeviceDBType>('devices');
+
+export const logCollection = dbLogs.collection<LogsType>('logs');
+
+export const collections = [
+  blogsCollection,
+  videosCollection,
+  postsCollection,
+  commentCollection,
+  usersAccountsCollection,
+  usersCollection,
+  userDevicesCollection,
+  logCollection,
+];

@@ -1,4 +1,4 @@
-import { CreateUserDto, UserAccountDBType } from '../types/userType';
+import { CreateUserDto, UserAccountDBType } from '../models/userType';
 import bcrypt from 'bcrypt';
 import { _generateHash } from '../helpFunction';
 import { usersAccountsCollection } from '../models/dbCollections';

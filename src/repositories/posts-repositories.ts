@@ -1,4 +1,4 @@
-import { PostsType } from '../models/postsType';
+import { PostType } from '../models/postType';
 import { uuid } from 'uuidv4';
 import { blogsCollection, postsCollection } from '../models/dbCollections';
 import { WithId } from 'mongodb';
@@ -22,11 +22,11 @@ export const postsRepositories = {
     };
   },
 
-  async getPostsById(id: string): Promise<WithId<PostsType> | null> {
+  async getPostsById(id: string): Promise<WithId<PostType> | null> {
     return postsCollection.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
-  async createNewPost(post: PostsType) {
+  async createNewPost(post: PostType) {
     const blog = await blogsCollection.findOne({ id: post.blogId });
     if (!blog) {
       return false;
@@ -50,7 +50,7 @@ export const postsRepositories = {
     return result.deletedCount === 1;
   },
 
-  async updatePostById(id: string, post: PostsType) {
+  async updatePostById(id: string, post: PostType) {
     const result = await postsCollection.updateOne(
       { id: id },
       {

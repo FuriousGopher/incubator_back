@@ -1,8 +1,8 @@
 import { blogsRepositories } from '../repositories/blogs-repositories';
 import { postsRepositories } from '../repositories/posts-repositories';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
-import { BlogsType } from '../models/blogsType';
-import { PostsType } from '../models/postsType';
+import { BlogType } from '../models/blogType';
+import { PostType } from '../models/postType';
 
 export const blogsService = {
   async getAllBlogs(query: GetAllBlogsQueryType) {
@@ -19,13 +19,13 @@ export const blogsService = {
   async getBlogById(id: string) {
     return await blogsRepositories.getBlogById(id);
   },
-  async createNewBlog(blogs: BlogsType) {
+  async createNewBlog(blogs: BlogType) {
     return await blogsRepositories.createNewBlog(blogs);
   },
   async deleteBlogById(id: string) {
     return await blogsRepositories.deleteBlogById(id);
   },
-  async updateBlogById(id: string, blogs: BlogsType) {
+  async updateBlogById(id: string, blogs: BlogType) {
     return await blogsRepositories.updateBlogById(id, blogs);
   },
   async getAllPostsByBlogId(query: GetAllBlogsQueryType, blogId: string) {
@@ -39,7 +39,7 @@ export const blogsService = {
       items: blogsResponse.posts,
     };
   },
-  async createNewPostByBlogId(post: PostsType, blogId: string, blogName: string) {
+  async createNewPostByBlogId(post: PostType, blogId: string, blogName: string) {
     return await blogsRepositories.createNewPostByBlogId(post, blogId, blogName);
   },
 };

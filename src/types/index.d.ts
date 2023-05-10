@@ -1,4 +1,4 @@
-import { CreatedUsertype } from './userType';
+import { CreatedUsertype } from '../models/userType';
 
 declare global {
   declare namespace Express {

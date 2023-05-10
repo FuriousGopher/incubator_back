@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { HttpStatusCode } from '../types/HTTP-Response';
-import { CreatedUsertype } from '../types/userType';
+import { CreatedUsertype } from '../models/userType';
 import { MethodGetAllUsersReqQuery } from '../types/queryType';
 import { usersService } from '../services/usersService';
 

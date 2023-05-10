@@ -8,6 +8,7 @@ import { usersRouter } from '../routes/users-router';
 import express, { Request, Response } from 'express';
 import { commentsRouter } from '../routes/comments-router';
 import path from 'path';
+import { securityRouter } from '../routes/security-router';
 
 export const router = express.Router();
 
@@ -24,6 +25,9 @@ router.use('/posts', postsRouter);
 router.use('/auth', authRouter);
 
 router.use('/users', checkAuthorization, usersRouter);
+
+router.use('/security', securityRouter);
+
 router.use('/', (req: Request, res: Response) => {
   const filePath = path.join(__dirname, '../home.html');
   res.sendFile(filePath);

@@ -1,7 +1,7 @@
 import { CommentType } from '../models/commentType';
 import { uuid } from 'uuidv4';
 import { commentCollection } from '../models/dbCollections';
-import { UserAccountDBType } from '../types/userType';
+import { UserAccountDBType } from '../models/userType';
 import { EnhancedOmit, InferIdType } from 'mongodb';
 
 export const commentsRepositories = {

@@ -1,6 +1,6 @@
 import { MethodGetAllReqQueryById } from '../types/queryType';
 import { postsRepositories } from '../repositories/posts-repositories';
-import { PostsType } from '../models/postsType';
+import { PostType } from '../models/postType';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
 import { commentsRepositories } from '../repositories/comments-repositories';
 
@@ -19,13 +19,13 @@ export const postsService = {
   async getPostsById(id: string) {
     return await postsRepositories.getPostsById(id);
   },
-  async createNewPost(post: PostsType) {
+  async createNewPost(post: PostType) {
     return await postsRepositories.createNewPost(post);
   },
   async deletePostsById(id: string) {
     return await postsRepositories.deletePostsById(id);
   },
-  async updatePostById(id: string, post: PostsType) {
+  async updatePostById(id: string, post: PostType) {
     return await postsRepositories.updatePostById(id, post);
   },
   async getAllCommentsByPostId(query: GetAllBlogsQueryType, postId: string) {

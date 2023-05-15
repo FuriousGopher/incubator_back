@@ -1,5 +1,7 @@
 export type LogsType = {
   ip: string;
-  URL: string;
-  date: Date;
+  endpoint: string;
+  firstAttempt: number;
+  lastAttempt: number;
+  attemptsCount: number;
 };

@@ -17,10 +17,11 @@ import { validationEmailConfirm } from '../validators/validatorForCodeConfirmati
 import { validationCodeInput } from '../validators/validationInputForCodeConfirmation';
 import { validationEmailResend } from '../validators/validationForEmailReSend';
 import { validatorForRefreshToken } from '../validators/validatorForRefreshToken';
+import { logsLimiter } from '../middlewares/checkTimesOfLogsLogsMiddleware';
 
 export const authRouter = Router();
 
-authRouter.post('/login', loginOrEmailValidators, validationMiddleware, loginAuth);
+authRouter.post('/login', logsLimiter, loginOrEmailValidators, validationMiddleware, loginAuth);
 
 authRouter.get('/me', checkTokenAuth, getUser);
 
@@ -28,10 +29,11 @@ authRouter.post('/refresh-token', validatorForRefreshToken, refreshToken);
 
 authRouter.post('/logout', validatorForRefreshToken, logOut);
 
-authRouter.post('/registration-confirmation', validationCodeInput, validationEmailConfirm, validationMiddleware, codeConfirmation);
+authRouter.post('/registration-confirmation', logsLimiter, validationCodeInput, validationEmailConfirm, validationMiddleware, codeConfirmation);
 
 authRouter.post(
   '/registration',
+  logsLimiter,
   createUserValidator,
   validatorForUserExistLogin('login'),
   validatorForUserExistEmail('email'),
@@ -39,4 +41,11 @@ authRouter.post(
   registrationOfUser,
 );
 
-authRouter.post('/registration-email-resending', emailValidator, validationEmailResend, validationMiddleware, resendEmailForRegistration);
+authRouter.post(
+  '/registration-email-resending',
+  logsLimiter,
+  emailValidator,
+  validationEmailResend,
+  validationMiddleware,
+  resendEmailForRegistration,
+);

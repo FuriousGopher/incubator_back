@@ -23,7 +23,6 @@ export const commentCollection = dbComment.collection<CommentType>('comment');
 export const usersCollection = dbUsers.collection<UserModel>('users');
 export const usersAccountsCollection = dbAccounts.collection<UserAccountDBType>('accounts');
 export const userDevicesCollection = dbDevices.collection<UserDeviceDBType>('devices');
-
 export const logCollection = dbLogs.collection<LogsType>('logs');
 
 export const collections = [

@@ -1,7 +1,7 @@
 export type DevicesType = {
   id: string;
   ip: string;
-  deviceName: string;
+  title: string;
   userId: string;
   deviceId: string;
   lastActiveDate: number;

@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 import { settings } from '../settings';
 
 export const jwtService = {
-  async createJWT(user: CreatedUsertype) {
-    return jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: '5m' });
+  async createJWT(userId: string, deviceId: string) {
+    return jwt.sign({ userId: userId, deviceId }, settings.JWT_SECRET, { expiresIn: '5m' });
   },
   async getUserIdByToken(token: string) {
     try {
@@ -20,7 +20,7 @@ export const jwtService = {
     }
   },
 
-  async createRefreshTokenJWT(user: CreatedUsertype) {
-    return jwt.sign({ userId: user.id }, settings.JWT_SECRET, { expiresIn: '5m' });
+  async createRefreshTokenJWT(userId: string, deviceId: string) {
+    return jwt.sign({ userId: userId, deviceId }, settings.JWT_SECRET, { expiresIn: '5m' });
   },
 };

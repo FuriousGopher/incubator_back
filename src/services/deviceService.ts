@@ -13,14 +13,33 @@ export const deviceService = {
     const newDevice: DevicesType = {
       id: uuid(),
       ip: ip,
-      deviceName: userAgent,
+      title: userAgent,
       userId: getUser.userId.toString(),
       deviceId: getUser.deviceId,
       lastActiveDate: getUser.iat,
       expirationDate: getUser.exp,
     };
-    console.log(newDevice);
 
     return deviceRepositories.createDevice(newDevice);
+  },
+
+  async updateDevice(userId: string, issuedAt: number) {
+    return deviceRepositories.updateDevice(userId, issuedAt);
+  },
+
+  async foundDevices(userId: string) {
+    return deviceRepositories.findAllDevicesById(userId);
+  },
+
+  async deleteDevice(deviceId: string) {
+    return deviceRepositories.deleteDevice(deviceId);
+  },
+
+  async deleteAllOldDevices(currentDevice: string) {
+    return deviceRepositories.deleteAllOldDevices(currentDevice);
+  },
+
+  async deleteAll() {
+    return deviceRepositories.deleteAll();
   },
 };

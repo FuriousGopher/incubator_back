@@ -4,15 +4,17 @@ import { Request, Response } from 'express';
 import { jwtService } from '../aplication/jwt-service';
 import { authService } from '../services/authService';
 import { deviceService } from '../services/deviceService';
-const REFRESH_TOKEN = 'newRefreshToken';
+import { uuid } from 'uuidv4';
+const REFRESH_TOKEN = 'refreshToken';
 
 export const loginAuth = async (req: Request, res: Response) => {
   const result = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
   if (result) {
+    const deviceId = uuid();
     const ip = req.ip;
     const userAgent = req.headers['user-agent'] || 'unknown';
-    const newAccessToken = await jwtService.createJWT(result);
-    const newRefreshToken = await jwtService.createRefreshTokenJWT(result);
+    const newAccessToken = await jwtService.createJWT(result.id, deviceId);
+    const newRefreshToken = await jwtService.createRefreshTokenJWT(result.id, deviceId);
     await authService.addingNewRefreshToken(result.id, newRefreshToken);
     await deviceService.createDeviceList(newRefreshToken, ip, userAgent);
     res
@@ -26,6 +28,7 @@ export const loginAuth = async (req: Request, res: Response) => {
     res.status(HttpStatusCode.Unauthorized).send('The password or login is wrong');
   }
 };
+
 export const getUser = async (req: Request, res: Response) => {
   if (!req.user?.id) {
     return res.send(HttpStatusCode.Unauthorized);
@@ -74,18 +77,23 @@ export const resendEmailForRegistration = async (req: Request, res: Response) =>
 
 export const refreshToken = async (req: Request, res: Response) => {
   const cookieRefreshToken = req.cookies[REFRESH_TOKEN];
-  const foundUserByRefreshToken = await authService.findUserByRefreshToken(cookieRefreshToken);
-  if (foundUserByRefreshToken) {
-    const token = await jwtService.createJWT(foundUserByRefreshToken);
-    const refreshToken = await jwtService.createRefreshTokenJWT(foundUserByRefreshToken);
-    await authService.addingNewRefreshToken(foundUserByRefreshToken.id, refreshToken);
+  /*const ip = req.ip;*/ //////////TODO check if needed
+  const checkRefreshToken = await jwtService.getUserIdByToken(cookieRefreshToken);
+  const deviceId = checkRefreshToken!.deviceId.toString();
+  const userId = checkRefreshToken!.userId.toString();
+  if (checkRefreshToken) {
+    const newAccessToken = await jwtService.createJWT(userId, deviceId);
+    const newRefreshToken = await jwtService.createRefreshTokenJWT(userId, deviceId);
+    await authService.addingNewRefreshToken(userId, newRefreshToken);
+    const newIssuedAt = checkRefreshToken!.iat;
+    await deviceService.updateDevice(userId, newIssuedAt);
     res
-      .cookie(REFRESH_TOKEN, refreshToken, {
+      .cookie(REFRESH_TOKEN, newRefreshToken, {
         httpOnly: true,
         secure: true,
       })
       .status(HttpStatusCode.OK)
-      .send({ accessToken: token });
+      .send({ accessToken: newAccessToken });
   } else {
     res.status(HttpStatusCode.Unauthorized).send('The password or login is wrong');
   }

@@ -3,22 +3,25 @@ import { HttpStatusCode } from '../types/HTTP-Response';
 import { Request, Response } from 'express';
 import { jwtService } from '../aplication/jwt-service';
 import { authService } from '../services/authService';
-
-const REFRESH_TOKEN = 'refreshToken';
+import { deviceService } from '../services/deviceService';
+const REFRESH_TOKEN = 'newRefreshToken';
 
 export const loginAuth = async (req: Request, res: Response) => {
   const result = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);
   if (result) {
-    const token = await jwtService.createJWT(result);
-    const refreshToken = await jwtService.createRefreshTokenJWT(result);
-    await authService.addingNewRefreshToken(result.id, refreshToken);
+    const ip = req.ip;
+    const userAgent = req.headers['user-agent'] || 'unknown';
+    const newAccessToken = await jwtService.createJWT(result);
+    const newRefreshToken = await jwtService.createRefreshTokenJWT(result);
+    await authService.addingNewRefreshToken(result.id, newRefreshToken);
+    await deviceService.createDeviceList(newRefreshToken, ip, userAgent);
     res
-      .cookie(REFRESH_TOKEN, refreshToken, {
+      .cookie(REFRESH_TOKEN, newRefreshToken, {
         httpOnly: true,
         secure: true,
       })
       .status(HttpStatusCode.OK)
-      .send({ accessToken: token });
+      .send({ accessToken: newAccessToken });
   } else {
     res.status(HttpStatusCode.Unauthorized).send('The password or login is wrong');
   }
@@ -92,7 +95,7 @@ export const logOut = async (req: Request, res: Response) => {
   const cookieRefreshToken = req.cookies[REFRESH_TOKEN];
   const foundUserByRefreshToken = await jwtService.getUserIdByToken(cookieRefreshToken);
   if (foundUserByRefreshToken) {
-    const user = await authService.findUserById(foundUserByRefreshToken);
+    const user = await authService.findUserById(foundUserByRefreshToken.userId.toString());
     if (user) {
       await authService.addingNewRefreshToken(user?.id, '');
       res.sendStatus(HttpStatusCode.NoContent);

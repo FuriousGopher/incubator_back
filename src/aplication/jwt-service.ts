@@ -8,8 +8,12 @@ export const jwtService = {
   },
   async getUserIdByToken(token: string) {
     try {
-      const result: any = jwt.verify(token, settings.JWT_SECRET);
-      return result.userId;
+      return jwt.verify(token, settings.JWT_SECRET) as {
+        userId: number;
+        deviceId: string;
+        iat: number;
+        exp: number;
+      };
     } catch (error) {
       console.log(error);
       return null;

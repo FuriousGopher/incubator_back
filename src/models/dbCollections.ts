@@ -4,8 +4,8 @@ import { PostType } from './postType';
 import { client } from '../repositories/db';
 import { UserAccountDBType, UserModel } from './userType';
 import { CommentType } from './commentType';
-import { UserDeviceDBType } from './userDeviceType';
 import { LogsType } from './logsType';
+import { DevicesType } from './DevicesType';
 
 export const dbVideos = client.db('videos');
 export const dbPosts = client.db('posts');
@@ -22,7 +22,7 @@ export const postsCollection = dbPosts.collection<PostType>('posts');
 export const commentCollection = dbComment.collection<CommentType>('comment');
 export const usersCollection = dbUsers.collection<UserModel>('users');
 export const usersAccountsCollection = dbAccounts.collection<UserAccountDBType>('accounts');
-export const userDevicesCollection = dbDevices.collection<UserDeviceDBType>('devices');
+export const userDevicesCollection = dbDevices.collection<DevicesType>('devices');
 export const logCollection = dbLogs.collection<LogsType>('logs');
 
 export const collections = [

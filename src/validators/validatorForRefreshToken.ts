@@ -10,7 +10,7 @@ export const validatorForRefreshToken = async (req: Request, res: Response, next
     const userId = await jwtService.getUserIdByToken(cookieRefreshToken);
 
     if (userId) {
-      const user = await authService.findUserById(userId);
+      const user = await authService.findUserById(userId.userId.toString());
       if (user?.securityData.refreshToken === cookieRefreshToken) {
         return next();
       }

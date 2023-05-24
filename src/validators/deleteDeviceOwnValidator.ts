@@ -30,6 +30,7 @@ export const deleteDeviceOwnValidator = async (req: Request, res: Response, next
     }
   } else {
     res.sendStatus(HttpStatusCode.NotFound);
+    return;
   }
 
   next();

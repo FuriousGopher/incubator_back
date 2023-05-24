@@ -19,6 +19,12 @@ export const deleteDeviceOwnValidator = async (req: Request, res: Response, next
   }
 
   const deviceId = req.params.id;
+
+  if (!deviceId) {
+    res.sendStatus(HttpStatusCode.NotFound);
+    return;
+  }
+
   const device = await deviceService.foundDeviceById(deviceId);
   if (device) {
     const deviceUserId = device?.userId;

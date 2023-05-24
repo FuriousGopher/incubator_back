@@ -17,11 +17,13 @@ export const getAllDevices = async (req: Request, res: Response) => {
 
 export const deleteSessionById = async (req: Request, res: Response) => {
   const id = req.params.id;
+
   const isDeleted = await deviceService.deleteDevice(id);
+
   if (isDeleted) {
-    res.sendStatus(204);
+    res.sendStatus(HttpStatusCode.NoContent);
   } else {
-    res.sendStatus(404);
+    res.sendStatus(HttpStatusCode.NotFound);
   }
 };
 

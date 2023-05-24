@@ -27,6 +27,10 @@ export const deviceService = {
     return deviceRepositories.updateDevice(userId, issuedAt);
   },
 
+  async foundDeviceById(deviceId: string) {
+    return deviceRepositories.findDeviceById(deviceId);
+  },
+
   async foundDevices(userId: string) {
     return deviceRepositories.findAllDevicesById(userId);
   },
@@ -37,9 +41,5 @@ export const deviceService = {
 
   async deleteAllOldDevices(currentDevice: string) {
     return deviceRepositories.deleteAllOldDevices(currentDevice);
-  },
-
-  async deleteAll() {
-    return deviceRepositories.deleteAll();
   },
 };

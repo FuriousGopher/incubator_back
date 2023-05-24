@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { deleteSessionById, getAllDevices } from '../controllers/deviceController';
+import { deleteAllDevices, deleteSessionById, getAllDevices } from '../controllers/deviceController';
+import { deleteDeviceOwnValidator } from '../validators/deleteDeviceOwnValidator';
 
 export const securityRouter = Router();
 
 securityRouter.get('/devices', getAllDevices);
 
-securityRouter.delete('/devices');
+securityRouter.delete('/devices', deleteAllDevices);
 
-securityRouter.delete('/devices/:id', deleteSessionById);
+securityRouter.delete('/devices/:id', deleteDeviceOwnValidator, deleteSessionById);

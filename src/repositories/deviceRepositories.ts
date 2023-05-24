@@ -32,9 +32,4 @@ export const deviceRepositories = {
     await userDevicesCollection.deleteMany({ deviceId: { $ne: currentDevice } });
     return (await userDevicesCollection.countDocuments()) === 1;
   },
-
-  async deleteAll() {
-    await userDevicesCollection.deleteMany({});
-    return (await userDevicesCollection.countDocuments()) === 0;
-  },
 };

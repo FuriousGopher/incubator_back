@@ -1,6 +1,7 @@
 import { jwtService } from '../aplication/jwt-service';
 import { NextFunction, Request, Response } from 'express';
 import { deviceService } from '../services/deviceService';
+import { HttpStatusCode } from '../types/HTTP-Response';
 
 export const deleteDeviceOwnValidator = async (req: Request, res: Response, next: NextFunction) => {
   const cookieRefreshToken = req.cookies.refreshToken;
@@ -19,13 +20,16 @@ export const deleteDeviceOwnValidator = async (req: Request, res: Response, next
 
   const deviceId = req.params.id;
   const device = await deviceService.foundDeviceById(deviceId);
+  if (device) {
+    const deviceUserId = device?.userId;
+    const cookieUserId = userIdByToken.userId.toString();
 
-  const deviceUserId = device?.userId;
-  const cookieUserId = userIdByToken.userId.toString();
-
-  if (deviceUserId !== cookieUserId) {
-    res.sendStatus(403);
-    return;
+    if (deviceUserId !== cookieUserId) {
+      res.sendStatus(HttpStatusCode.Forbidden);
+      return;
+    }
+  } else {
+    res.sendStatus(HttpStatusCode.NotFound);
   }
 
   next();

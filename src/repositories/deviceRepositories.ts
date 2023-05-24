@@ -17,7 +17,18 @@ export const deviceRepositories = {
   },
 
   async findAllDevicesById(userId: string) {
-    return userDevicesCollection.find({ userId }, { projection: { _id: 0, deviceId: 1, ip: 1, lastActiveDate: 1, title: 1 } }).toArray();
+    const devices = await userDevicesCollection
+      .find({ userId }, { projection: { _id: 0, deviceId: 1, ip: 1, lastActiveDate: 1, title: 1 } })
+      .toArray();
+
+    const formattedDevices = devices.map((device) => ({
+      ip: device.ip,
+      title: device.title,
+      lastActiveDate: device.lastActiveDate,
+      deviceId: device.deviceId,
+    }));
+
+    return formattedDevices;
   },
   async updateDevice(userId: string, issuedAt: number) {
     const result = await userDevicesCollection.updateOne({ userId }, { $set: { lastActiveDate: issuedAt } });

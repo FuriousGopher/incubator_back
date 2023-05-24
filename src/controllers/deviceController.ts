@@ -11,7 +11,7 @@ export const getAllDevices = async (req: Request, res: Response) => {
     const foundDevices = await deviceService.foundDevices(userId);
     res.status(HttpStatusCode.OK).send(foundDevices);
   } else {
-    res.sendStatus(HttpStatusCode.NotFound);
+    res.sendStatus(HttpStatusCode.Unauthorized);
   }
 };
 

@@ -1,4 +1,3 @@
-import { CreatedUsertype } from '../models/userType';
 import jwt from 'jsonwebtoken';
 import { settings } from '../settings';
 

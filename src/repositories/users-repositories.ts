@@ -106,6 +106,11 @@ export const usersRepositories = {
     return result.modifiedCount === 1;
   },
 
+  async deleteDevice(userId: string, deviceId: string) {
+    const result = await usersAccountsCollection.deleteOne({ userId, deviceId });
+    return result.deletedCount === 1;
+  },
+
   async findUserByRefreshToken(refreshToken: string) {
     return await usersAccountsCollection.findOne({ 'securityData.refreshToken': refreshToken });
   },

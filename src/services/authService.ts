@@ -59,6 +59,10 @@ export const authService = {
     return await usersRepositories.addingNewRefreshToken(id, newRefreshToken);
   },
 
+  async deleteDevice(id: string, deviceId: string) {
+    return await usersRepositories.deleteDevice(id, deviceId);
+  },
+
   async findUserByRefreshToken(refreshToken: string) {
     const findUser = await usersRepositories.findUserByRefreshToken(refreshToken);
     if (findUser) {

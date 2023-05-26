@@ -105,7 +105,7 @@ export const logOut = async (req: Request, res: Response) => {
   if (foundUserByRefreshToken) {
     const user = await authService.findUserById(foundUserByRefreshToken.userId.toString());
     if (user) {
-      await authService.addingNewRefreshToken(user.id, '');
+      await authService.deleteDevice(user.id, foundUserByRefreshToken.deviceId);
       res.cookie('refreshToken', '').status(HttpStatusCode.NoContent).send();
     } else {
       res.sendStatus(HttpStatusCode.Unauthorized);

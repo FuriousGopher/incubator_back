@@ -25,7 +25,7 @@ export const deviceService = {
   },
 
   async updateDevice(userId: string, deviceId: string, issuedAt: string) {
-    return deviceRepositories.updateDevice(userId, issuedAt);
+    return deviceRepositories.updateDevice(userId, deviceId, issuedAt);
   },
 
   async foundDeviceById(deviceId: string) {

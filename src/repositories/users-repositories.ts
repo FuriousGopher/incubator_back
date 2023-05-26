@@ -1,7 +1,7 @@
 import { CreateUserDto, UserAccountDBType } from '../models/userType';
 import bcrypt from 'bcrypt';
 import { _generateHash } from '../helpFunction';
-import { usersAccountsCollection } from '../models/dbCollections';
+import { userDevicesCollection, usersAccountsCollection } from '../models/dbCollections';
 import { uuid } from 'uuidv4';
 import { add } from 'date-fns';
 
@@ -106,8 +106,8 @@ export const usersRepositories = {
     return result.modifiedCount === 1;
   },
 
-  async deleteDevice(userId: string, deviceId: string) {
-    const result = await usersAccountsCollection.deleteOne({ userId, deviceId });
+  async deleteDevice(deviceId: string) {
+    const result = await userDevicesCollection.deleteOne({ deviceId });
     return result.deletedCount === 1;
   },
 

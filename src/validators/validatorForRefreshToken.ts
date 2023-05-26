@@ -11,7 +11,6 @@ export const validatorForRefreshToken = async (req: Request, res: Response, next
 
     const userId = await jwtService.getUserIdByToken(cookieRefreshToken);
     if (!userId) return res.sendStatus(401);
-
     const user = await authService.findUserById(userId.userId.toString());
     if (!user) return res.sendStatus(401);
 

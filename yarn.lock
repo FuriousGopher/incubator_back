@@ -2638,6 +2638,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cron@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "cron@npm:2.3.1"
+  dependencies:
+    luxon: ^3.2.1
+  checksum: ac27c257cb8dba4b51978b4767119fc79bfc0dfa35ef0be2533bc4142ae006130515236e2102d04ee3ce44bffc2a4e37a3bee18a2152bbb303bf5ff944e25204
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:^5.0.1":
   version: 5.1.0
   resolution: "cross-spawn@npm:5.1.0"
@@ -4376,6 +4385,7 @@ __metadata:
     bcrypt: ^5.1.0
     cookie-parser: ^1.4.6
     cors: ^2.8.5
+    cron: ^2.3.1
     date-fns: ^2.30.0
     dotenv: ^16.0.3
     eslint: 8.22.0
@@ -5608,6 +5618,13 @@ __metadata:
   version: 7.18.3
   resolution: "lru-cache@npm:7.18.3"
   checksum: e550d772384709deea3f141af34b6d4fa392e2e418c1498c078de0ee63670f1f46f5eee746e8ef7e69e1c895af0d4224e62ee33e66a543a14763b0f2e74c1356
+  languageName: node
+  linkType: hard
+
+"luxon@npm:^3.2.1":
+  version: 3.3.0
+  resolution: "luxon@npm:3.3.0"
+  checksum: 50cf17a0dc155c3dcacbeae8c0b7e80db425e0ba97b9cbdf12a7fc142d841ff1ab1560919f033af46240ed44e2f70c49f76e3422524c7fc8bb8d81ca47c66187
   languageName: node
   linkType: hard
 

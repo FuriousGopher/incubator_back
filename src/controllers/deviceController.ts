@@ -17,17 +17,17 @@ export const getAllDevices = async (req: Request, res: Response) => {
 };
 
 export const deleteSessionById = async (req: Request, res: Response) => {
-  const cookieRefreshToken = req.cookies.refreshToken;
+  /*const cookieRefreshToken = req.cookies.refreshToken;*/
   const toDeleteId = req.params.id;
   const deviceId = req.deviceId!;
   const userId = req.user!.id;
-  const lastActiveDate = await jwtService.lastActiveDate(cookieRefreshToken);
-  const toDeleteDevice = deviceService.foundDeviceById(toDeleteId);
+  /*const lastActiveDate = await jwtService.lastActiveDate(cookieRefreshToken);*/
+  const toDeleteDevice = await deviceService.foundDeviceById(toDeleteId);
   if (!toDeleteDevice) return res.sendStatus(HttpStatusCode.NotFound);
   const device = await deviceService.foundDeviceById(deviceId);
   if (!device) return res.sendStatus(HttpStatusCode.NotFound);
-  if (device.lastActiveDate !== lastActiveDate) return res.sendStatus(HttpStatusCode.Unauthorized); /// i change this one
-  if (device.userId !== userId) return res.sendStatus(HttpStatusCode.Forbidden);
+  if (toDeleteDevice.userId !== userId) return res.sendStatus(HttpStatusCode.Forbidden);
+  /*if (toDeleteDevice.lastActiveDate !== lastActiveDate) return res.sendStatus(HttpStatusCode.Unauthorized);*/
   await deviceService.deleteDevice(toDeleteId);
   return res.sendStatus(HttpStatusCode.NoContent);
 };

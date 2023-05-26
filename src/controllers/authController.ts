@@ -83,7 +83,6 @@ export const refreshToken = async (req: Request, res: Response) => {
   if (!device) return res.sendStatus(HttpStatusCode.Unauthorized);
   if (device.lastActiveDate !== lastActiveDate) return res.sendStatus(HttpStatusCode.Unauthorized);
   if (device.userId !== userId) return res.sendStatus(HttpStatusCode.Forbidden);
-
   const newAccessToken = await jwtService.createJWT(userId, deviceId);
   const newRefreshToken = await jwtService.createRefreshTokenJWT(userId, deviceId);
   const newIssuedAt = await jwtService.lastActiveDate(newRefreshToken);
@@ -108,7 +107,7 @@ export const logOut = async (req: Request, res: Response) => {
       if (!device) return res.sendStatus(HttpStatusCode.Unauthorized);
       if (device.lastActiveDate !== lastActiveDate) return res.sendStatus(HttpStatusCode.Unauthorized);
       if (device.userId !== foundUserByRefreshToken.userId.toString()) return res.sendStatus(HttpStatusCode.Forbidden);
-      await authService.deleteDevice(user.id, foundUserByRefreshToken.deviceId);
+      await authService.deleteDevice(foundUserByRefreshToken.deviceId);
       res.cookie('refreshToken', '').sendStatus(HttpStatusCode.NoContent);
     } else {
       res.sendStatus(HttpStatusCode.Unauthorized);

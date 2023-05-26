@@ -7,16 +7,17 @@ const REFRESH_TOKEN = 'refreshToken';
 export const validatorForRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const cookieRefreshToken = req.cookies[REFRESH_TOKEN];
+    if (!cookieRefreshToken) return res.sendStatus(401);
+
     const userId = await jwtService.getUserIdByToken(cookieRefreshToken);
+    if (!userId) return res.sendStatus(401);
 
-    if (userId) {
-      const user = await authService.findUserById(userId.userId.toString());
-      if (user?.securityData.refreshToken === cookieRefreshToken) {
-        return next();
-      }
-    }
+    const user = await authService.findUserById(userId.userId.toString());
+    if (!user) return res.sendStatus(401);
 
-    return res.sendStatus(401);
+    if (user.securityData.refreshToken !== cookieRefreshToken) return res.sendStatus(401);
+
+    return next();
   } catch (error) {
     console.error(error);
     return res.sendStatus(500);

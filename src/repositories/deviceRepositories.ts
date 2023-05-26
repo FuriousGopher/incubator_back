@@ -28,7 +28,7 @@ export const deviceRepositories = {
       title: device.title,
     }));
   },
-  async updateDevice(userId: string, issuedAt: number) {
+  async updateDevice(userId: string, issuedAt: string) {
     const result = await userDevicesCollection.updateOne({ userId }, { $set: { lastActiveDate: issuedAt } });
     return result.matchedCount === 1;
   },

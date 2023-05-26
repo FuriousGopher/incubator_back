@@ -18,6 +18,11 @@ export const jwtService = {
     }
   },
 
+  async lastActiveDate(token: string) {
+    const payload: any = jwt.decode(token);
+    return new Date(payload.iat * 1000).toISOString();
+  },
+
   async createRefreshTokenJWT(userId: string, deviceId: string) {
     return jwt.sign({ userId: userId, deviceId }, settings.JWT_SECRET, { expiresIn: '20m' });
   },

@@ -85,7 +85,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     const newAccessToken = await jwtService.createJWT(userId, deviceId);
     const newRefreshToken = await jwtService.createRefreshTokenJWT(userId, deviceId);
     await authService.addingNewRefreshToken(userId, newRefreshToken);
-    const newIssuedAt = checkRefreshToken!.iat;
+    const newIssuedAt = await jwtService.lastActiveDate(newRefreshToken);
     await deviceService.updateDevice(userId, newIssuedAt);
     res
       .cookie(REFRESH_TOKEN, newRefreshToken, {
@@ -105,8 +105,8 @@ export const logOut = async (req: Request, res: Response) => {
   if (foundUserByRefreshToken) {
     const user = await authService.findUserById(foundUserByRefreshToken.userId.toString());
     if (user) {
-      await authService.addingNewRefreshToken(user?.id, '');
-      res.sendStatus(HttpStatusCode.NoContent);
+      await authService.addingNewRefreshToken(user.id, '');
+      res.cookie('refreshToken', '').status(HttpStatusCode.NoContent).send();
     } else {
       res.sendStatus(HttpStatusCode.Unauthorized);
     }

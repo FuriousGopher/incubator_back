@@ -6,6 +6,7 @@ import { deviceRepositories } from '../repositories/deviceRepositories';
 export const deviceService = {
   async createDeviceList(newRefreshToken: string, ip: string, userAgent: string) {
     const getUser = await jwtService.getUserIdByToken(newRefreshToken);
+    const lastActiveDate = await jwtService.lastActiveDate(newRefreshToken);
     if (!getUser) {
       return null;
     }
@@ -16,14 +17,14 @@ export const deviceService = {
       title: userAgent,
       userId: getUser.userId.toString(),
       deviceId: getUser.deviceId,
-      lastActiveDate: getUser.iat.toString(),
+      lastActiveDate,
       expirationDate: getUser.exp,
     };
 
     return deviceRepositories.createDevice(newDevice);
   },
 
-  async updateDevice(userId: string, issuedAt: number) {
+  async updateDevice(userId: string, issuedAt: string) {
     return deviceRepositories.updateDevice(userId, issuedAt);
   },
 

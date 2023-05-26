@@ -4,6 +4,6 @@ export type DevicesType = {
   title: string;
   userId: string;
   deviceId: string;
-  lastActiveDate: number;
+  lastActiveDate: string;
   expirationDate: number;
 };

@@ -16,7 +16,7 @@ export const deviceService = {
       title: userAgent,
       userId: getUser.userId.toString(),
       deviceId: getUser.deviceId,
-      lastActiveDate: getUser.iat,
+      lastActiveDate: getUser.iat.toString(),
       expirationDate: getUser.exp,
     };
 

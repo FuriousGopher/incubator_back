@@ -21,14 +21,12 @@ export const deviceRepositories = {
       .find({ userId }, { projection: { _id: 0, deviceId: 1, ip: 1, lastActiveDate: 1, title: 1 } })
       .toArray();
 
-    const formattedDevices = devices.map((device) => ({
-      ip: device.ip,
-      title: device.title,
-      lastActiveDate: device.lastActiveDate,
+    return devices.map((device) => ({
       deviceId: device.deviceId,
+      ip: device.ip,
+      lastActiveDate: device.lastActiveDate,
+      title: device.title,
     }));
-
-    return formattedDevices;
   },
   async updateDevice(userId: string, issuedAt: number) {
     const result = await userDevicesCollection.updateOne({ userId }, { $set: { lastActiveDate: issuedAt } });

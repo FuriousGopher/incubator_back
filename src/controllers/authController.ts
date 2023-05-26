@@ -86,7 +86,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     const newRefreshToken = await jwtService.createRefreshTokenJWT(userId, deviceId);
     await authService.addingNewRefreshToken(userId, newRefreshToken);
     const newIssuedAt = await jwtService.lastActiveDate(newRefreshToken);
-    await deviceService.updateDevice(userId, newIssuedAt);
+    await deviceService.updateDevice(userId, deviceId, newIssuedAt);
     res
       .cookie(REFRESH_TOKEN, newRefreshToken, {
         httpOnly: true,

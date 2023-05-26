@@ -15,8 +15,8 @@ export const validatorForRefreshToken = async (req: Request, res: Response, next
     const user = await authService.findUserById(userId.userId.toString());
     if (!user) return res.sendStatus(401);
 
-    if (user.securityData.refreshToken !== cookieRefreshToken) return res.sendStatus(401);
-
+    req.user = user;
+    req.deviceId = userId.deviceId;
     return next();
   } catch (error) {
     console.error(error);

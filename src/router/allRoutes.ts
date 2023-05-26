@@ -9,6 +9,7 @@ import express, { Request, Response } from 'express';
 import { commentsRouter } from '../routes/comments-router';
 import path from 'path';
 import { securityRouter } from '../routes/security-router';
+import { validatorForRefreshToken } from '../validators/validatorForRefreshToken';
 
 export const router = express.Router();
 
@@ -26,7 +27,7 @@ router.use('/auth', authRouter);
 
 router.use('/users', checkAuthorization, usersRouter);
 
-router.use('/security', securityRouter);
+router.use('/security', validatorForRefreshToken, securityRouter);
 
 router.use('/', (req: Request, res: Response) => {
   const filePath = path.join(__dirname, '../home.html');

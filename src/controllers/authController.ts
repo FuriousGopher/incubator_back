@@ -15,7 +15,6 @@ export const loginAuth = async (req: Request, res: Response) => {
     const userAgent = req.headers['user-agent'] || 'unknown';
     const newAccessToken = await jwtService.createJWT(result.id, deviceId);
     const newRefreshToken = await jwtService.createRefreshTokenJWT(result.id, deviceId);
-    await authService.addingNewRefreshToken(result.id, newRefreshToken);
     await deviceService.createDeviceList(newRefreshToken, ip, userAgent);
     res
       .cookie(REFRESH_TOKEN, newRefreshToken, {
@@ -77,26 +76,25 @@ export const resendEmailForRegistration = async (req: Request, res: Response) =>
 
 export const refreshToken = async (req: Request, res: Response) => {
   const cookieRefreshToken = req.cookies[REFRESH_TOKEN];
-  /*const ip = req.ip;*/ //////////TODO check if needed
-  const checkRefreshToken = await jwtService.getUserIdByToken(cookieRefreshToken);
-  const deviceId = checkRefreshToken!.deviceId.toString();
-  const userId = checkRefreshToken!.userId.toString();
-  if (checkRefreshToken) {
-    const newAccessToken = await jwtService.createJWT(userId, deviceId);
-    const newRefreshToken = await jwtService.createRefreshTokenJWT(userId, deviceId);
-    await authService.addingNewRefreshToken(userId, newRefreshToken);
-    const newIssuedAt = await jwtService.lastActiveDate(newRefreshToken);
-    await deviceService.updateDevice(userId, deviceId, newIssuedAt);
-    res
-      .cookie(REFRESH_TOKEN, newRefreshToken, {
-        httpOnly: true,
-        secure: true,
-      })
-      .status(HttpStatusCode.OK)
-      .send({ accessToken: newAccessToken });
-  } else {
-    res.status(HttpStatusCode.Unauthorized).send('The password or login is wrong');
-  }
+  const deviceId = req.deviceId!;
+  const userId = req.user!.id;
+  const lastActiveDate = await jwtService.lastActiveDate(cookieRefreshToken);
+  const device = await deviceService.foundDeviceById(deviceId);
+  if (!device) return res.sendStatus(HttpStatusCode.Unauthorized);
+  if (device.lastActiveDate !== lastActiveDate) return res.sendStatus(HttpStatusCode.Unauthorized);
+  if (device.userId !== userId) return res.sendStatus(HttpStatusCode.Forbidden);
+
+  const newAccessToken = await jwtService.createJWT(userId, deviceId);
+  const newRefreshToken = await jwtService.createRefreshTokenJWT(userId, deviceId);
+  const newIssuedAt = await jwtService.lastActiveDate(newRefreshToken);
+  await deviceService.updateDevice(userId, deviceId, newIssuedAt);
+  res
+    .cookie(REFRESH_TOKEN, newRefreshToken, {
+      httpOnly: true,
+      secure: true,
+    })
+    .status(HttpStatusCode.OK)
+    .send({ accessToken: newAccessToken });
 };
 
 export const logOut = async (req: Request, res: Response) => {
@@ -105,8 +103,13 @@ export const logOut = async (req: Request, res: Response) => {
   if (foundUserByRefreshToken) {
     const user = await authService.findUserById(foundUserByRefreshToken.userId.toString());
     if (user) {
+      const lastActiveDate = await jwtService.lastActiveDate(cookieRefreshToken);
+      const device = await deviceService.foundDeviceById(foundUserByRefreshToken.deviceId);
+      if (!device) return res.sendStatus(HttpStatusCode.Unauthorized);
+      if (device.lastActiveDate !== lastActiveDate) return res.sendStatus(HttpStatusCode.Unauthorized);
+      if (device.userId !== foundUserByRefreshToken.userId.toString()) return res.sendStatus(HttpStatusCode.Forbidden);
       await authService.deleteDevice(user.id, foundUserByRefreshToken.deviceId);
-      res.cookie('refreshToken', '').status(HttpStatusCode.NoContent).send();
+      res.cookie('refreshToken', '').sendStatus(HttpStatusCode.NoContent);
     } else {
       res.sendStatus(HttpStatusCode.Unauthorized);
     }

@@ -18,7 +18,6 @@ export const validationRecoveryCode = body('recoveryCode').custom(async (recover
   const result = await usersRepositories.findByCodeInUsersMongooseModel(recoveryCode);
   if (
     !result ||
-    result.emailConfirmation.isConfirmed ||
     result.emailConfirmation.confirmationCode !== recoveryCode ||
     result.emailConfirmation.expirationDate! < new Date()
   ) {

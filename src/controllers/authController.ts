@@ -128,12 +128,8 @@ export const logOut = async (req: Request, res: Response) => {
 };
 
 export const passwordRecovery = async (req: Request, res: Response) => {
-  const result = await authService.sendRecoveryCode(req.body.email);
-  if (result) {
-    res.sendStatus(HttpStatusCode.NoContent);
-  } else {
-    res.sendStatus(HttpStatusCode.BadRequest);
-  }
+  await authService.sendRecoveryCode(req.body.email);
+  res.sendStatus(HttpStatusCode.NoContent);
 };
 export const newPassword = async (req: Request, res: Response) => {
   const result = await authService.newPassword(req.body.recoveryCode, req.body.newPassword);

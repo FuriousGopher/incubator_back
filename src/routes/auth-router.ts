@@ -4,6 +4,7 @@ import {
   getUser,
   loginAuth,
   logOut,
+  newPassword,
   passwordRecovery,
   refreshToken,
   registrationOfUser,
@@ -61,4 +62,11 @@ authRouter.post(
 
 authRouter.post('/password-recovery', logsLimiter, emailValidator, validationMiddleware, passwordRecovery);
 
-authRouter.post('/new-password', logsLimiter, validatorForNewPassword, validationRecoveryCode, validationMiddleware);
+authRouter.post(
+  '/new-password',
+  logsLimiter,
+  validatorForNewPassword,
+  validationRecoveryCode,
+  validationMiddleware,
+  newPassword,
+);

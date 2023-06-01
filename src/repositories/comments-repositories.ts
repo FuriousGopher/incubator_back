@@ -1,14 +1,14 @@
 import { CommentType } from '../models/commentType';
 import { uuid } from 'uuidv4';
-import { commentCollection } from '../models/dbCollections';
-import { UserAccountDBType } from '../models/userType';
+import { UserDBModel } from '../models/userType';
 import { EnhancedOmit, InferIdType } from 'mongodb';
+import { CommentsMongooseModel } from '../Domain/CommentSchema';
 
 export const commentsRepositories = {
   async createNewCommentByPostId(
     comment: CommentType,
-    user: EnhancedOmit<UserAccountDBType, '_id'> & {
-      _id: InferIdType<UserAccountDBType>;
+    user: EnhancedOmit<UserDBModel, '_id'> & {
+      _id: InferIdType<UserDBModel>;
     },
     postId: string,
   ) {
@@ -22,17 +22,16 @@ export const commentsRepositories = {
       createdAt: new Date().toISOString(),
       postId: postId,
     };
-    await commentCollection.insertOne({ ...newComment });
+    await CommentsMongooseModel.create({ ...newComment });
     return newComment;
   },
   async getAllCommentsByPostId(postId: string, pageNumber: number, nPerPage: number, sortBy: string, sortDirection: -1 | 1) {
-    const foundComments = await commentCollection
-      .find({ postId: postId }, { projection: { _id: 0, postId: 0 } })
+    const foundComments = await CommentsMongooseModel.find({ postId: postId }, { projection: { _id: 0, postId: 0 } })
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
       .limit(Number(nPerPage))
-      .toArray();
-    const totalNumberOfDocuments = await commentCollection.countDocuments({ postId: postId });
+      .lean();
+    const totalNumberOfDocuments = await CommentsMongooseModel.countDocuments({ postId: postId });
     return {
       comments: foundComments,
       totalNumberOfPosts: totalNumberOfDocuments,
@@ -42,10 +41,10 @@ export const commentsRepositories = {
     };
   },
   async getCommentById(id: string) {
-    return commentCollection.findOne({ id: id }, { projection: { _id: 0, postId: 0 } });
+    return CommentsMongooseModel.findOne({ id: id }, { projection: { _id: 0, postId: 0 } });
   },
   async updateCommentById(comment: CommentType, commentId: string) {
-    const result = await commentCollection.updateOne(
+    const result = await CommentsMongooseModel.updateOne(
       { id: commentId },
       {
         $set: {
@@ -56,14 +55,14 @@ export const commentsRepositories = {
     return result.matchedCount === 1;
   },
   async checkCommentUserId(commentId: string, userId: string) {
-    const comment = await commentCollection.findOne({ id: commentId });
+    const comment = await CommentsMongooseModel.findOne({ id: commentId });
     if (!comment) {
       return false;
     }
     return comment.commentatorInfo.userId === userId;
   },
   async deleteCommentById(id: string) {
-    const result = await commentCollection.deleteOne({ id: id });
+    const result = await CommentsMongooseModel.deleteOne({ id: id });
     return result.deletedCount === 1;
   },
 };

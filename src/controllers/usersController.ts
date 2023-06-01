@@ -1,19 +1,12 @@
 import { Request, Response } from 'express';
 import { HttpStatusCode } from '../types/HTTP-Response';
-import { CreatedUsertype } from '../models/userType';
 import { MethodGetAllUsersReqQuery } from '../types/queryType';
 import { usersService } from '../services/usersService';
 
 export const createNewUser = async (req: Request, res: Response) => {
   const { email, login, password } = req.body;
   const newUser = await usersService.createNewUser(email, login, password);
-  const createdUser: CreatedUsertype = {
-    id: newUser.id,
-    login: newUser.accountData.login,
-    email: newUser.accountData.email,
-    createdAt: newUser.accountData.createdAt,
-  };
-  res.status(HttpStatusCode.Created).send(createdUser);
+  res.status(HttpStatusCode.Created).send(newUser);
 };
 
 export const deleteUserById = async (req: Request, res: Response) => {

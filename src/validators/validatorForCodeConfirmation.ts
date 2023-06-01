@@ -2,7 +2,7 @@ import { body } from 'express-validator';
 import { usersRepositories } from '../repositories/users-repositories';
 
 export const validationEmailConfirm = body('code').custom(async (code) => {
-  const result = await usersRepositories.findByCodeInUsersAccountsCollection(code);
+  const result = await usersRepositories.findByCodeInUsersMongooseModel(code);
   if (
     !result ||
     result.emailConfirmation.isConfirmed ||

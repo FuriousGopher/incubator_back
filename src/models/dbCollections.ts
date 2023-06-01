@@ -1,3 +1,4 @@
+/*
 import { BlogType } from './blogType';
 import { VideosType } from './videoTypes';
 import { PostType } from './postType';
@@ -35,3 +36,4 @@ export const collections = [
   userDevicesCollection,
   logCollection,
 ];
+*/

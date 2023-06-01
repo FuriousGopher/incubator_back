@@ -5,3 +5,13 @@ export type LogsType = {
   lastAttempt: number;
   attemptsCount: number;
 };
+
+export class LogsDBModel {
+  constructor(
+    public ip: string,
+    public endpoint: string,
+    public firstAttempt: string,
+    public lastAttempt: string,
+    public attemptsCount: string,
+  ) {}
+}

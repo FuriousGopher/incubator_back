@@ -1,18 +1,17 @@
 import { PostType } from '../models/postType';
 import { uuid } from 'uuidv4';
-import { blogsCollection, postsCollection } from '../models/dbCollections';
 import { WithId } from 'mongodb';
+import { PostsMongooseModel } from '../Domain/PostSchema';
+import { BlogsMongooseModel } from '../Domain/BlogSchema';
 
 export const postsRepositories = {
   async getAllPosts(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1) {
-    const foundPosts = await postsCollection
-      .find()
+    const foundPosts = await PostsMongooseModel.find()
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
       .limit(nPerPage)
-      .project({ _id: false })
-      .toArray();
-    const totalNumberOfPosts = await postsCollection.countDocuments();
+      .lean();
+    const totalNumberOfPosts = await PostsMongooseModel.countDocuments();
     return {
       posts: foundPosts,
       totalNumberOfPosts: totalNumberOfPosts,
@@ -23,11 +22,11 @@ export const postsRepositories = {
   },
 
   async getPostsById(id: string): Promise<WithId<PostType> | null> {
-    return postsCollection.findOne({ id: id }, { projection: { _id: 0 } });
+    return PostsMongooseModel.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
   async createNewPost(post: PostType) {
-    const blog = await blogsCollection.findOne({ id: post.blogId });
+    const blog = await BlogsMongooseModel.findOne({ id: post.blogId });
     if (!blog) {
       return false;
     }
@@ -41,17 +40,17 @@ export const postsRepositories = {
       createdAt: new Date().toISOString(),
     };
 
-    await postsCollection.insertOne({ ...newPost });
+    await PostsMongooseModel.create({ ...newPost });
     return newPost;
   },
 
   async deletePostsById(id: string) {
-    const result = await postsCollection.deleteOne({ id: id });
+    const result = await PostsMongooseModel.deleteOne({ id: id });
     return result.deletedCount === 1;
   },
 
   async updatePostById(id: string, post: PostType) {
-    const result = await postsCollection.updateOne(
+    const result = await PostsMongooseModel.updateOne(
       { id: id },
       {
         $set: {
@@ -66,13 +65,12 @@ export const postsRepositories = {
   },
 
   async getPostsByBlogId(blogId: string, pageNumber: number, nPerPage: number, sortBy: string, sortDirection: -1 | 1) {
-    const foundPosts = await postsCollection
-      .find({ blogId: blogId }, { projection: { _id: 0 } })
+    const foundPosts = await PostsMongooseModel.find({ blogId: blogId }, { projection: { _id: 0 } })
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
       .limit(Number(nPerPage))
-      .toArray();
-    const totalNumberOfDocuments = await postsCollection.countDocuments({ blogId: blogId });
+      .lean();
+    const totalNumberOfDocuments = await PostsMongooseModel.countDocuments({ blogId: blogId });
     return {
       posts: foundPosts,
       totalNumberOfPosts: totalNumberOfDocuments,

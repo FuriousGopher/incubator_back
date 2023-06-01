@@ -22,7 +22,7 @@ export const logsService = {
       return false;
     }
 
-    const attemptsCount = rateLimit.attemptsCount + 1;
+    const attemptsCount = +rateLimit.attemptsCount + 1;
 
     return logsRepositories.updateCounter(ip, endpoint, attemptsCount, currentDate);
   },

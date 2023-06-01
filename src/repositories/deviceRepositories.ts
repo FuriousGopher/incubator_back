@@ -1,13 +1,13 @@
-import { userDevicesCollection } from '../models/dbCollections';
 import { DevicesType } from '../models/DevicesType';
+import { DevicesMongooseModel } from '../Domain/DeviceSchema';
 
 export const deviceRepositories = {
   async createDevice(newDevice: DevicesType) {
-    await userDevicesCollection.insertOne({ ...newDevice });
+    await DevicesMongooseModel.create({ ...newDevice });
     return newDevice;
   },
   async findDeviceById(deviceId: string) {
-    const foundDevice = await userDevicesCollection.findOne({ deviceId });
+    const foundDevice = await DevicesMongooseModel.findOne({ deviceId });
 
     if (!foundDevice) {
       return null;
@@ -17,28 +17,26 @@ export const deviceRepositories = {
   },
 
   async findAllDevicesById(userId: string) {
-    const devices = await userDevicesCollection
-      .find({ userId }, { projection: { _id: 0, deviceId: 1, ip: 1, lastActiveDate: 1, title: 1 } })
-      .toArray();
+    const devices = await DevicesMongooseModel.find({ userId }, { projection: { _id: 0, deviceId: 1, ip: 1, lastActiveDate: 1, title: 1 } }).lean();
 
     return devices.map((device) => ({
-      deviceId: device.deviceId,
+      deviceId: device.id,
       ip: device.ip,
       lastActiveDate: device.lastActiveDate,
       title: device.title,
     }));
   },
   async updateDevice(userId: string, deviceId: string, issuedAt: string) {
-    const result = await userDevicesCollection.updateOne({ userId, deviceId }, { $set: { lastActiveDate: issuedAt } });
+    const result = await DevicesMongooseModel.updateOne({ userId, deviceId }, { $set: { lastActiveDate: issuedAt } });
     return result.modifiedCount === 1;
   },
   async deleteDevice(deviceId: string) {
-    const result = await userDevicesCollection.deleteOne({ deviceId });
+    const result = await DevicesMongooseModel.deleteOne({ deviceId });
     return result.deletedCount === 1;
   },
 
   async deleteAllOldDevices(currentDevice: string) {
-    await userDevicesCollection.deleteMany({ deviceId: { $ne: currentDevice } });
-    return (await userDevicesCollection.countDocuments()) === 1;
+    await DevicesMongooseModel.deleteMany({ deviceId: { $ne: currentDevice } });
+    return (await DevicesMongooseModel.countDocuments()) === 1;
   },
 };

@@ -1,4 +1,3 @@
-import { videosRouter } from '../routes/videos-router';
 import { testRouter } from '../routes/testing-route';
 import { blogsRouter } from '../routes/blogs-router';
 import { postsRouter } from '../routes/posts-router';
@@ -12,8 +11,6 @@ import { securityRouter } from '../routes/security-router';
 import { validatorForRefreshToken } from '../validators/validatorForRefreshToken';
 
 export const router = express.Router();
-
-router.use('/videos', videosRouter);
 
 router.use('/testing', testRouter);
 

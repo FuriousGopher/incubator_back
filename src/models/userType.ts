@@ -1,29 +1,28 @@
-export type UserModel = {
-  id: string;
-  login: string;
-  email: string;
-  password: string;
-  createdAt: string;
-};
+export type CreateUserDto = Omit<
+  UserDBModel,
+  | 'id'
+  | 'accountData.createdAt'
+  | 'accountData.isMembership'
+  | 'emailConfirmation.confirmationCode'
+  | 'emailConfirmation.expirationDate'
+  | 'emailConfirmation.isConfirmed'
+>;
 
-export type CreateUserDto = Omit<UserModel, 'id' | 'createdAt'>;
-
-export type CreatedUsertype = Omit<UserModel, 'password'>;
-
-export type UserAccountDBType = {
-  id: string;
-  accountData: {
-    login: string;
-    email: string;
-    passwordHash: string;
-    createdAt: string;
-  };
-  emailConfirmation: {
-    confirmationCode: string;
-    expirationDate: any;
-    isConfirmed: boolean;
-  };
-  securityData: {
-    refreshToken: string;
-  };
-};
+export type CreatedUsertype = Omit<UserDBModel, 'password'>;
+export class UserDBModel {
+  constructor(
+    public id: string,
+    public accountData: {
+      login: string;
+      email: string;
+      passwordHash: string;
+      createdAt: string;
+      isMembership: boolean;
+    },
+    public emailConfirmation: {
+      confirmationCode: string | null;
+      expirationDate: Date | null;
+      isConfirmed: boolean;
+    },
+  ) {}
+}

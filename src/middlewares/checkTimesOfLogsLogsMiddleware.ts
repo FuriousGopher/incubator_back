@@ -10,10 +10,10 @@ export const logsLimiter = async (req: Request, res: Response, next: NextFunctio
   if (!foundRateLimit) {
     await logsService.createLogsLimit(ip, endpoint);
   } else {
-    const diffBetweenNowAndFirst = Date.now() - foundRateLimit.firstAttempt;
-    const diffBetweenNowAndLast = Date.now() - foundRateLimit.lastAttempt;
+    const diffBetweenNowAndFirst = Date.now() - +foundRateLimit.firstAttempt;
+    const diffBetweenNowAndLast = Date.now() - +foundRateLimit.lastAttempt;
 
-    if (foundRateLimit.attemptsCount >= 5) {
+    if (+foundRateLimit.attemptsCount >= 5) {
       if (diffBetweenNowAndLast < 5000) {
         res.sendStatus(429);
         return;

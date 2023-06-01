@@ -9,4 +9,15 @@ export type CommentType = {
   postId: string;
 };
 
-export type WithId<T> = T & { id: string };
+export class CommentDBModel {
+  constructor(
+    public id: string,
+    public content: string,
+    public commentatorInfo: {
+      userId: string;
+      userLogin: string;
+    },
+    public createdAt: string,
+    public postId: string,
+  ) {}
+}

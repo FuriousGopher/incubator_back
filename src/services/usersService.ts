@@ -45,7 +45,7 @@ export const usersService = {
   },
 
   async createNewUser(email: string, login: string, password: string) {
-    return await usersRepositories.createNewUser({ email, login, password });
+    return await usersRepositories.createNewUser(email, login, password);
   },
 
   async findUserById(id: string) {

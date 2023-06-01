@@ -6,3 +6,14 @@ export type BlogType = {
   createdAt: string;
   isMembership: boolean;
 };
+
+export class BlogDBModel {
+  constructor(
+    public id: string,
+    public name: string,
+    public description: string,
+    public websiteUrl: string,
+    public createdAt: string,
+    public isMembership: boolean,
+  ) {}
+}

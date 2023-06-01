@@ -1,28 +1,33 @@
 import { BlogType } from '../models/blogType';
 import { uuid } from 'uuidv4';
 import { WithId } from 'mongodb';
-import { blogsCollection, postsCollection } from '../models/dbCollections';
 import { PostType } from '../models/postType';
+import { BlogsMongooseModel } from '../Domain/BlogSchema';
+import { PostsMongooseModel } from '../Domain/PostSchema';
 
 export const blogsRepositories = {
   async getBlogById(id: string): Promise<WithId<BlogType> | null> {
-    return blogsCollection.findOne({ id: id }, { projection: { _id: 0 } });
+    return BlogsMongooseModel.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
-  async getAllBlogs(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1, searchNameTerm: string | null) {
+  async getAllBlogs(
+    pageNumber: number,
+    nPerPage: number,
+    sortBy: string,
+    sortDirection: 1 | -1,
+    searchNameTerm: string | null,
+  ) {
     let filter = {};
     if (searchNameTerm) {
       const regex = new RegExp(searchNameTerm, 'i');
       filter = { name: { $regex: regex } };
     }
-    const totalNumberOfDocuments = await blogsCollection.countDocuments(filter);
-    const foundBlogs = await blogsCollection
-      .find(filter)
+    const totalNumberOfDocuments = await BlogsMongooseModel.countDocuments(filter);
+    const foundBlogs = await BlogsMongooseModel.find(filter)
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
       .limit(nPerPage)
-      .project({ _id: false })
-      .toArray();
+      .lean();
     return {
       blogs: foundBlogs,
       totalNumberOfBlogs: totalNumberOfDocuments,
@@ -40,17 +45,17 @@ export const blogsRepositories = {
       createdAt: new Date().toISOString(),
       isMembership: false,
     };
-    await blogsCollection.insertOne({ ...newBlog });
+    await BlogsMongooseModel.create({ ...newBlog });
     return newBlog;
   },
 
   async deleteBlogById(id: string) {
-    const result = await blogsCollection.deleteOne({ id: id });
+    const result = await BlogsMongooseModel.deleteOne({ id: id });
     return result.deletedCount === 1;
   },
 
   async updateBlogById(id: string, blog: BlogType) {
-    const result = await blogsCollection.updateOne(
+    const result = await BlogsMongooseModel.updateOne(
       { id: id },
       {
         $set: {
@@ -74,7 +79,7 @@ export const blogsRepositories = {
       createdAt: new Date().toISOString(),
     };
 
-    await postsCollection.insertOne({ ...newPost });
+    await PostsMongooseModel.create({ ...newPost });
     return newPost;
   },
 };

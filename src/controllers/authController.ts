@@ -5,6 +5,7 @@ import { jwtService } from '../aplication/jwt-service';
 import { authService } from '../services/authService';
 import { deviceService } from '../services/deviceService';
 import { uuid } from 'uuidv4';
+import { CreateUserDto } from '../models/userType';
 const REFRESH_TOKEN = 'refreshToken';
 
 export const loginAuth = async (req: Request, res: Response) => {
@@ -44,10 +45,19 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 export const registrationOfUser = async (req: Request, res: Response) => {
-  const newUser = {
-    login: req.body.login,
-    email: req.body.email,
-    password: req.body.password,
+  const newUser: CreateUserDto = {
+    accountData: {
+      login: req.body.login,
+      email: req.body.email,
+      passwordHash: req.body.password,
+      createdAt: new Date().toISOString(),
+      isMembership: false,
+    },
+    emailConfirmation: {
+      confirmationCode: uuid(),
+      expirationDate: new Date(),
+      isConfirmed: false,
+    },
   };
   const createdUser = await authService.createUser(newUser);
   if (createdUser) {

@@ -20,4 +20,22 @@ export const emailAdapter = {
       </p>`,
     });
   },
+  async sendRecoveryCodeByEmail(email: string, recoveryCode: string | null) {
+    const transport = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: settings.MY_EMAIL,
+        pass: settings.EMAIL_PASS,
+      },
+    });
+    return await transport.sendMail({
+      from: 'Ricky',
+      to: email,
+      subject: 'BackEndIncubatorTest',
+      html: `<h1>Password recovery</h1>
+      <p>To finish password recovery please follow the link below:
+      <a href="https://incubator-back.vercel.app/auth/password-recovery?recoveryCode=${recoveryCode}">recovery password</a>
+      </p>`,
+    });
+  },
 };

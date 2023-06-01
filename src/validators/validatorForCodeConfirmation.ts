@@ -7,7 +7,19 @@ export const validationEmailConfirm = body('code').custom(async (code) => {
     !result ||
     result.emailConfirmation.isConfirmed ||
     result.emailConfirmation.confirmationCode !== code ||
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    result.emailConfirmation.expirationDate! < new Date()
+  ) {
+    throw new Error('Confirmation code is incorrect, expired or already been applied');
+  }
+  return true;
+});
+
+export const validationRecoveryCode = body('recoveryCode').custom(async (recoveryCode) => {
+  const result = await usersRepositories.findByCodeInUsersMongooseModel(recoveryCode);
+  if (
+    !result ||
+    result.emailConfirmation.isConfirmed ||
+    result.emailConfirmation.confirmationCode !== recoveryCode ||
     result.emailConfirmation.expirationDate! < new Date()
   ) {
     throw new Error('Confirmation code is incorrect, expired or already been applied');

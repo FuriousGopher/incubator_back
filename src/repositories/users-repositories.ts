@@ -110,20 +110,12 @@ export const usersRepositories = {
     return await UsersMongooseModel.findOne({ 'accountData.email': email });
   },
 
-  async addingNewRefreshToken(id: string | undefined, newRefreshToken: string) {
-    const result = await UsersMongooseModel.updateOne(
-      { id },
-      { $set: { 'securityData.refreshToken': newRefreshToken } },
-    );
-    return result.modifiedCount === 1;
-  },
-
   async deleteDevice(deviceId: string) {
     const result = await UsersMongooseModel.deleteOne({ deviceId });
     return result.deletedCount === 1;
   },
-
-  async findUserByRefreshToken(refreshToken: string) {
-    return await UsersMongooseModel.findOne({ 'securityData.refreshToken': refreshToken });
+  async updatePassword(id: string, newPassword: string) {
+    const result = await UsersMongooseModel.updateOne({ id }, { $set: { 'accountData.passwordHash': newPassword } });
+    return result.modifiedCount === 1;
   },
 };

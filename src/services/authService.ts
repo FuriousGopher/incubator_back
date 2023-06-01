@@ -53,25 +53,25 @@ export const authService = {
     return usersRepositories.updateConfirmationCode(user.id, newConfirmationCode);
   },
 
-  async addingNewRefreshToken(id: string | undefined, newRefreshToken: string) {
-    return await usersRepositories.addingNewRefreshToken(id, newRefreshToken);
+  async sendRecoveryCode(email: string) {
+    const user = await usersRepositories.findUserByEmail(email);
+    if (!user) return false;
+    const newRecoveryCode = uuid();
+    if (user) {
+      await emailAdapter.sendRecoveryCodeByEmail(user.accountData.email, newRecoveryCode);
+    }
+    return usersRepositories.updateConfirmationCode(user.id, newRecoveryCode);
   },
 
   async deleteDevice(deviceId: string) {
     return await usersRepositories.deleteDevice(deviceId);
   },
 
-  async findUserByRefreshToken(refreshToken: string) {
-    const findUser = await usersRepositories.findUserByRefreshToken(refreshToken);
-    if (findUser) {
-      return {
-        id: findUser.id,
-        login: findUser.accountData.login,
-        email: findUser.accountData.email,
-        createdAt: findUser.accountData.createdAt,
-      };
-    } else {
-      return false;
-    }
+  async newPassword(recoveryCode: string, newPassword: string) {
+    const user = await usersRepositories.findByCodeInUsersMongooseModel(recoveryCode);
+    if (!user) return false;
+    const passwordSalt = await bcrypt.genSalt(10);
+    const passwordHash = await _generateHash(newPassword, passwordSalt);
+    return await usersRepositories.updatePassword(user.id, passwordHash);
   },
 };

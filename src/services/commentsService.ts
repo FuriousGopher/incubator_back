@@ -1,12 +1,12 @@
-import { CommentType } from '../models/commentType';
 import { commentsRepositories } from '../repositories/comments-repositories';
 import { postsRepositories } from '../repositories/posts-repositories';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { usersService } from './usersService';
 import { HttpError } from '../types/errorType';
+import { CommentDBModel } from '../models/commentType';
 
 export const commentsService = {
-  async createNewCommentByPostId(comment: CommentType, userId: string, postId: string) {
+  async createNewCommentByPostId(comment: CommentDBModel, userId: string, postId: string) {
     try {
       const user = await usersService.findUserById(userId);
       if (!user) {
@@ -30,13 +30,79 @@ export const commentsService = {
   async getCommentById(id: string) {
     return await commentsRepositories.getCommentById(id);
   },
-  async updateCommentById(comment: CommentType, commentId: string) {
+
+  async updateCommentById(comment: CommentDBModel, commentId: string) {
     return await commentsRepositories.updateCommentById(comment, commentId);
   },
+
   async deleteCommentById(id: string) {
     return await commentsRepositories.deleteCommentById(id);
   },
+
   async checkCommentUserId(commentId: string, userId: string) {
     return await commentsRepositories.checkCommentUserId(commentId, userId);
+  },
+
+  async updateLikeStatus(commentId: string, userId: string, likeStatus: string) {
+    const foundCommentById = await commentsRepositories.getCommentById(commentId);
+    if (!foundCommentById) return false;
+
+    let likesCount = foundCommentById.likesInfo.likesCount;
+    let dislikesCount = foundCommentById.likesInfo.dislikesCount;
+
+    const foundComment = await commentsRepositories.findUserInLikesInfo(commentId, userId);
+
+    if (!foundComment) {
+      await commentsRepositories.addUserInLikesInfo(commentId, userId, likeStatus);
+
+      if (likeStatus === 'Like') {
+        likesCount++;
+      }
+
+      if (likeStatus === 'Dislike') {
+        dislikesCount++;
+      }
+      return commentsRepositories.updateLikesCount(commentId, likesCount, dislikesCount);
+    }
+
+    const userLikeDBStatus = await commentsRepositories.findUserLikeStatus(commentId, userId);
+
+    switch (userLikeDBStatus) {
+      case 'None':
+        if (likeStatus === 'Like') {
+          likesCount++;
+        }
+
+        if (likeStatus === 'Dislike') {
+          dislikesCount++;
+        }
+
+        break;
+
+      case 'Like':
+        if (likeStatus === 'None') {
+          likesCount--;
+        }
+
+        if (likeStatus === 'Dislike') {
+          likesCount--;
+          dislikesCount++;
+        }
+        break;
+
+      case 'Dislike':
+        if (likeStatus === 'None') {
+          dislikesCount--;
+        }
+
+        if (likeStatus === 'Like') {
+          dislikesCount--;
+          likesCount++;
+        }
+    }
+
+    await commentsRepositories.updateLikesCount(commentId, likesCount, dislikesCount);
+
+    return commentsRepositories.updateLikesStatus(commentId, userId, likeStatus);
   },
 };

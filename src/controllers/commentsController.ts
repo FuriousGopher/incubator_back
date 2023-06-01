@@ -84,3 +84,15 @@ export const deleteCommentById = async (req: Request, res: Response) => {
     res.sendStatus(HttpStatusCode.InternalServerError);
   }
 };
+
+export const updateLikeStatus = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const userId = req.user!.id;
+  const likeStatus = req.body.likeStatus;
+  const updateLikeStatusByCommentId = await commentsService.updateLikeStatus(id, userId, likeStatus);
+  if (updateLikeStatusByCommentId) {
+    res.sendStatus(HttpStatusCode.NoContent);
+  } else {
+    res.status(HttpStatusCode.NotFound).send('Comments not found');
+  }
+};

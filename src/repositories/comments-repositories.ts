@@ -1,4 +1,4 @@
-import { CommentType } from '../models/commentType';
+import { CommentDBModel } from '../models/commentType';
 import { uuid } from 'uuidv4';
 import { UserDBModel } from '../models/userType';
 import { EnhancedOmit, InferIdType } from 'mongodb';
@@ -6,7 +6,7 @@ import { CommentsMongooseModel } from '../Domain/CommentSchema';
 
 export const commentsRepositories = {
   async createNewCommentByPostId(
-    comment: CommentType,
+    comment: CommentDBModel,
     user: EnhancedOmit<UserDBModel, '_id'> & {
       _id: InferIdType<UserDBModel>;
     },
@@ -21,11 +21,22 @@ export const commentsRepositories = {
       },
       createdAt: new Date().toISOString(),
       postId: postId,
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        users: [],
+      },
     };
     await CommentsMongooseModel.create({ ...newComment });
     return newComment;
   },
-  async getAllCommentsByPostId(postId: string, pageNumber: number, nPerPage: number, sortBy: string, sortDirection: -1 | 1) {
+  async getAllCommentsByPostId(
+    postId: string,
+    pageNumber: number,
+    nPerPage: number,
+    sortBy: string,
+    sortDirection: -1 | 1,
+  ) {
     const foundComments = await CommentsMongooseModel.find({ postId: postId }, { projection: { _id: 0, postId: 0 } })
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
@@ -41,9 +52,9 @@ export const commentsRepositories = {
     };
   },
   async getCommentById(id: string) {
-    return CommentsMongooseModel.findOne({ id: id }, { projection: { _id: 0, postId: 0 } });
+    return CommentsMongooseModel.findOne({ id: id });
   },
-  async updateCommentById(comment: CommentType, commentId: string) {
+  async updateCommentById(comment: CommentDBModel, commentId: string) {
     const result = await CommentsMongooseModel.updateOne(
       { id: commentId },
       {
@@ -64,5 +75,75 @@ export const commentsRepositories = {
   async deleteCommentById(id: string) {
     const result = await CommentsMongooseModel.deleteOne({ id: id });
     return result.deletedCount === 1;
+  },
+  async findUserInLikesInfo(commentId: string, userId: string) {
+    const foundUser = await CommentsMongooseModel.findOne(
+      CommentsMongooseModel.findOne({ id: commentId, 'likesInfo.users.userId': userId }),
+    );
+
+    if (!foundUser) {
+      return null;
+    }
+
+    return foundUser;
+  },
+
+  async addUserInLikesInfo(commentId: string, userId: string, likeStatus: string) {
+    const result = await CommentsMongooseModel.updateOne(
+      { _id: commentId },
+      {
+        $push: {
+          'likesInfo.users': {
+            userId,
+            likeStatus,
+          },
+        },
+      },
+    );
+    return result.matchedCount === 1;
+  },
+
+  async updateLikesCount(commentId: string, likesCount: number, dislikesCount: number) {
+    const result = await CommentsMongooseModel.updateOne(
+      { _id: commentId },
+      {
+        $set: {
+          'likesInfo.likesCount': likesCount,
+          'likesInfo.dislikesCount': dislikesCount,
+        },
+      },
+    );
+    return result.matchedCount === 1;
+  },
+
+  async findUserLikeStatus(commentId: string, userId: string): Promise<string | null> {
+    const foundUser = await CommentsMongooseModel.findOne(
+      { _id: commentId },
+      {
+        'likesInfo.users': {
+          $filter: {
+            input: '$likesInfo.users',
+            cond: { $eq: ['$$this.userId', userId] },
+          },
+        },
+      },
+    );
+
+    if (!foundUser || foundUser.likesInfo.users.length === 0) {
+      return null;
+    }
+
+    return foundUser.likesInfo.users[0].likeStatus;
+  },
+  async updateLikesStatus(commentId: string, userId: string, likeStatus: string): Promise<boolean> {
+    const result = await CommentsMongooseModel.updateOne(
+      { _id: commentId, 'likesInfo.users.userId': userId },
+      {
+        $set: {
+          'likesInfo.users.$.likeStatus': likeStatus,
+        },
+      },
+    );
+    return result.matchedCount === 1;
   },
 };

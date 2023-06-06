@@ -1,13 +1,3 @@
-export type DevicesType = {
-  id: string;
-  ip: string;
-  title: string;
-  userId: string;
-  deviceId: string;
-  lastActiveDate: string;
-  expirationDate: number;
-};
-
 export class DevicesDBModel {
   constructor(
     public id: string,

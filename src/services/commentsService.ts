@@ -28,7 +28,7 @@ export const commentsService = {
   },
 
   async getCommentById(id: string) {
-    return await commentsRepositories.getCommentById(id);
+    return commentsRepositories.getCommentById(id);
   },
 
   async updateCommentById(comment: CommentDBModel, commentId: string) {
@@ -50,9 +50,9 @@ export const commentsService = {
     let likesCount = foundCommentById.likesInfo.likesCount;
     let dislikesCount = foundCommentById.likesInfo.dislikesCount;
 
-    const foundComment = await commentsRepositories.findUserInLikesInfo(commentId, userId);
+    const findUser = await commentsRepositories.findUserInLikesInfo(commentId, userId);
 
-    if (!foundComment) {
+    if (!findUser) {
       await commentsRepositories.addUserInLikesInfo(commentId, userId, likeStatus);
 
       if (likeStatus === 'Like') {

@@ -8,10 +8,10 @@ import {
   getBlogById,
   updateBlogById,
 } from '../controllers/blogsController';
-import { validatePostAndPutMethodsForBlogsBody } from '../validators/blogsValidator';
+import { validatePostAndPutMethodsForBlogsBody } from '../validators/validatorForNewBlog';
 import { checkAuthorization } from '../middlewares/checkAuthorization';
-import { validationMiddleware } from '../middlewares/ValidationErorrsMiddleware';
-import { validatePostMethodsForPostsByBlogId } from '../validators/blogValidatorForPostMetchod';
+import { validationMiddleware } from '../validators/ValidationErorrsMiddleware';
+import { validatePostMethodsForPostsByBlogId } from '../validators/validatorForNewPostByBlogId';
 
 export const blogsRouter = Router();
 

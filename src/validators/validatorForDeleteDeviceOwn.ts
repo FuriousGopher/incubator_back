@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { deviceService } from '../services/deviceService';
 import { HttpStatusCode } from '../types/HTTP-Response';
 
-export const deleteDeviceOwnValidator = async (req: Request, res: Response, next: NextFunction) => {
+export const validatorForDeleteDeviceOwn = async (req: Request, res: Response, next: NextFunction) => {
   const cookieRefreshToken = req.cookies.refreshToken;
 
   if (!cookieRefreshToken) {

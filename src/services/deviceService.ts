@@ -1,6 +1,6 @@
 import { jwtService } from '../aplication/jwt-service';
 import { uuid } from 'uuidv4';
-import { DevicesType } from '../models/DevicesType';
+import { DevicesDBModel } from '../models/DevicesType';
 import { deviceRepositories } from '../repositories/deviceRepositories';
 
 export const deviceService = {
@@ -11,7 +11,7 @@ export const deviceService = {
       return null;
     }
 
-    const newDevice: DevicesType = {
+    const newDevice: DevicesDBModel = {
       id: uuid(),
       ip: ip,
       title: userAgent,

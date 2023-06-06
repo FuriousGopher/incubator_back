@@ -16,6 +16,23 @@ export class CommentDBModel {
   ) {}
 }
 
-export class UserLikes {
-  constructor(public userId: string, public likeStatus: string) {}
-}
+export type UserLikes = {
+  userId: string;
+  likeStatus: string;
+};
+
+export type CommentDBModelType = {
+  id: string;
+  content: string;
+  commentatorInfo: {
+    userId: string;
+    userLogin: string;
+  };
+  createdAt: string;
+  postId: string;
+  likesInfo: {
+    likesCount: number;
+    dislikesCount: number;
+    users: UserLikes[];
+  };
+};

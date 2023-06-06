@@ -1,4 +1,4 @@
-import { PostType } from '../models/postType';
+import { PostDBModel, PostType } from '../models/postType';
 import { uuid } from 'uuidv4';
 import { WithId } from 'mongodb';
 import { PostsMongooseModel } from '../Domain/PostSchema';
@@ -25,7 +25,7 @@ export const postsRepositories = {
     return PostsMongooseModel.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
-  async createNewPost(post: PostType) {
+  async createNewPost(post: PostDBModel) {
     const blog = await BlogsMongooseModel.findOne({ id: post.blogId });
     if (!blog) {
       return false;

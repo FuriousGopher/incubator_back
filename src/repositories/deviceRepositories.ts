@@ -1,8 +1,8 @@
-import { DevicesType } from '../models/DevicesType';
+import { DevicesDBModel } from '../models/DevicesType';
 import { DevicesMongooseModel } from '../Domain/DeviceSchema';
 
 export const deviceRepositories = {
-  async createDevice(newDevice: DevicesType) {
+  async createDevice(newDevice: DevicesDBModel) {
     await DevicesMongooseModel.create({ ...newDevice });
     return newDevice;
   },

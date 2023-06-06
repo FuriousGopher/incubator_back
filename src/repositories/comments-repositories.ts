@@ -1,4 +1,4 @@
-import { CommentDBModel } from '../models/commentType';
+import { CommentDBModel, CommentDBModelType } from '../models/commentType';
 import { uuid } from 'uuidv4';
 import { UserDBModel } from '../models/userType';
 import { EnhancedOmit, InferIdType } from 'mongodb';
@@ -6,7 +6,7 @@ import { CommentsMongooseModel } from '../Domain/CommentSchema';
 
 export const commentsRepositories = {
   async createNewCommentByPostId(
-    comment: CommentDBModel,
+    comment: CommentDBModelType,
     user: EnhancedOmit<UserDBModel, '_id'> & {
       _id: InferIdType<UserDBModel>;
     },
@@ -24,19 +24,13 @@ export const commentsRepositories = {
       likesInfo: {
         likesCount: 0,
         dislikesCount: 0,
-        users: [],
+        myStatus: 'None',
       },
     };
     await CommentsMongooseModel.create({ ...newComment });
     return newComment;
   },
-  async getAllCommentsByPostId(
-    postId: string,
-    pageNumber: number,
-    nPerPage: number,
-    sortBy: string,
-    sortDirection: -1 | 1,
-  ) {
+  async getAllCommentsByPostId(postId: string, pageNumber: number, nPerPage: number, sortBy: string, sortDirection: -1 | 1) {
     const foundComments = await CommentsMongooseModel.find({ postId: postId }, { projection: { _id: 0, postId: 0 } })
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
@@ -77,9 +71,7 @@ export const commentsRepositories = {
     return result.deletedCount === 1;
   },
   async findUserInLikesInfo(commentId: string, userId: string) {
-    const foundUser = await CommentsMongooseModel.findOne(
-      CommentsMongooseModel.findOne({ id: commentId, 'likesInfo.users.userId': userId }),
-    );
+    const foundUser = await CommentsMongooseModel.findOne(CommentsMongooseModel.findOne({ id: commentId, 'likesInfo.users.userId': userId }));
 
     if (!foundUser) {
       return null;
@@ -90,7 +82,7 @@ export const commentsRepositories = {
 
   async addUserInLikesInfo(commentId: string, userId: string, likeStatus: string) {
     const result = await CommentsMongooseModel.updateOne(
-      { _id: commentId },
+      { id: commentId },
       {
         $push: {
           'likesInfo.users': {
@@ -105,7 +97,7 @@ export const commentsRepositories = {
 
   async updateLikesCount(commentId: string, likesCount: number, dislikesCount: number) {
     const result = await CommentsMongooseModel.updateOne(
-      { _id: commentId },
+      { id: commentId },
       {
         $set: {
           'likesInfo.likesCount': likesCount,
@@ -118,7 +110,7 @@ export const commentsRepositories = {
 
   async findUserLikeStatus(commentId: string, userId: string): Promise<string | null> {
     const foundUser = await CommentsMongooseModel.findOne(
-      { _id: commentId },
+      { id: commentId },
       {
         'likesInfo.users': {
           $filter: {
@@ -137,7 +129,7 @@ export const commentsRepositories = {
   },
   async updateLikesStatus(commentId: string, userId: string, likeStatus: string): Promise<boolean> {
     const result = await CommentsMongooseModel.updateOne(
-      { _id: commentId, 'likesInfo.users.userId': userId },
+      { id: commentId, 'likesInfo.users.userId': userId },
       {
         $set: {
           'likesInfo.users.$.likeStatus': likeStatus,

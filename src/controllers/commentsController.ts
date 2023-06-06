@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { commentsService } from '../services/commentsService';
 import { usersService } from '../services/usersService';
+import { commentsRepositories } from '../repositories/comments-repositories';
 
 export const createNewCommentByPostId = async (req: Request, res: Response) => {
   const postId = req.params.postId;
@@ -18,6 +19,11 @@ export const createNewCommentByPostId = async (req: Request, res: Response) => {
         userLogin: newCommentByPostId.commentatorInfo.userLogin,
       },
       createdAt: newCommentByPostId.createdAt,
+      likesInfo: {
+        likesCount: newCommentByPostId.likesInfo.likesCount,
+        dislikesCount: newCommentByPostId.likesInfo.dislikesCount,
+        myStatus: newCommentByPostId.likesInfo.myStatus,
+      },
     });
   } catch (e: any) {
     return res.status(e.statusCode).send(e.message);
@@ -26,9 +32,9 @@ export const createNewCommentByPostId = async (req: Request, res: Response) => {
 
 export const getCommentById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const comments = await commentsService.getCommentById(id);
-  if (comments) {
-    res.status(200).send(comments);
+  const comment = await commentsService.getCommentById(id);
+  if (comment) {
+    res.status(200).send(comment);
   } else {
     res.status(404).send('Comments not found');
   }

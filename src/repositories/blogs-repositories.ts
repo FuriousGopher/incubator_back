@@ -10,13 +10,7 @@ export const blogsRepositories = {
     return BlogsMongooseModel.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
-  async getAllBlogs(
-    pageNumber: number,
-    nPerPage: number,
-    sortBy: string,
-    sortDirection: 1 | -1,
-    searchNameTerm: string | null,
-  ) {
+  async getAllBlogs(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1, searchNameTerm: string | null) {
     let filter = {};
     if (searchNameTerm) {
       const regex = new RegExp(searchNameTerm, 'i');

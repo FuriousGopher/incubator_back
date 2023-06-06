@@ -1,13 +1,8 @@
 import { Router } from 'express';
 import { checkTokenAuth } from '../middlewares/checkTokenAuth';
-import { validatorForComment } from '../validators/commentValidator';
-import {
-  deleteCommentById,
-  getCommentById,
-  updateCommentById,
-  updateLikeStatus,
-} from '../controllers/commentsController';
-import { validationMiddleware } from '../middlewares/ValidationErorrsMiddleware';
+import { validatorForComment } from '../validators/validatorForNewComment';
+import { deleteCommentById, getCommentById, updateCommentById, updateLikeStatus } from '../controllers/commentsController';
+import { validationMiddleware } from '../validators/ValidationErorrsMiddleware';
 import { validatorForLikes } from '../validators/validatorForLikes';
 
 export const commentsRouter = Router();

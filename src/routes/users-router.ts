@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { createUserValidator } from '../validators/UserRegistValidator';
-import { validationMiddleware } from '../middlewares/ValidationErorrsMiddleware';
+import { createUserValidator } from '../validators/validatorForUserRegistration';
+import { validationMiddleware } from '../validators/ValidationErorrsMiddleware';
 import { createNewUser, deleteUserById, getAllUsers } from '../controllers/usersController';
 import { validatorForUserExistEmail, validatorForUserExistLogin } from '../validators/validatorForUserExist';
 

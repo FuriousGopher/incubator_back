@@ -23,9 +23,11 @@ export const postsService = {
       items: postsResponse.posts,
     };
   },
+
   async getPostsById(id: string) {
     return await postsRepositories.getPostsById(id);
   },
+
   async createNewPost(post: PostDBModel) {
     const blog = await blogsRepositories.getBlogById(post.blogId);
     if (!blog) {
@@ -39,21 +41,31 @@ export const postsService = {
       blogId: post.blogId,
       blogName: blog.name,
       createdAt: new Date().toISOString(),
-      likesInfo: {
+      extendedLikesInfo: {
         likesCount: 0,
         dislikesCount: 0,
-        users: [],
+        myStatus: 'None',
+        newestLikes: [
+          {
+            addedAt: 0,
+            userId: 0,
+            userLogin: string;
+          },
+        ];
       },
     };
 
     return await postsRepositories.createNewPost(newPost);
   },
+
   async deletePostsById(id: string) {
     return await postsRepositories.deletePostsById(id);
   },
+
   async updatePostById(id: string, post: PostType) {
     return await postsRepositories.updatePostById(id, post);
   },
+
   async getAllCommentsByPostId(query: GetAllBlogsQueryType, postId: string, userId?: string) {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
     const foundComments = await commentsRepositories.getAllCommentsByPostId(
@@ -91,5 +103,10 @@ export const postsService = {
       totalCount: foundComments.totalNumberOfPosts,
       items,
     };
+  },
+
+  async updateLikeStatus(postid: string, userId: string, likeStatus: string) {
+    const foundPostById = await postsRepositories.getPostsById(postid);
+    if (!foundPostById) return false;
   },
 };

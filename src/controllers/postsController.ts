@@ -5,6 +5,7 @@ import { postsService } from '../services/postsService';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
 import { jwtService } from '../aplication/jwt-service';
 import { usersService } from '../services/usersService';
+import { commentsService } from '../services/commentsService';
 
 export const getAllPosts = async (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllReqQueryById>,
@@ -86,5 +87,17 @@ export const getAllCommentsByPostId = async (
     res.status(HttpStatusCode.OK).send(response);
   } else {
     res.status(HttpStatusCode.NotFound).send('Post not found');
+  }
+};
+
+export const updateLikeStatusForPost = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const userId = req.user!.id;
+  const likeStatus = req.body.likeStatus;
+  const updateLikeStatusByPostId = await postsService.updateLikeStatus(id, userId, likeStatus);
+  if (updateLikeStatusByPostId) {
+    res.sendStatus(HttpStatusCode.NoContent);
+  } else {
+    res.status(HttpStatusCode.NotFound).send('Comments not found');
   }
 };

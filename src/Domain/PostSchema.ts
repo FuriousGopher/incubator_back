@@ -9,15 +9,15 @@ const postSchema = new mongoose.Schema<PostDBModel>({
   blogId: { type: String, required: true },
   blogName: { type: String, required: true },
   createdAt: { type: String, required: true },
-  likesInfo: {
+  extendedLikesInfo: {
     likesCount: { type: Number, required: true },
     dislikesCount: { type: Number, required: true },
-    users: [
+    myStatus: { type: String, required: true },
+    newestLikes: [
       {
         addedAt: String,
         userId: String,
         userLogin: String,
-        likeStatus: String,
       },
     ],
   },

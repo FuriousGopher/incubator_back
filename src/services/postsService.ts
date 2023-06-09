@@ -64,39 +64,30 @@ export const postsService = {
       sortDirection,
     );
 
-    let likeStatus: string | undefined;
+    const items = foundComments.comments.map((comment) => {
+      const userLike = comment.likesInfo.users.find((user) => user.userId === userId);
+      const myStatus = userLike ? userLike.likeStatus : 'None';
 
-    if (userId) {
-      const commentWithUser = foundComments.comments.find((comment) =>
-        comment.likesInfo.users.some((user) => user.userId === userId),
-      );
-      if (commentWithUser) {
-        const userLike = commentWithUser.likesInfo.users.find((user) => user.userId === userId);
-        if (userLike) {
-          likeStatus = userLike.likeStatus;
-        }
-      }
-    }
-
-    const items = foundComments.comments.map((comment) => ({
-      id: comment.id,
-      content: comment.content,
-      commentatorInfo: {
-        userId: comment.commentatorInfo.userId,
-        userLogin: comment.commentatorInfo.userLogin,
-      },
-      createdAt: comment.createdAt,
-      likesInfo: {
-        likesCount: comment.likesInfo.likesCount,
-        dislikesCount: comment.likesInfo.dislikesCount,
-        myStatus: likeStatus || 'None',
-      },
-    }));
+      return {
+        id: comment.id,
+        content: comment.content,
+        commentatorInfo: {
+          userId: comment.commentatorInfo.userId,
+          userLogin: comment.commentatorInfo.userLogin,
+        },
+        createdAt: comment.createdAt,
+        likesInfo: {
+          likesCount: comment.likesInfo.likesCount,
+          dislikesCount: comment.likesInfo.dislikesCount,
+          myStatus,
+        },
+      };
+    });
 
     return {
+      pageSize: foundComments.pageSize,
       pagesCount: foundComments.totalNumberOfPages,
       page: +foundComments.currentPage,
-      pageSize: foundComments.pageSize,
       totalCount: foundComments.totalNumberOfPosts,
       items,
     };

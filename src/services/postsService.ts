@@ -94,9 +94,9 @@ export const postsService = {
     }));
 
     return {
-      pageSize: foundComments.pageSize,
       pagesCount: foundComments.totalNumberOfPages,
       page: +foundComments.currentPage,
+      pageSize: foundComments.pageSize,
       totalCount: foundComments.totalNumberOfPosts,
       items,
     };

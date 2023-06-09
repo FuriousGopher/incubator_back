@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { commentsService } from '../services/commentsService';
 import { usersService } from '../services/usersService';
-import { commentsRepositories } from '../repositories/comments-repositories';
 
 export const createNewCommentByPostId = async (req: Request, res: Response) => {
   const postId = req.params.postId;
@@ -32,7 +31,8 @@ export const createNewCommentByPostId = async (req: Request, res: Response) => {
 
 export const getCommentById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const comment = await commentsService.getCommentById(id);
+  const userId = req.user?.id;
+  const comment = await commentsService.getCommentById(id, userId);
   if (comment) {
     res.status(200).send(comment);
   } else {

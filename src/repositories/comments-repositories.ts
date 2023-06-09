@@ -1,4 +1,4 @@
-import { CommentDBModel, CommentDBModelType } from '../models/commentType';
+import { CommentDBModel, CommentViewModel } from '../models/commentType';
 import { uuid } from 'uuidv4';
 import { UserDBModel } from '../models/userType';
 import { EnhancedOmit, InferIdType } from 'mongodb';
@@ -6,7 +6,7 @@ import { CommentsMongooseModel } from '../Domain/CommentSchema';
 
 export const commentsRepositories = {
   async createNewCommentByPostId(
-    comment: CommentDBModelType,
+    comment: CommentDBModel,
     user: EnhancedOmit<UserDBModel, '_id'> & {
       _id: InferIdType<UserDBModel>;
     },
@@ -45,9 +45,39 @@ export const commentsRepositories = {
       pageSize: nPerPage,
     };
   },
-  async getCommentById(id: string) {
-    return CommentsMongooseModel.findOne({ id: id });
+
+  async getCommentById(id: string, userId: string | undefined): Promise<CommentViewModel | null> {
+    const foundComment = await CommentsMongooseModel.findOne({ id });
+
+    if (!foundComment) {
+      return null;
+    }
+
+    let likeStatus;
+
+    if (userId) {
+      const userLike = foundComment.likesInfo.users.find((user) => user.userId === userId);
+      if (userLike) {
+        likeStatus = userLike.likeStatus;
+      }
+    }
+
+    return {
+      id: foundComment.id,
+      content: foundComment.content,
+      commentatorInfo: {
+        userId: foundComment.commentatorInfo.userId,
+        userLogin: foundComment.commentatorInfo.userLogin,
+      },
+      createdAt: foundComment.createdAt,
+      likesInfo: {
+        likesCount: foundComment.likesInfo.likesCount,
+        dislikesCount: foundComment.likesInfo.dislikesCount,
+        myStatus: likeStatus || 'None',
+      },
+    };
   },
+
   async updateCommentById(comment: CommentDBModel, commentId: string) {
     const result = await CommentsMongooseModel.updateOne(
       { id: commentId },
@@ -59,6 +89,7 @@ export const commentsRepositories = {
     );
     return result.matchedCount === 1;
   },
+
   async checkCommentUserId(commentId: string, userId: string) {
     const comment = await CommentsMongooseModel.findOne({ id: commentId });
     if (!comment) {
@@ -66,10 +97,12 @@ export const commentsRepositories = {
     }
     return comment.commentatorInfo.userId === userId;
   },
+
   async deleteCommentById(id: string) {
     const result = await CommentsMongooseModel.deleteOne({ id: id });
     return result.deletedCount === 1;
   },
+
   async findUserInLikesInfo(commentId: string, userId: string) {
     const foundUser = await CommentsMongooseModel.findOne(CommentsMongooseModel.findOne({ id: commentId, 'likesInfo.users.userId': userId }));
 
@@ -127,6 +160,7 @@ export const commentsRepositories = {
 
     return foundUser.likesInfo.users[0].likeStatus;
   },
+
   async updateLikesStatus(commentId: string, userId: string, likeStatus: string): Promise<boolean> {
     const result = await CommentsMongooseModel.updateOne(
       { id: commentId, 'likesInfo.users.userId': userId },

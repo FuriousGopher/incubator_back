@@ -21,7 +21,7 @@ export type UserLikes = {
   likeStatus: string;
 };
 
-export type CommentDBModelType = {
+export type CommentViewModel = {
   id: string;
   content: string;
   commentatorInfo: {
@@ -29,10 +29,9 @@ export type CommentDBModelType = {
     userLogin: string;
   };
   createdAt: string;
-  postId: string;
   likesInfo: {
     likesCount: number;
     dislikesCount: number;
-    users: UserLikes[];
+    myStatus: string;
   };
 };

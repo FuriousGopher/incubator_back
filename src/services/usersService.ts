@@ -55,7 +55,7 @@ export const usersService = {
     };
   },
 
-  async findUserById(id: string) {
+  async findUserById(id: string | undefined) {
     return await usersRepositories.findUserById(id);
   },
 };

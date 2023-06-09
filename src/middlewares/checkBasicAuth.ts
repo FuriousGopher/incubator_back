@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
 
-export function checkAuthorization(req: Request, res: Response, next: NextFunction) {
+export function checkBasicAuth(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Basic')) {
     return res.status(401).json({ error: 'Unauthorized' });

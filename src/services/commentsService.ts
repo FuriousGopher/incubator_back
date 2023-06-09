@@ -27,8 +27,8 @@ export const commentsService = {
     }
   },
 
-  async getCommentById(id: string) {
-    return commentsRepositories.getCommentById(id);
+  async getCommentById(id: string, userId?: string | undefined) {
+    return commentsRepositories.getCommentById(id, userId);
   },
 
   async updateCommentById(comment: CommentDBModel, commentId: string) {
@@ -44,7 +44,7 @@ export const commentsService = {
   },
 
   async updateLikeStatus(commentId: string, userId: string, likeStatus: string) {
-    const foundCommentById = await commentsRepositories.getCommentById(commentId);
+    const foundCommentById = await commentsRepositories.getCommentById(commentId, userId);
     if (!foundCommentById) return false;
 
     let likesCount = foundCommentById.likesInfo.likesCount;

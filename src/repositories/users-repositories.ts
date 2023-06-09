@@ -36,14 +36,7 @@ export const usersRepositories = {
     return result.deletedCount === 1;
   },
 
-  async getAllUsers(
-    pageNumber: number,
-    nPerPage: number,
-    sortBy: string,
-    sortDirection: 1 | -1,
-    searchEmailTerm: string,
-    searchLoginTerm: string,
-  ) {
+  async getAllUsers(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1, searchEmailTerm: string, searchLoginTerm: string) {
     const filter: any = {};
     if (searchLoginTerm || searchEmailTerm) {
       filter.$or = [];
@@ -76,17 +69,17 @@ export const usersRepositories = {
   },
 
   async findByLoginOrEmail(loginOrEmail: string) {
-    return await UsersMongooseModel.findOne({
+    return UsersMongooseModel.findOne({
       $or: [{ 'accountData.login': loginOrEmail }, { 'accountData.email': loginOrEmail }],
     });
   },
 
   async findByCodeInUsersMongooseModel(code: string) {
-    return await UsersMongooseModel.findOne({ 'emailConfirmation.confirmationCode': code });
+    return UsersMongooseModel.findOne({ 'emailConfirmation.confirmationCode': code });
   },
 
-  async findUserById(id: string) {
-    return await UsersMongooseModel.findOne({ id });
+  async findUserById(id: string | undefined) {
+    return UsersMongooseModel.findOne({ id });
   },
 
   async createUserByRegistration(newUser: UserDBModel) {
@@ -99,15 +92,12 @@ export const usersRepositories = {
   },
 
   async updateConfirmationCode(id: string, newCode: string) {
-    const result = await UsersMongooseModel.updateOne(
-      { id },
-      { $set: { 'emailConfirmation.confirmationCode': newCode } },
-    );
+    const result = await UsersMongooseModel.updateOne({ id }, { $set: { 'emailConfirmation.confirmationCode': newCode } });
     return result.modifiedCount === 1;
   },
 
   async findUserByEmail(email: string) {
-    return await UsersMongooseModel.findOne({ 'accountData.email': email });
+    return UsersMongooseModel.findOne({ 'accountData.email': email });
   },
 
   async deleteDevice(deviceId: string) {

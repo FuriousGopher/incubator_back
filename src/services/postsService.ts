@@ -1,8 +1,10 @@
 import { MethodGetAllReqQueryById } from '../types/queryType';
 import { postsRepositories } from '../repositories/posts-repositories';
-import { PostType } from '../models/postType';
+import { PostDBModel, PostType } from '../models/postType';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
 import { commentsRepositories } from '../repositories/comments-repositories';
+import { uuid } from 'uuidv4';
+import { blogsRepositories } from '../repositories/blogs-repositories';
 
 export const postsService = {
   async getAllPosts(query: MethodGetAllReqQueryById) {
@@ -19,8 +21,27 @@ export const postsService = {
   async getPostsById(id: string) {
     return await postsRepositories.getPostsById(id);
   },
-  async createNewPost(post: PostType) {
-    return await postsRepositories.createNewPost(post);
+  async createNewPost(post: PostDBModel) {
+    const blog = await blogsRepositories.getBlogById(post.blogId);
+    if (!blog) {
+      return false;
+    }
+    const newPost = {
+      id: uuid(),
+      title: post.title,
+      shortDescription: post.shortDescription,
+      content: post.content,
+      blogId: post.blogId,
+      blogName: blog.name,
+      createdAt: new Date().toISOString(),
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        users: [],
+      },
+    };
+
+    return await postsRepositories.createNewPost(newPost);
   },
   async deletePostsById(id: string) {
     return await postsRepositories.deletePostsById(id);

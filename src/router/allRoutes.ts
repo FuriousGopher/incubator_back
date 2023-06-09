@@ -2,7 +2,7 @@ import { testRouter } from '../routes/testing-route';
 import { blogsRouter } from '../routes/blogs-router';
 import { postsRouter } from '../routes/posts-router';
 import { authRouter } from '../routes/auth-router';
-import { checkAuthorization } from '../middlewares/checkAuthorization';
+import { checkBasicAuth } from '../middlewares/checkBasicAuth';
 import { usersRouter } from '../routes/users-router';
 import express, { Request, Response } from 'express';
 import { commentsRouter } from '../routes/comments-router';
@@ -22,7 +22,7 @@ router.use('/posts', postsRouter);
 
 router.use('/auth', authRouter);
 
-router.use('/users', checkAuthorization, usersRouter);
+router.use('/users', checkBasicAuth, usersRouter);
 
 router.use('/security', validatorForRefreshToken, securityRouter);
 

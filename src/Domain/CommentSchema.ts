@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { CommentDBModel, CommentDBModelType } from '../models/commentType';
+import { CommentDBModel } from '../models/commentType';
 
-const commentDBModel = new mongoose.Schema<CommentDBModelType>({
+const commentDBModel = new mongoose.Schema<CommentDBModel>({
   id: { type: String, required: true },
   content: { type: String, required: true },
   commentatorInfo: {

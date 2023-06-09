@@ -8,6 +8,10 @@ export type PostType = {
   createdAt: string;
 };
 
+export class DataOfUsersLikes {
+  constructor(public addedAt: string, public userId: string, public userLogin: string, public likeStatus: string) {}
+}
+
 export class PostDBModel {
   constructor(
     public id: string,
@@ -17,5 +21,10 @@ export class PostDBModel {
     public blogId: string,
     public blogName: string,
     public createdAt: string,
+    public likesInfo: {
+      likesCount: number;
+      dislikesCount: number;
+      users: DataOfUsersLikes[];
+    },
   ) {}
 }

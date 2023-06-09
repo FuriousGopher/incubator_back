@@ -1,8 +1,6 @@
 import { PostDBModel, PostType } from '../models/postType';
-import { uuid } from 'uuidv4';
 import { WithId } from 'mongodb';
 import { PostsMongooseModel } from '../Domain/PostSchema';
-import { BlogsMongooseModel } from '../Domain/BlogSchema';
 
 export const postsRepositories = {
   async getAllPosts(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1) {
@@ -25,23 +23,17 @@ export const postsRepositories = {
     return PostsMongooseModel.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
-  async createNewPost(post: PostDBModel) {
-    const blog = await BlogsMongooseModel.findOne({ id: post.blogId });
-    if (!blog) {
-      return false;
-    }
-    const newPost = {
-      id: uuid(),
-      title: post.title,
-      shortDescription: post.shortDescription,
-      content: post.content,
-      blogId: post.blogId,
-      blogName: blog.name,
-      createdAt: new Date().toISOString(),
+  async createNewPost(newPost: PostDBModel) {
+    await PostsMongooseModel.create(newPost);
+    return {
+      id: newPost.id,
+      title: newPost.title,
+      shortDescription: newPost.shortDescription,
+      content: newPost.content,
+      blogId: newPost.blogId,
+      blogName: newPost.blogName,
+      createdAt: newPost.createdAt,
     };
-
-    await PostsMongooseModel.create({ ...newPost });
-    return newPost;
   },
 
   async deletePostsById(id: string) {

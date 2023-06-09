@@ -30,8 +30,17 @@ export const commentsRepositories = {
     await CommentsMongooseModel.create({ ...newComment });
     return newComment;
   },
-  async getAllCommentsByPostId(postId: string, pageNumber: number, nPerPage: number, sortBy: string, sortDirection: -1 | 1) {
-    const foundComments = await CommentsMongooseModel.find({ postId: postId }, { projection: { _id: 0, postId: 0 } })
+  async getAllCommentsByPostId(
+    postId: string,
+    pageNumber: number,
+    nPerPage: number,
+    sortBy: string,
+    sortDirection: -1 | 1,
+  ) {
+    const foundComments = await CommentsMongooseModel.find(
+      { postId: postId },
+      { projection: { _id: 0, postId: 0, __v: 0 } },
+    )
       .sort({ [sortBy]: sortDirection })
       .skip(pageNumber > 0 ? (pageNumber - 1) * nPerPage : 0)
       .limit(Number(nPerPage))
@@ -104,7 +113,9 @@ export const commentsRepositories = {
   },
 
   async findUserInLikesInfo(commentId: string, userId: string) {
-    const foundUser = await CommentsMongooseModel.findOne(CommentsMongooseModel.findOne({ id: commentId, 'likesInfo.users.userId': userId }));
+    const foundUser = await CommentsMongooseModel.findOne(
+      CommentsMongooseModel.findOne({ id: commentId, 'likesInfo.users.userId': userId }),
+    );
 
     if (!foundUser) {
       return null;

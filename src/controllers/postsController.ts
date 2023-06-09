@@ -3,6 +3,8 @@ import { MethodGetAllReqQueryById } from '../types/queryType';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { postsService } from '../services/postsService';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
+import { jwtService } from '../aplication/jwt-service';
+import { usersService } from '../services/usersService';
 
 export const getAllPosts = async (
   req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllReqQueryById>,
@@ -64,6 +66,13 @@ export const getAllCommentsByPostId = async (
   >,
   res: Response,
 ) => {
+  const accessToken = req.headers.authorization?.split(' ')[1];
+  if (accessToken) {
+    const userId = await jwtService.getUserIdByToken(accessToken);
+    const userModel = await usersService.findUserById(userId?.userId.toString());
+    req.user = { id: userModel?.id };
+  }
+  const userId = req.user?.id;
   const query = {
     searchNameTerm: req.query.searchNameTerm ?? null,
     pageSize: Number(req.query.pageSize) || 10,
@@ -72,7 +81,7 @@ export const getAllCommentsByPostId = async (
     sortDirection: req.query.sortDirection ?? 'desc',
   };
   const postId = req.params.postId;
-  const response = await postsService.getAllCommentsByPostId(query, postId);
+  const response = await postsService.getAllCommentsByPostId(query, postId, userId);
   if (response.items.length) {
     res.status(HttpStatusCode.OK).send(response);
   } else {

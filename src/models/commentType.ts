@@ -12,6 +12,7 @@ export class CommentDBModel {
       likesCount: number;
       dislikesCount: number;
       users: UserLikes[];
+      myStatus?: string;
     },
   ) {}
 }

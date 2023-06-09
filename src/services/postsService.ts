@@ -9,7 +9,12 @@ import { blogsRepositories } from '../repositories/blogs-repositories';
 export const postsService = {
   async getAllPosts(query: MethodGetAllReqQueryById) {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
-    const postsResponse = await postsRepositories.getAllPosts(query.pageNumber, query.pageSize, query.sortBy, sortDirection);
+    const postsResponse = await postsRepositories.getAllPosts(
+      query.pageNumber,
+      query.pageSize,
+      query.sortBy,
+      sortDirection,
+    );
     return {
       pagesCount: postsResponse.totalNumberOfPages,
       page: postsResponse.currentPage,
@@ -49,15 +54,51 @@ export const postsService = {
   async updatePostById(id: string, post: PostType) {
     return await postsRepositories.updatePostById(id, post);
   },
-  async getAllCommentsByPostId(query: GetAllBlogsQueryType, postId: string) {
+  async getAllCommentsByPostId(query: GetAllBlogsQueryType, postId: string, userId?: string) {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
-    const blogsResponse = await commentsRepositories.getAllCommentsByPostId(postId, query.pageNumber, query.pageSize, query.sortBy, sortDirection);
+    const foundComments = await commentsRepositories.getAllCommentsByPostId(
+      postId,
+      query.pageNumber,
+      query.pageSize,
+      query.sortBy,
+      sortDirection,
+    );
+
+    let likeStatus: string | undefined;
+
+    if (userId) {
+      const commentWithUser = foundComments.comments.find((comment) =>
+        comment.likesInfo.users.some((user) => user.userId === userId),
+      );
+      if (commentWithUser) {
+        const userLike = commentWithUser.likesInfo.users.find((user) => user.userId === userId);
+        if (userLike) {
+          likeStatus = userLike.likeStatus;
+        }
+      }
+    }
+
+    const items = foundComments.comments.map((comment) => ({
+      id: comment.id,
+      content: comment.content,
+      commentatorInfo: {
+        userId: comment.commentatorInfo.userId,
+        userLogin: comment.commentatorInfo.userLogin,
+      },
+      createdAt: comment.createdAt,
+      likesInfo: {
+        likesCount: comment.likesInfo.likesCount,
+        dislikesCount: comment.likesInfo.dislikesCount,
+        myStatus: likeStatus || 'None',
+      },
+    }));
+
     return {
-      pageSize: blogsResponse.pageSize,
-      pagesCount: blogsResponse.totalNumberOfPages,
-      page: +blogsResponse.currentPage,
-      totalCount: blogsResponse.totalNumberOfPosts,
-      items: blogsResponse.comments,
+      pageSize: foundComments.pageSize,
+      pagesCount: foundComments.totalNumberOfPages,
+      page: +foundComments.currentPage,
+      totalCount: foundComments.totalNumberOfPosts,
+      items,
     };
   },
 };

@@ -1,6 +1,5 @@
-import { PostDBModel } from '../models/postType';
+import { PostDBModel, PostViewModel } from '../models/postType';
 import { PostsMongooseModel } from '../Domain/PostSchema';
-import { PostViewModel } from '../models/view/postViewModel';
 
 export const postsRepositories = {
   async getAllPosts(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1) {

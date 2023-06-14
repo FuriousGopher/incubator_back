@@ -89,6 +89,12 @@ export const createNewPostByBlogId = async (req: Request, res: Response) => {
   if (!blog) {
     return res.status(HttpStatusCode.NotFound).send('Blog not found');
   }
-  const newPostByBlogId = await blogsService.createNewPostByBlogId(req.body, blogId, blog.name);
+  const newPostByBlogId = await blogsService.createNewPostByBlogId(
+    req.body.title,
+    req.body.shortDescription,
+    req.body.content,
+    blogId,
+    blog.name,
+  );
   res.status(HttpStatusCode.Created).send(newPostByBlogId);
 };

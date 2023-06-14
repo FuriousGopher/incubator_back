@@ -2,8 +2,6 @@ import { BlogType } from '../models/blogType';
 import { uuid } from 'uuidv4';
 import { WithId } from 'mongodb';
 import { BlogsMongooseModel } from '../Domain/BlogSchema';
-import { PostsMongooseModel } from '../Domain/PostSchema';
-import { PostViewModel } from '../models/view/postViewModel';
 
 export const blogsRepositories = {
   async getBlogById(id: string): Promise<WithId<BlogType> | null> {
@@ -66,26 +64,5 @@ export const blogsRepositories = {
       },
     );
     return result.matchedCount === 1;
-  },
-
-  async createNewPostByBlogId(post: PostViewModel, blogId: string, blogName: string) {
-    const newPost = {
-      id: uuid(),
-      title: post.title,
-      shortDescription: post.shortDescription,
-      content: post.content,
-      blogId: blogId,
-      blogName: blogName,
-      createdAt: new Date().toISOString(),
-      extendedLikesInfo: {
-        likesCount: post.extendedLikesInfo.likesCount,
-        dislikesCount: post.extendedLikesInfo.dislikesCount,
-        myStatus: 'None',
-        newestLikes: [],
-      },
-    };
-
-    await PostsMongooseModel.create({ ...newPost });
-    return newPost;
   },
 };

@@ -1,16 +1,22 @@
 import { BlogType } from '../models/blogType';
 import { uuid } from 'uuidv4';
 import { WithId } from 'mongodb';
-import { PostType } from '../models/postType';
 import { BlogsMongooseModel } from '../Domain/BlogSchema';
 import { PostsMongooseModel } from '../Domain/PostSchema';
+import { PostViewModel } from '../models/view/postViewModel';
 
 export const blogsRepositories = {
   async getBlogById(id: string): Promise<WithId<BlogType> | null> {
     return BlogsMongooseModel.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
-  async getAllBlogs(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1, searchNameTerm: string | null) {
+  async getAllBlogs(
+    pageNumber: number,
+    nPerPage: number,
+    sortBy: string,
+    sortDirection: 1 | -1,
+    searchNameTerm: string | null,
+  ) {
     let filter = {};
     if (searchNameTerm) {
       const regex = new RegExp(searchNameTerm, 'i');
@@ -62,7 +68,7 @@ export const blogsRepositories = {
     return result.matchedCount === 1;
   },
 
-  async createNewPostByBlogId(post: PostType, blogId: string, blogName: string) {
+  async createNewPostByBlogId(post: PostViewModel, blogId: string, blogName: string) {
     const newPost = {
       id: uuid(),
       title: post.title,
@@ -71,6 +77,12 @@ export const blogsRepositories = {
       blogId: blogId,
       blogName: blogName,
       createdAt: new Date().toISOString(),
+      extendedLikesInfo: {
+        likesCount: post.extendedLikesInfo.likesCount,
+        dislikesCount: post.extendedLikesInfo.dislikesCount,
+        myStatus: 'None',
+        newestLikes: [],
+      },
     };
 
     await PostsMongooseModel.create({ ...newPost });

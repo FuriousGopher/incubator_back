@@ -18,7 +18,13 @@ export const blogsRouter = Router();
 blogsRouter.get('/', getAllBlogs);
 blogsRouter.get('/:blogId/posts', getAllPostsByBlogId);
 blogsRouter.get('/:id', getBlogById);
-blogsRouter.post('/:blogId/posts', checkBasicAuth, validatePostMethodsForPostsByBlogId, validationMiddleware, createNewPostByBlogId);
+blogsRouter.post(
+  '/:blogId/posts',
+  checkBasicAuth,
+  validatePostMethodsForPostsByBlogId,
+  validationMiddleware,
+  createNewPostByBlogId,
+);
 blogsRouter.post('/', checkBasicAuth, validatePostAndPutMethodsForBlogsBody, validationMiddleware, createNewBlog);
 blogsRouter.delete('/:id', checkBasicAuth, deleteBlogById);
 blogsRouter.put('/:id', checkBasicAuth, validatePostAndPutMethodsForBlogsBody, validationMiddleware, updateBlogById);

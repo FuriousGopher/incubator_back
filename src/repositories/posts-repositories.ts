@@ -74,7 +74,7 @@ export const postsRepositories = {
       createdAt: newPost.createdAt,
       extendedLikesInfo: {
         likesCount: newPost.likesInfo.likesCount,
-        dislikesCount: newPost.likesInfo.likesCount,
+        dislikesCount: newPost.likesInfo.dislikesCount,
         myStatus: 'None',
         newestLikes: [],
       },

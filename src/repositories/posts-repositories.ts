@@ -1,5 +1,4 @@
 import { PostDBModel } from '../models/postType';
-import { WithId } from 'mongodb';
 import { PostsMongooseModel } from '../Domain/PostSchema';
 import { PostViewModel } from '../models/view/postViewModel';
 
@@ -20,8 +19,48 @@ export const postsRepositories = {
     };
   },
 
-  async getPostsById(id: string): Promise<WithId<PostDBModel> | null> {
-    return PostsMongooseModel.findOne({ id: id }, { projection: { _id: 0 } });
+  async getPostsById(id: string, userId?: string | undefined): Promise<PostViewModel | null> {
+    const foundPost = await PostsMongooseModel.findOne({ id });
+    if (!foundPost) {
+      return null;
+    }
+
+    let likeStatus;
+
+    if (userId) {
+      const userLike = foundPost.likesInfo.users.find((user) => user.userId === userId);
+      if (userLike) {
+        likeStatus = userLike.likeStatus;
+      }
+    }
+
+    const userLikes = foundPost.likesInfo.users;
+
+    return {
+      id: foundPost.id,
+      title: foundPost.title,
+      shortDescription: foundPost.shortDescription,
+      content: foundPost.content,
+      blogId: foundPost.blogId,
+      blogName: foundPost.blogName,
+      createdAt: foundPost.createdAt,
+      extendedLikesInfo: {
+        likesCount: foundPost.likesInfo.likesCount,
+        dislikesCount: foundPost.likesInfo.dislikesCount,
+        myStatus: likeStatus || 'None',
+        newestLikes: userLikes
+          .filter((post) => post.likeStatus === 'Like')
+          .sort((a, b) => -a.addedAt.localeCompare(b.addedAt))
+          .map((post) => {
+            return {
+              addedAt: post.addedAt,
+              userId: post.userId,
+              login: post.userLogin,
+            };
+          })
+          .splice(0, 3),
+      },
+    };
   },
 
   async createNewPost(newPost: PostDBModel): Promise<PostViewModel> {
@@ -123,7 +162,7 @@ export const postsRepositories = {
       {
         'likesInfo.users': {
           $filter: {
-            input: 'likesInfo.users',
+            input: '$likesInfo.users',
             cond: { $eq: ['$$this.userId', userId] },
           },
         },
@@ -152,7 +191,7 @@ export const postsRepositories = {
 
   async updateLikesStatus(postId: string, userId: string, likeStatus: string): Promise<boolean> {
     const result = await PostsMongooseModel.updateOne(
-      { id: postId, 'likesInfo.users.userId': userId },
+      { id: postId, 'likesInfo.users.userId': userId, 'likesInfo.users': { $elemMatch: { userId: userId } } },
       {
         $set: {
           'likesInfo.users.$.likeStatus': likeStatus,

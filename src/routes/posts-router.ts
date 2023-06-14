@@ -15,6 +15,7 @@ import { checkTokenAuth } from '../middlewares/checkTokenAuth';
 import { validatorForComment } from '../validators/validatorForNewComment';
 import { createNewCommentByPostId } from '../controllers/commentsController';
 import { validatorForLikes } from '../validators/validatorForLikes';
+import { getUserIdFromToken } from '../middlewares/getUserIdFromToken';
 
 export const postsRouter = Router();
 
@@ -27,7 +28,7 @@ postsRouter.post(
   validationMiddleware,
   createNewCommentByPostId,
 );
-postsRouter.get('/:id', getPostsById);
+postsRouter.get('/:id', getUserIdFromToken, getPostsById);
 postsRouter.post('/', checkBasicAuth, validatePostAndPutMethodsForPostsBody, validationMiddleware, createNewPost);
 postsRouter.delete('/:id', checkBasicAuth, deletePostsById);
 postsRouter.put('/:id', checkBasicAuth, validatePostAndPutMethodsForPostsBody, validationMiddleware, updatePostById);

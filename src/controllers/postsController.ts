@@ -1,23 +1,22 @@
 import { Request, Response } from 'express';
-import { MethodGetAllReqQueryById } from '../types/queryType';
+import { MethodGetAllReqQueryById, QueryForRequest } from '../types/queryType';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { postsService } from '../services/postsService';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
 import { jwtService } from '../aplication/jwt-service';
 import { usersService } from '../services/usersService';
-import { commentsService } from '../services/commentsService';
 
-export const getAllPosts = async (
-  req: Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, MethodGetAllReqQueryById>,
-  res: Response,
-) => {
+export const getAllPosts = async (req: QueryForRequest<MethodGetAllReqQueryById>, res: Response) => {
   const query = {
     pageSize: Number(req.query.pageSize) || 10,
     pageNumber: Number(req.query.pageNumber) || 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
-  const response = await postsService.getAllPosts(query);
+  const cookieRefreshToken = req.cookies.refreshToken;
+  const userId = await jwtService.getUserIdByToken(cookieRefreshToken);
+  const userIdString = userId?.toString();
+  const response = await postsService.getAllPosts(query, userIdString);
   if (response.items) {
     res.status(HttpStatusCode.OK).send(response);
   } else {
@@ -26,9 +25,10 @@ export const getAllPosts = async (
 };
 export const getPostsById = async (req: Request, res: Response) => {
   const id = req.params.id;
-  const post = await postsService.getPostsById(id);
-  if (post) {
-    res.status(200).send(post);
+  const userId = req.user?.id;
+  const foundPost = await postsService.getPostsById(id, userId);
+  if (foundPost) {
+    res.status(200).send(foundPost);
   } else {
     res.status(404).send('Post not found');
   }

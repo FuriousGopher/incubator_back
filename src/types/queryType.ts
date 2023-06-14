@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 export type MethodGetAllPostsReqQuery = {
   searchNameTerm: string;
   sortBy: string;
@@ -21,3 +23,5 @@ export type MethodGetAllReqQueryById = {
   pageNumber: number;
   pageSize: number;
 };
+
+export type QueryForRequest<Q> = Request<NonNullable<unknown>, NonNullable<unknown>, NonNullable<unknown>, Q>;

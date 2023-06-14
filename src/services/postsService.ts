@@ -9,7 +9,7 @@ import { usersRepositories } from '../repositories/users-repositories';
 import { PostViewModel } from '../models/view/postViewModel';
 
 export const postsService = {
-  async getAllPosts(query: MethodGetAllReqQueryById) {
+  async getAllPosts(query: MethodGetAllReqQueryById, userId?: string) {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
     const postsResponse = await postsRepositories.getAllPosts(
       query.pageNumber,
@@ -22,12 +22,53 @@ export const postsService = {
       page: postsResponse.currentPage,
       pageSize: postsResponse.pageSize,
       totalCount: postsResponse.totalNumberOfPosts,
-      items: postsResponse.posts,
+      items: await this.mapGetAllPosts(postsResponse.posts, userId),
     };
   },
 
-  async getPostsById(id: string) {
-    return await postsRepositories.getPostsById(id);
+  async mapGetAllPosts(array: PostDBModel[], userId?: string) {
+    return Promise.all(
+      array.map(async (post) => {
+        let status;
+
+        if (userId) {
+          status = await postsRepositories.findUserLikeStatus(post.id, userId);
+        }
+
+        const likesArray = post.likesInfo && post.likesInfo.users ? post.likesInfo.users : [];
+        const likesCount = post.likesInfo ? post.likesInfo.likesCount : 0;
+
+        return {
+          id: post.id,
+          title: post.title,
+          shortDescription: post.shortDescription,
+          content: post.content,
+          blogId: post.blogId,
+          blogName: post.blogName,
+          createdAt: post.createdAt,
+          extendedLikesInfo: {
+            likesCount,
+            dislikesCount: post.likesInfo ? post.likesInfo.dislikesCount : 0,
+            myStatus: status,
+            newestLikes: likesArray
+              .filter((post) => post.likeStatus === 'Like')
+              .sort((a, b) => -a.addedAt.localeCompare(b.addedAt))
+              .map((post) => {
+                return {
+                  addedAt: post.addedAt.toString(),
+                  userId: post.userId,
+                  login: post.userLogin,
+                };
+              })
+              .splice(0, 3),
+          },
+        };
+      }),
+    );
+  },
+
+  async getPostsById(id: string, userId?: string) {
+    return await postsRepositories.getPostsById(id, userId);
   },
 
   async createNewPost(
@@ -105,8 +146,8 @@ export const postsService = {
     const foundPostById = await postsRepositories.getPostsById(postId);
     if (!foundPostById) return false;
 
-    let likesCount = foundPostById.likesInfo.likesCount;
-    let dislikesCount = foundPostById.likesInfo.dislikesCount;
+    let likesCount = foundPostById.extendedLikesInfo.likesCount;
+    let dislikesCount = foundPostById.extendedLikesInfo.dislikesCount;
 
     const foundUser = await postsRepositories.findUserInLikesInfo(postId, userId);
 

@@ -34,7 +34,12 @@ export const getPostsById = async (req: Request, res: Response) => {
   }
 };
 export const createNewPost = async (req: Request, res: Response) => {
-  const newPost = await postsService.createNewPost(req.body);
+  const newPost = await postsService.createNewPost(
+    req.body.title,
+    req.body.shortDescription,
+    req.body.content,
+    req.body.blogId,
+  );
   res.status(201).send(newPost);
 };
 export const deletePostsById = async (req: Request, res: Response) => {

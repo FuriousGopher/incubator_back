@@ -1,6 +1,7 @@
-import { PostDBModel, PostType } from '../models/postType';
+import { PostDBModel } from '../models/postType';
 import { WithId } from 'mongodb';
 import { PostsMongooseModel } from '../Domain/PostSchema';
+import { PostViewModel } from '../models/view/postViewModel';
 
 export const postsRepositories = {
   async getAllPosts(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1) {
@@ -19,11 +20,11 @@ export const postsRepositories = {
     };
   },
 
-  async getPostsById(id: string): Promise<WithId<PostType> | null> {
+  async getPostsById(id: string): Promise<WithId<PostDBModel> | null> {
     return PostsMongooseModel.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
-  async createNewPost(newPost: PostDBModel) {
+  async createNewPost(newPost: PostDBModel): Promise<PostViewModel> {
     await PostsMongooseModel.create(newPost);
     return {
       id: newPost.id,
@@ -33,6 +34,12 @@ export const postsRepositories = {
       blogId: newPost.blogId,
       blogName: newPost.blogName,
       createdAt: newPost.createdAt,
+      extendedLikesInfo: {
+        likesCount: newPost.likesInfo.likesCount,
+        dislikesCount: newPost.likesInfo.likesCount,
+        myStatus: 'None',
+        newestLikes: [],
+      },
     };
   },
 
@@ -41,7 +48,7 @@ export const postsRepositories = {
     return result.deletedCount === 1;
   },
 
-  async updatePostById(id: string, post: PostType) {
+  async updatePostById(id: string, post: PostDBModel) {
     const result = await PostsMongooseModel.updateOne(
       { id: id },
       {
@@ -70,5 +77,88 @@ export const postsRepositories = {
       totalNumberOfPages: Math.ceil(totalNumberOfDocuments / nPerPage),
       pageSize: nPerPage,
     };
+  },
+
+  async findUserInLikesInfo(postId: string, userId: string): Promise<PostDBModel | null> {
+    const foundUser = await PostsMongooseModel.findOne(
+      PostsMongooseModel.findOne({
+        id: postId,
+        'likesInfo.users.userId': userId,
+      }),
+    );
+
+    if (!foundUser) {
+      return null;
+    }
+
+    return foundUser;
+  },
+
+  async pushUserInExtendedLikesInfo(
+    postId: string,
+    userId: string,
+    likeStatus: string,
+    addedAt: string,
+    userLogin: string,
+  ): Promise<boolean> {
+    const result = await PostsMongooseModel.updateOne(
+      { id: postId },
+      {
+        $push: {
+          'likesInfo.users': {
+            addedAt,
+            userId,
+            userLogin,
+            likeStatus,
+          },
+        },
+      },
+    );
+    return result.matchedCount === 1;
+  },
+
+  async findUserLikeStatus(postId: string, userId: string): Promise<string | null> {
+    const foundUser = await PostsMongooseModel.findOne(
+      { id: postId },
+      {
+        'likesInfo.users': {
+          $filter: {
+            input: 'likesInfo.users',
+            cond: { $eq: ['$$this.userId', userId] },
+          },
+        },
+      },
+    );
+
+    if (!foundUser || foundUser.likesInfo.users.length === 0) {
+      return null;
+    }
+
+    return foundUser.likesInfo.users[0].likeStatus;
+  },
+
+  async updateLikesCount(postId: string, likesCount: number, dislikesCount: number): Promise<boolean> {
+    const result = await PostsMongooseModel.updateOne(
+      { id: postId },
+      {
+        $set: {
+          'likesInfo.likesCount': likesCount,
+          'likesInfo.dislikesCount': dislikesCount,
+        },
+      },
+    );
+    return result.matchedCount === 1;
+  },
+
+  async updateLikesStatus(postId: string, userId: string, likeStatus: string): Promise<boolean> {
+    const result = await PostsMongooseModel.updateOne(
+      { id: postId, 'likesInfo.users.userId': userId },
+      {
+        $set: {
+          'likesInfo.users.$.likeStatus': likeStatus,
+        },
+      },
+    );
+    return result.matchedCount === 1;
   },
 };

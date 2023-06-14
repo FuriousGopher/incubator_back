@@ -31,4 +31,4 @@ postsRouter.get('/:id', getPostsById);
 postsRouter.post('/', checkBasicAuth, validatePostAndPutMethodsForPostsBody, validationMiddleware, createNewPost);
 postsRouter.delete('/:id', checkBasicAuth, deletePostsById);
 postsRouter.put('/:id', checkBasicAuth, validatePostAndPutMethodsForPostsBody, validationMiddleware, updatePostById);
-postsRouter.get('/:id/like-status', checkTokenAuth, validatorForLikes, validationMiddleware, updateLikeStatusForPost);
+postsRouter.put('/:id/like-status', checkTokenAuth, validatorForLikes, validationMiddleware, updateLikeStatusForPost);

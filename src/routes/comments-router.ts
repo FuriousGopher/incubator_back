@@ -1,8 +1,13 @@
 import { Router } from 'express';
 import { checkTokenAuth } from '../middlewares/checkTokenAuth';
 import { validatorForComment } from '../validators/validatorForNewComment';
-import { deleteCommentById, getCommentById, updateCommentById, updateLikeStatus } from '../controllers/commentsController';
-import { validationMiddleware } from '../validators/ValidationErorrsMiddleware';
+import {
+  deleteCommentById,
+  getCommentById,
+  updateCommentById,
+  updateLikeStatus,
+} from '../controllers/commentsController';
+import { validationMiddleware } from '../validators/validationErorrsMiddleware';
 import { validatorForLikes } from '../validators/validatorForLikes';
 import { getUserIdFromToken } from '../middlewares/getUserIdFromToken';
 

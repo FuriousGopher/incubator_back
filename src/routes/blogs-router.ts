@@ -10,7 +10,7 @@ import {
 } from '../controllers/blogsController';
 import { validatePostAndPutMethodsForBlogsBody } from '../validators/validatorForNewBlog';
 import { checkBasicAuth } from '../middlewares/checkBasicAuth';
-import { validationMiddleware } from '../validators/ValidationErorrsMiddleware';
+import { validationMiddleware } from '../validators/validationErorrsMiddleware';
 import { validatePostMethodsForPostsByBlogId } from '../validators/validatorForNewPostByBlogId';
 
 export const blogsRouter = Router();

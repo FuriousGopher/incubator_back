@@ -1,11 +1,15 @@
-import { usersRepositories } from '../repositories/users-repositories';
+import { UsersRepositories } from '../repositories/users-repositories';
 import { _generateHash } from '../helpFunction';
 import { GetAllUsersQueryType } from '../DTO/QueryForUsers';
 
-export const usersService = {
+class UsersService {
+  usersRepositories: UsersRepositories;
+  constructor() {
+    this.usersRepositories = new UsersRepositories();
+  }
   async getAllUsers(query: GetAllUsersQueryType) {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
-    const userResponse = await usersRepositories.getAllUsers(
+    const userResponse = await this.usersRepositories.getAllUsers(
       query.pageNumber,
       query.pageSize,
       query.sortBy,
@@ -20,10 +24,10 @@ export const usersService = {
       totalCount: userResponse.totalNumberOfPosts,
       items: userResponse.users,
     };
-  },
+  }
 
   async checkCredentials(loginOrEmail: string, password: string) {
-    const user = await usersRepositories.findByLoginOrEmail(loginOrEmail);
+    const user = await this.usersRepositories.findByLoginOrEmail(loginOrEmail);
     if (!user) return false;
     if (!user.emailConfirmation.isConfirmed) return false;
     const passwordHash = await _generateHash(password, user.accountData.passwordHash);
@@ -38,14 +42,14 @@ export const usersService = {
     } else {
       return false;
     }
-  },
+  }
 
   async deleteUserById(id: string) {
-    return await usersRepositories.deleteUserById(id);
-  },
+    return await this.usersRepositories.deleteUserById(id);
+  }
 
   async createNewUser(email: string, login: string, password: string) {
-    const newUser = await usersRepositories.createNewUser(email, login, password);
+    const newUser = await this.usersRepositories.createNewUser(email, login, password);
 
     return {
       id: newUser.id,
@@ -53,9 +57,11 @@ export const usersService = {
       email: newUser.accountData.email,
       createdAt: newUser.accountData.createdAt,
     };
-  },
+  }
 
   async findUserById(id: string | undefined) {
-    return await usersRepositories.findUserById(id);
-  },
-};
+    return await this.usersRepositories.findUserById(id);
+  }
+}
+
+export const usersService = new UsersService();

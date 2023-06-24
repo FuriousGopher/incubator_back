@@ -1,18 +1,18 @@
 import { Router } from 'express';
 import { createUserValidator } from '../validators/validatorForUserRegistration';
-import { validationMiddleware } from '../validators/ValidationErorrsMiddleware';
-import { createNewUser, deleteUserById, getAllUsers } from '../controllers/usersController';
+import { validationMiddleware } from '../validators/validationErorrsMiddleware';
+import { usersController } from '../controllers/usersController';
 import { validatorForUserExistEmail, validatorForUserExistLogin } from '../validators/validatorForUserExist';
 
 export const usersRouter = Router();
 
-usersRouter.get('/', getAllUsers);
+usersRouter.get('/', usersController.getAllUsers.bind(usersController));
 usersRouter.post(
   '/',
   createUserValidator,
   validatorForUserExistLogin('login'),
   validatorForUserExistEmail('email'),
   validationMiddleware,
-  createNewUser,
+  usersController.createNewUser.bind(usersController),
 );
-usersRouter.delete('/:id', deleteUserById);
+usersRouter.delete('/:id', usersController.deleteUserById.bind(usersController));

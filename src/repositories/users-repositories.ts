@@ -5,7 +5,7 @@ import { add } from 'date-fns';
 import { UsersMongooseModel } from '../Domain/UserSchema';
 import { UserDBModel } from '../models/userType';
 
-export const usersRepositories = {
+export class UsersRepositories {
   async createNewUser(email: string, login: string, password: string) {
     const passwordSalt = await bcrypt.genSalt(4);
     const passwordHash = await _generateHash(password, passwordSalt);
@@ -29,14 +29,21 @@ export const usersRepositories = {
     };
     await UsersMongooseModel.create({ ...newUser });
     return newUser;
-  },
+  }
 
   async deleteUserById(id: string) {
     const result = await UsersMongooseModel.deleteOne({ id: id });
     return result.deletedCount === 1;
-  },
+  }
 
-  async getAllUsers(pageNumber: number, nPerPage: number, sortBy: string, sortDirection: 1 | -1, searchEmailTerm: string, searchLoginTerm: string) {
+  async getAllUsers(
+    pageNumber: number,
+    nPerPage: number,
+    sortBy: string,
+    sortDirection: 1 | -1,
+    searchEmailTerm: string,
+    searchLoginTerm: string,
+  ) {
     const filter: any = {};
     if (searchLoginTerm || searchEmailTerm) {
       filter.$or = [];
@@ -66,46 +73,49 @@ export const usersRepositories = {
       totalNumberOfPages: Math.ceil(totalNumberOfPosts / nPerPage),
       pageSize: nPerPage,
     };
-  },
+  }
 
   async findByLoginOrEmail(loginOrEmail: string) {
     return UsersMongooseModel.findOne({
       $or: [{ 'accountData.login': loginOrEmail }, { 'accountData.email': loginOrEmail }],
     });
-  },
+  }
 
   async findByCodeInUsersMongooseModel(code: string) {
     return UsersMongooseModel.findOne({ 'emailConfirmation.confirmationCode': code });
-  },
+  }
 
   async findUserById(id: string | undefined) {
     return UsersMongooseModel.findOne({ id });
-  },
+  }
 
   async createUserByRegistration(newUser: UserDBModel) {
     return UsersMongooseModel.create(newUser);
-  },
+  }
 
   async updateIsConfirmed(id: string) {
     const result = await UsersMongooseModel.updateOne({ id }, { $set: { 'emailConfirmation.isConfirmed': true } });
     return result.modifiedCount === 1;
-  },
+  }
 
   async updateConfirmationCode(id: string, newCode: string) {
-    const result = await UsersMongooseModel.updateOne({ id }, { $set: { 'emailConfirmation.confirmationCode': newCode } });
+    const result = await UsersMongooseModel.updateOne(
+      { id },
+      { $set: { 'emailConfirmation.confirmationCode': newCode } },
+    );
     return result.modifiedCount === 1;
-  },
+  }
 
   async findUserByEmail(email: string) {
     return UsersMongooseModel.findOne({ 'accountData.email': email });
-  },
+  }
 
   async deleteDevice(deviceId: string) {
     const result = await UsersMongooseModel.deleteOne({ deviceId });
     return result.deletedCount === 1;
-  },
+  }
   async updatePassword(id: string, newPassword: string) {
     const result = await UsersMongooseModel.updateOne({ id }, { $set: { 'accountData.passwordHash': newPassword } });
     return result.modifiedCount === 1;
-  },
-};
+  }
+}

@@ -36,4 +36,4 @@ export const collections = [
   userDevicesCollection,
   logCollection,
 ];
-*/
+*/ /*comment because using mongoose */

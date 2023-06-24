@@ -10,7 +10,7 @@ import {
 } from '../controllers/postsController';
 import { validatePostAndPutMethodsForPostsBody } from '../validators/validatorForNewPost';
 import { checkBasicAuth } from '../middlewares/checkBasicAuth';
-import { validationMiddleware } from '../validators/ValidationErorrsMiddleware';
+import { validationMiddleware } from '../validators/validationErorrsMiddleware';
 import { checkTokenAuth } from '../middlewares/checkTokenAuth';
 import { validatorForComment } from '../validators/validatorForNewComment';
 import { createNewCommentByPostId } from '../controllers/commentsController';

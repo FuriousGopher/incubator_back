@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { createUserValidator } from '../validators/validatorForUserRegistration';
+import { usersController } from '../composition-root';
 import { validationMiddleware } from '../validators/validationErorrsMiddleware';
-import { usersController } from '../controllers/usersController';
 import { validatorForUserExistEmail, validatorForUserExistLogin } from '../validators/validatorForUserExist';
 
 export const usersRouter = Router();

@@ -2,11 +2,8 @@ import { UsersRepositories } from '../repositories/users-repositories';
 import { _generateHash } from '../helpFunction';
 import { GetAllUsersQueryType } from '../DTO/QueryForUsers';
 
-class UsersService {
-  usersRepositories: UsersRepositories;
-  constructor() {
-    this.usersRepositories = new UsersRepositories();
-  }
+export class UsersService {
+  constructor(protected usersRepositories: UsersRepositories) {}
   async getAllUsers(query: GetAllUsersQueryType) {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
     const userResponse = await this.usersRepositories.getAllUsers(
@@ -63,5 +60,3 @@ class UsersService {
     return await this.usersRepositories.findUserById(id);
   }
 }
-
-export const usersService = new UsersService();

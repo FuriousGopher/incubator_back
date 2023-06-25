@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { commentsService } from '../services/commentsService';
-import { usersService } from '../services/usersService';
+import { UsersService } from '../services/usersService';
+import { container } from '../composition-root';
+
+const usersService = container.resolve(UsersService);
 
 export const createNewCommentByPostId = async (req: Request, res: Response) => {
   const postId = req.params.postId;

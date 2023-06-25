@@ -1,5 +1,8 @@
 import { body } from 'express-validator';
-import { usersRepositories } from '../repositories/users-repositories';
+import { UsersRepositories } from '../repositories/users-repositories';
+import { container } from '../composition-root';
+
+const usersRepositories = container.resolve(UsersRepositories);
 
 export const validationEmailConfirm = body('code').custom(async (code) => {
   const result = await usersRepositories.findByCodeInUsersMongooseModel(code);

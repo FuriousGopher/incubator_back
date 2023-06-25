@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { jwtService } from '../aplication/jwt-service';
-import { usersService } from '../services/usersService';
+import { UsersService } from '../services/usersService';
+import { container } from '../composition-root';
+
+const usersService = container.resolve(UsersService);
 
 export const checkTokenAuth = async (req: Request, res: Response, next: NextFunction) => {
   if (!req.headers.authorization) {

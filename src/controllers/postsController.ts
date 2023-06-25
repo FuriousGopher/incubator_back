@@ -4,7 +4,10 @@ import { HttpStatusCode } from '../types/HTTP-Response';
 import { postsService } from '../services/postsService';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
 import { jwtService } from '../aplication/jwt-service';
-import { usersService } from '../services/usersService';
+import { UsersService } from '../services/usersService';
+import { container } from '../composition-root';
+
+const usersService = container.resolve(UsersService);
 
 export const getAllPosts = async (req: QueryForRequest<MethodGetAllReqQueryById>, res: Response) => {
   const query = {

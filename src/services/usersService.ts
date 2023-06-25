@@ -1,7 +1,10 @@
 import { UsersRepositories } from '../repositories/users-repositories';
 import { _generateHash } from '../helpFunction';
 import { GetAllUsersQueryType } from '../DTO/QueryForUsers';
+import { injectable } from 'inversify';
+import 'reflect-metadata';
 
+@injectable()
 export class UsersService {
   constructor(protected usersRepositories: UsersRepositories) {}
   async getAllUsers(query: GetAllUsersQueryType) {

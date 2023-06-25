@@ -1,4 +1,4 @@
-import { usersService } from '../services/usersService';
+import { UsersService } from '../services/usersService';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { Request, Response } from 'express';
 import { jwtService } from '../aplication/jwt-service';
@@ -6,7 +6,10 @@ import { authService } from '../services/authService';
 import { deviceService } from '../services/deviceService';
 import { uuid } from 'uuidv4';
 import { CreateUserDto } from '../models/userType';
+import { container } from '../composition-root';
 const REFRESH_TOKEN = 'refreshToken';
+
+const usersService = container.resolve(UsersService);
 
 export const loginAuth = async (req: Request, res: Response) => {
   const result = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password);

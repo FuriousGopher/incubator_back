@@ -1,5 +1,8 @@
 import { body } from 'express-validator';
-import { usersRepositories } from '../repositories/users-repositories';
+import { UsersRepositories } from '../repositories/users-repositories';
+import { container } from '../composition-root';
+
+const usersRepositories = container.resolve(UsersRepositories);
 
 export const validatorForUserExistLogin = (login: string) =>
   body(login).custom(async (login: string) => {

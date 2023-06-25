@@ -5,8 +5,11 @@ import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
 import { commentsRepositories } from '../repositories/comments-repositories';
 import { uuid } from 'uuidv4';
 import { blogsRepositories } from '../repositories/blogs-repositories';
-import { usersRepositories } from '../repositories/users-repositories';
+import { UsersRepositories } from '../repositories/users-repositories';
 import { PostViewModel } from '../models/view/postViewModel';
+import { container } from '../composition-root';
+
+const usersRepositories = container.resolve(UsersRepositories);
 
 export const postsService = {
   async getAllPosts(query: MethodGetAllReqQueryById, userId?: string) {

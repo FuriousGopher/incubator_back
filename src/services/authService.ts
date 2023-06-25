@@ -3,8 +3,11 @@ import bcrypt from 'bcrypt';
 import { _generateHash } from '../helpFunction';
 import { uuid } from 'uuidv4';
 import { add } from 'date-fns';
-import { usersRepositories } from '../repositories/users-repositories';
+import { UsersRepositories } from '../repositories/users-repositories';
 import { emailAdapter } from '../adapters/email-adapter';
+import { container } from '../composition-root';
+
+const usersRepositories = container.resolve(UsersRepositories);
 
 export const authService = {
   async createUser(newUser: CreateUserDto) {

@@ -2,7 +2,10 @@ import { Request, Response } from 'express';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { MethodGetAllUsersReqQuery } from '../types/queryType';
 import { UsersService } from '../services/usersService';
+import { injectable } from 'inversify';
+import 'reflect-metadata';
 
+@injectable()
 export class UsersController {
   constructor(protected usersService: UsersService) {}
   async createNewUser(req: Request, res: Response) {

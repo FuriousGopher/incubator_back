@@ -4420,6 +4420,7 @@ __metadata:
     nodemon: ^2.0.22
     npx: ^10.2.2
     prettier: ^2.3.2
+    reflect-metadata: ^0.1.13
     supertest: ^6.3.3
     ts-jest: ^29.0.5
     ts-node: ^10.9.1
@@ -7469,6 +7470,13 @@ __metadata:
   dependencies:
     picomatch: ^2.2.1
   checksum: 1ced032e6e45670b6d7352d71d21ce7edf7b9b928494dcaba6f11fba63180d9da6cd7061ebc34175ffda6ff529f481818c962952004d273178acd70f7059b320
+  languageName: node
+  linkType: hard
+
+"reflect-metadata@npm:^0.1.13":
+  version: 0.1.13
+  resolution: "reflect-metadata@npm:0.1.13"
+  checksum: 798d379a7b6f6455501145419505c97dd11cbc23857a386add2b9ef15963ccf15a48d9d15507afe01d4cd74116df8a213247200bac00320bd7c11ddeaa5e8fb4
   languageName: node
   linkType: hard
 

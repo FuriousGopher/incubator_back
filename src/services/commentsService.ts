@@ -1,9 +1,12 @@
 import { commentsRepositories } from '../repositories/comments-repositories';
 import { postsRepositories } from '../repositories/posts-repositories';
 import { HttpStatusCode } from '../types/HTTP-Response';
-import { usersService } from './usersService';
+import { UsersService } from './usersService';
 import { HttpError } from '../types/errorType';
 import { CommentDBModel } from '../models/commentType';
+import { container } from '../composition-root';
+
+const usersService = container.resolve(UsersService);
 
 export const commentsService = {
   async createNewCommentByPostId(comment: CommentDBModel, userId: string, postId: string) {

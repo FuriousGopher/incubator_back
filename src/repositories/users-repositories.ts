@@ -4,7 +4,10 @@ import { uuid } from 'uuidv4';
 import { add } from 'date-fns';
 import { UsersMongooseModel } from '../Domain/UserSchema';
 import { UserDBModel } from '../models/userType';
+import { injectable } from 'inversify';
+import 'reflect-metadata';
 
+@injectable()
 export class UsersRepositories {
   async createNewUser(email: string, login: string, password: string) {
     const passwordSalt = await bcrypt.genSalt(4);

@@ -1,7 +1,7 @@
 import { blogsRepositories } from '../repositories/blogs-repositories';
 import { postsRepositories } from '../repositories/posts-repositories';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
-import { BlogType } from '../models/blogType';
+import { BlogDBModel } from '../models/blogType';
 import { PostViewModel } from '../models/view/postViewModel';
 import { PostDBModel } from '../models/postType';
 import { uuid } from 'uuidv4';
@@ -29,7 +29,7 @@ export const blogsService = {
     return await blogsRepositories.getBlogById(id);
   },
 
-  async createNewBlog(blogs: BlogType) {
+  async createNewBlog(blogs: BlogDBModel) {
     return await blogsRepositories.createNewBlog(blogs);
   },
 
@@ -37,7 +37,7 @@ export const blogsService = {
     return await blogsRepositories.deleteBlogById(id);
   },
 
-  async updateBlogById(id: string, blogs: BlogType) {
+  async updateBlogById(id: string, blogs: BlogDBModel) {
     return await blogsRepositories.updateBlogById(id, blogs);
   },
 

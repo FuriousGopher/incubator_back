@@ -1,8 +1,9 @@
-import { CommentDBModel, CommentViewModel } from '../models/commentType';
+import { CommentDBModel } from '../models/commentType';
 import { uuid } from 'uuidv4';
 import { UserDBModel } from '../models/userType';
 import { EnhancedOmit, InferIdType } from 'mongodb';
 import { CommentsMongooseModel } from '../Domain/CommentSchema';
+import { CommentViewModel } from '../models/view/commentViewNodel';
 
 export const commentsRepositories = {
   async createNewCommentByPostId(

@@ -1,10 +1,10 @@
-import { BlogType } from '../models/blogType';
+import { BlogDBModel } from '../models/blogType';
 import { uuid } from 'uuidv4';
 import { WithId } from 'mongodb';
 import { BlogsMongooseModel } from '../Domain/BlogSchema';
 
 export const blogsRepositories = {
-  async getBlogById(id: string): Promise<WithId<BlogType> | null> {
+  async getBlogById(id: string): Promise<WithId<BlogDBModel> | null> {
     return BlogsMongooseModel.findOne({ id: id }, { projection: { _id: 0 } });
   },
 
@@ -34,7 +34,7 @@ export const blogsRepositories = {
       pageSize: nPerPage,
     };
   },
-  async createNewBlog(blog: BlogType) {
+  async createNewBlog(blog: BlogDBModel) {
     const newBlog = {
       id: uuid(),
       name: blog.name,
@@ -52,7 +52,7 @@ export const blogsRepositories = {
     return result.deletedCount === 1;
   },
 
-  async updateBlogById(id: string, blog: BlogType) {
+  async updateBlogById(id: string, blog: BlogDBModel) {
     const result = await BlogsMongooseModel.updateOne(
       { id: id },
       {

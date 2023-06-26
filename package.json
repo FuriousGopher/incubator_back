@@ -31,6 +31,7 @@
     "nodemailer": "^6.9.1",
     "nodemon": "^2.0.22",
     "npx": "^10.2.2",
+    "reflect-metadata": "^0.1.13",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
     "tsc": "^2.0.4",

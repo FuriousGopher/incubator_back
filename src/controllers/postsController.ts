@@ -16,10 +16,18 @@ export const getAllPosts = async (req: QueryForRequest<MethodGetAllReqQueryById>
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
-  const cookieRefreshToken = req.cookies.refreshToken;
-  const userId = await jwtService.getUserIdByToken(cookieRefreshToken);
-  const userIdString = userId?.userId.toString();
-  const response = await postsService.getAllPosts(query, userIdString);
+  const accessToken = req.headers.authorization?.split(' ')[1];
+  if (accessToken) {
+    const userId = await jwtService.getUserIdByToken(accessToken);
+    const response = await postsService.getAllPosts(query, userId?.userId.toString());
+    if (response.items) {
+      res.status(HttpStatusCode.OK).send(response);
+    } else {
+      res.status(HttpStatusCode.NotFound).send('Posts not found');
+    }
+    return;
+  }
+  const response = await postsService.getAllPosts(query);
   if (response.items) {
     res.status(HttpStatusCode.OK).send(response);
   } else {
@@ -29,7 +37,6 @@ export const getAllPosts = async (req: QueryForRequest<MethodGetAllReqQueryById>
 export const getPostsById = async (req: Request, res: Response) => {
   const id = req.params.id;
   const userId = req.user?.id;
-  console.log(userId);
   const foundPost = await postsService.getPostsById(id, userId);
   if (foundPost) {
     res.status(200).send(foundPost);

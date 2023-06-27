@@ -1,4 +1,3 @@
-import { MethodGetAllReqQueryById } from '../types/queryType';
 import { postsRepositories } from '../repositories/posts-repositories';
 import { PostDBModel } from '../models/postType';
 import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
@@ -12,7 +11,15 @@ import { container } from '../composition-root';
 const usersRepositories = container.resolve(UsersRepositories);
 
 export const postsService = {
-  async getAllPosts(query: MethodGetAllReqQueryById, userId?: string) {
+  async getAllPosts(
+    query: {
+      sortDirection: string;
+      pageNumber: number;
+      pageSize: number;
+      sortBy: string;
+    },
+    userId?: string,
+  ) {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
     const postsResponse = await postsRepositories.getAllPosts(
       query.pageNumber,

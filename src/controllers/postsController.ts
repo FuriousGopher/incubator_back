@@ -1,33 +1,19 @@
 import { Request, Response } from 'express';
-import { MethodGetAllReqQueryById, QueryForRequest } from '../types/queryType';
 import { HttpStatusCode } from '../types/HTTP-Response';
 import { postsService } from '../services/postsService';
-import { GetAllBlogsQueryType } from '../DTO/queryForBlogs';
-import { jwtService } from '../aplication/jwt-service';
-import { UsersService } from '../services/usersService';
-import { container } from '../composition-root';
 
-const usersService = container.resolve(UsersService);
-
-export const getAllPosts = async (req: QueryForRequest<MethodGetAllReqQueryById>, res: Response) => {
+export const getAllPosts = async (
+  req: Request<{ blogId: string }, any, any, { [key: string]: string }>,
+  res: Response,
+) => {
   const query = {
     pageSize: Number(req.query.pageSize) || 10,
     pageNumber: Number(req.query.pageNumber) || 1,
     sortBy: req.query.sortBy ?? 'createdAt',
     sortDirection: req.query.sortDirection ?? 'desc',
   };
-  const accessToken = req.headers.authorization?.split(' ')[1];
-  if (accessToken) {
-    const userId = await jwtService.getUserIdByToken(accessToken);
-    const response = await postsService.getAllPosts(query, userId?.userId.toString());
-    if (response.items) {
-      res.status(HttpStatusCode.OK).send(response);
-    } else {
-      res.status(HttpStatusCode.NotFound).send('Posts not found');
-    }
-    return;
-  }
-  const response = await postsService.getAllPosts(query);
+  const userId = req.user!.id;
+  const response = await postsService.getAllPosts(query, userId);
   if (response.items) {
     res.status(HttpStatusCode.OK).send(response);
   } else {
@@ -79,16 +65,10 @@ export const getAllCommentsByPostId = async (
     },
     NonNullable<unknown>,
     NonNullable<unknown>,
-    GetAllBlogsQueryType
+    { [key: string]: string }
   >,
   res: Response,
 ) => {
-  const accessToken = req.headers.authorization?.split(' ')[1];
-  if (accessToken) {
-    const userId = await jwtService.getUserIdByToken(accessToken);
-    const userModel = await usersService.findUserById(userId?.userId.toString());
-    req.user = { id: userModel?.id };
-  }
   const userId = req.user?.id;
   const query = {
     searchNameTerm: req.query.searchNameTerm ?? null,

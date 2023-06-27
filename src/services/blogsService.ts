@@ -5,6 +5,7 @@ import { BlogDBModel } from '../models/blogType';
 import { PostViewModel } from '../models/view/postViewModel';
 import { PostDBModel } from '../models/postType';
 import { uuid } from 'uuidv4';
+import { postsService } from './postsService';
 
 export const blogsService = {
   async getAllBlogs(query: GetAllBlogsQueryType) {
@@ -41,7 +42,7 @@ export const blogsService = {
     return await blogsRepositories.updateBlogById(id, blogs);
   },
 
-  async getAllPostsByBlogId(query: GetAllBlogsQueryType, blogId: string) {
+  async getAllPostsByBlogId(query: GetAllBlogsQueryType, blogId: string, userId?: string) {
     const sortDirection = query.sortDirection === 'desc' ? -1 : 1;
     const blogsResponse = await postsRepositories.getPostsByBlogId(
       blogId,
@@ -55,7 +56,7 @@ export const blogsService = {
       pagesCount: blogsResponse.totalNumberOfPages,
       page: +blogsResponse.currentPage,
       totalCount: blogsResponse.totalNumberOfPosts,
-      items: blogsResponse.posts,
+      items: await postsService.mapGetAllPosts(blogsResponse.posts, userId),
     };
   },
 

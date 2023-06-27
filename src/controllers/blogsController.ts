@@ -55,25 +55,19 @@ export const updateBlogById = async (req: Request, res: Response) => {
   }
 };
 export const getAllPostsByBlogId = async (
-  req: Request<
-    {
-      blogId: string;
-    },
-    NonNullable<unknown>,
-    NonNullable<unknown>,
-    GetAllBlogsQueryType
-  >,
+  req: Request<{ blogId: string }, any, any, { [key: string]: string }>,
   res: Response,
 ) => {
-  const query = {
-    searchNameTerm: req.query.searchNameTerm ?? null,
+  const query: GetAllBlogsQueryType = {
+    searchNameTerm: (req.query.searchNameTerm as string) || '',
     pageSize: Number(req.query.pageSize) || 10,
     pageNumber: Number(req.query.pageNumber) || 1,
-    sortBy: req.query.sortBy ?? 'createdAt',
-    sortDirection: req.query.sortDirection ?? 'desc',
+    sortBy: (req.query.sortBy as string) || 'createdAt',
+    sortDirection: (req.query.sortDirection as string) || 'desc',
   };
   const blogId = req.params.blogId;
-  const response = await blogsService.getAllPostsByBlogId(query, blogId);
+  const userId = req.user?.id;
+  const response = await blogsService.getAllPostsByBlogId(query, blogId, userId);
   if (response.items.length) {
     res.status(HttpStatusCode.OK).send(response);
   } else {

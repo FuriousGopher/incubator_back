@@ -19,8 +19,8 @@ import { getUserIdFromToken } from '../middlewares/getUserIdFromToken';
 
 export const postsRouter = Router();
 
-postsRouter.get('/', getAllPosts);
-postsRouter.get('/:postId/comments', getAllCommentsByPostId);
+postsRouter.get('/', getUserIdFromToken, getAllPosts);
+postsRouter.get('/:postId/comments', getUserIdFromToken, getAllCommentsByPostId);
 postsRouter.post(
   '/:postId/comments',
   checkTokenAuth,

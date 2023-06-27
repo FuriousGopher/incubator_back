@@ -12,11 +12,12 @@ import { validatePostAndPutMethodsForBlogsBody } from '../validators/validatorFo
 import { checkBasicAuth } from '../middlewares/checkBasicAuth';
 import { validationMiddleware } from '../validators/validationErorrsMiddleware';
 import { validatePostMethodsForPostsByBlogId } from '../validators/validatorForNewPostByBlogId';
+import { getUserIdFromToken } from '../middlewares/getUserIdFromToken';
 
 export const blogsRouter = Router();
 
 blogsRouter.get('/', getAllBlogs);
-blogsRouter.get('/:blogId/posts', getAllPostsByBlogId);
+blogsRouter.get('/:blogId/posts', getUserIdFromToken, getAllPostsByBlogId);
 blogsRouter.get('/:id', getBlogById);
 blogsRouter.post(
   '/:blogId/posts',

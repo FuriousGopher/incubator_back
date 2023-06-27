@@ -12,7 +12,6 @@ export const getUserIdFromToken = async (req: Request, res: Response, next: Next
     const userModel = await usersService.findUserById(userId?.userId.toString());
     req.user = { id: userModel?.id };
   }
-  console.log(accessToken);
 
   next();
 };

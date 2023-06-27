@@ -18,7 +18,7 @@ export const getAllPosts = async (req: QueryForRequest<MethodGetAllReqQueryById>
   };
   const cookieRefreshToken = req.cookies.refreshToken;
   const userId = await jwtService.getUserIdByToken(cookieRefreshToken);
-  const userIdString = userId?.toString();
+  const userIdString = userId?.userId.toString();
   const response = await postsService.getAllPosts(query, userIdString);
   if (response.items) {
     res.status(HttpStatusCode.OK).send(response);
@@ -29,6 +29,7 @@ export const getAllPosts = async (req: QueryForRequest<MethodGetAllReqQueryById>
 export const getPostsById = async (req: Request, res: Response) => {
   const id = req.params.id;
   const userId = req.user?.id;
+  console.log(userId);
   const foundPost = await postsService.getPostsById(id, userId);
   if (foundPost) {
     res.status(200).send(foundPost);

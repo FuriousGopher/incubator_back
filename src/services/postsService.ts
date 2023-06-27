@@ -52,7 +52,7 @@ export const postsService = {
           extendedLikesInfo: {
             likesCount,
             dislikesCount: post.likesInfo ? post.likesInfo.dislikesCount : 0,
-            myStatus: status,
+            myStatus: status || 'None',
             newestLikes: likesArray
               .filter((post) => post.likeStatus === 'Like')
               .sort((a, b) => -a.addedAt.localeCompare(b.addedAt))
